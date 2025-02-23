@@ -1,261 +1,151 @@
 "use client"; // Mark as Client Component for framer-motion animations
 
-import { IconArrowLeft, IconArrowRight, IconX, IconExternalLink } from "@tabler/icons-react";
-import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
+import { motion, AnimatePresence, Variants, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef, useMemo } from "react";
 import { cn } from "@/lib/utils";
 
-// Define CP platform interface
-interface CPPlatform {
-  platform: string;
-  username: string;
-  rating: string;
-  problemsSolved: string;
-  notableAchievement: string;
-  src: string;
-  profileLink: string;
+// Define Timeline Entry interface
+interface TimelineEntry {
+  title: string;
+  content: React.ReactNode;
 }
 
-// Define props for Projects component
-interface ProjectsProps {
-  className?: string;
+// Define props for PinnedTimeline component
+interface PinnedTimelineProps {
+  data: TimelineEntry[];
 }
 
-const Projects: React.FC<ProjectsProps> = ({ className }) => {
-  const [active, setActive] = useState(0);
-  const [enlargedImage, setEnlargedImage] = useState<string | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+// PinnedTimeline Component
+export function PinnedTimeline({ data }: PinnedTimelineProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
 
-  // CP platform data
-  const cpPlatforms: CPPlatform[] = [
-    {
-      platform: "Codeforces",
-      username: "@pupil",
-      rating: "1369",
-      problemsSolved: "800+",
-      notableAchievement: "Reached Pupil rank with consistent problem-solving.",
-      src: "/codeforces.png",
-      profileLink: "https://codeforces.com/profile/pupil",
-    },
-    {
-      platform: "LeetCode",
-      username: "@raghvendra1853",
-      rating: "1800+",
-      problemsSolved: "500+",
-      notableAchievement: "Top 5% in weekly contests.",
-      src: "/leetcode.png",
-      profileLink: "https://leetcode.com/raghvendra1853/",
-    },
-    {
-      platform: "CodeChef",
-      username: "@raghvendra1853",
-      rating: "4 stars",
-      problemsSolved: "300+",
-      notableAchievement: "Achieved 4-star rating in 6 months.",
-      src: "/codechef.png",
-      profileLink: "https://www.codechef.com/users/raghvendra1853",
-    },
-  ];
+  const numItems = data.length;
 
-  // Carousel Controls
-  const handleNext = () => {
-    setActive((prev) => (prev + 1) % cpPlatforms.length);
+  // Define scroll ranges for each item
+  const ranges = useMemo(() => {
+    return data.map((_, i) => {
+      const start = i / numItems;
+      const end = (i + 1) / numItems;
+      return { start, end };
+    });
+  }, [data, numItems]);
+
+  // Animation variants for full section slide
+  const slideVariants: Variants = {
+    hidden: { opacity: 0, x: 100 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeInOut" } },
+    exit: { opacity: 0, x: -100, transition: { duration: 0.5, ease: "easeInOut" } },
   };
-
-  const handlePrev = () => {
-    setActive((prev) => (prev - 1 + cpPlatforms.length) % cpPlatforms.length);
-  };
-
-  const isActive = (index: number) => index === active;
-
-  // Handle Image Click -> Enlarge
-  const handleImageClick = (src: string) => {
-    setEnlargedImage(src);
-  };
-
-  // Close enlarged image
-  const handleClose = () => {
-    setEnlargedImage(null);
-  };
-
-  // Auto-play effect with pause when enlarged
-  useEffect(() => {
-    if (enlargedImage) {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      return;
-    }
-    intervalRef.current = setInterval(handleNext, 5000);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [enlargedImage]);
-
-  // Random rotation for the slideshow images
-  const randomRotateY = () => Math.floor(Math.random() * 21) - 10; // -10 to 10 deg
 
   return (
-    <section id="projects" className={cn("py-20 bg-neutral-800", className)}>
-      <div className="max-w-sm md:max-w-5xl mx-auto px-4 md:px-8 lg:px-12">
-        <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20">
-          {/* Left Side: Rotating CP Platform Images */}
-          <div>
-            <div className="relative h-[400px] md:h-[500px] w-full">
-              <AnimatePresence>
-                {cpPlatforms.map((platform, index) => (
-                  <motion.div
-                    key={platform.src}
-                    initial={{
-                      opacity: 0,
-                      scale: 0.9,
-                      z: -100,
-                      rotate: randomRotateY(),
-                    }}
-                    animate={{
-                      opacity: isActive(index) ? 1 : 0.7,
-                      scale: isActive(index) ? 1 : 0.95,
-                      // The zIndex ensures the active image sits on top in the carousel
-                      zIndex: isActive(index) ? 10 : 0,
-                      rotate: isActive(index) ? 0 : randomRotateY(),
-                      // A fun bounce effect on the active image
-                      y: isActive(index) ? [0, -80, 0] : 0,
-                    }}
-                    exit={{
-                      opacity: 0,
-                      scale: 0.9,
-                      z: 100,
-                      rotate: randomRotateY(),
-                    }}
-                    transition={{
-                      duration: 0.4,
-                      ease: "easeInOut",
-                    }}
-                    className="absolute inset-0 origin-bottom cursor-pointer"
-                    onClick={() => handleImageClick(platform.src)}
-                  >
-                    <Image
-                      src={platform.src}
-                      alt={platform.platform}
-                      width={600}
-                      height={600}
-                      draggable={false}
-                      className="h-full w-full rounded-3xl object-cover object-center"
-                    />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-          </div>
+    <div
+      ref={containerRef}
+      style={{ height: `${numItems * 100}vh` }} // Total height for scrolling through all items
+      className="relative w-full bg-neutral-800"
+    >
+      <motion.div className="sticky top-0 h-screen w-full flex items-center justify-center">
+        <div className="absolute left-[50%] top-0 bottom-0 w-[2px] bg-neutral-700 -translate-x-1/2" />
+        <AnimatePresence mode="wait">
+          {data.map((entry, i) => {
+            const { start, end } = ranges[i];
+            const opacity = useTransform(scrollYProgress, [start, start + 0.1, end - 0.1, end], [0, 1, 1, 0]);
 
-          {/* Right Side: CP Details & Buttons */}
-          <div className="flex flex-col justify-between py-4">
-            <motion.div
-              key={active}
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -20, opacity: 0 }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="space-y-6"
-            >
-              {/* Heading + Profile Button */}
-              <div className="flex items-center flex-wrap gap-4">
-                <h3 className="text-2xl md:text-3xl font-extrabold text-white tracking-wide">
-                  {cpPlatforms[active].platform}
-                </h3>
-                <a
-                  href={cpPlatforms[active].profileLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-300"
-                >
-                  <span>Profile</span>
-                  <IconExternalLink className="h-4 w-4" />
-                </a>
-              </div>
-
-              {/* Stats */}
-              <div className="space-y-4 text-gray-300 text-lg bg-neutral-700/50 p-4 rounded-md">
-                <div className="flex items-start gap-3">
-                  <span className="font-semibold text-white w-32">Rating:</span>
-                  <span>{cpPlatforms[active].rating}</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="font-semibold text-white w-32">Problems:</span>
-                  <span>{cpPlatforms[active].problemsSolved}</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="font-semibold text-white w-32">Achievement:</span>
-                  <span>
-                    {/* Word-by-word animation */}
-                    {cpPlatforms[active].notableAchievement.split(" ").map((word, index) => (
-                      <motion.span
-                        key={index}
-                        initial={{ filter: "blur(10px)", opacity: 0, y: 5 }}
-                        animate={{ filter: "blur(0px)", opacity: 1, y: 0 }}
-                        transition={{ duration: 0.2, ease: "easeInOut", delay: 0.02 * index }}
-                        className="inline-block"
-                      >
-                        {word}&nbsp;
-                      </motion.span>
-                    ))}
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Navigation Buttons */}
-            <div className="flex gap-4 pt-12 md:pt-0">
-              <button
-                onClick={handlePrev}
-                className="h-10 w-10 rounded-full bg-neutral-700 text-white flex items-center justify-center group/button hover:bg-blue-500 transition duration-300"
+            return (
+              <motion.div
+                key={i}
+                style={{ opacity }}
+                variants={slideVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="absolute w-full max-w-4xl px-4 md:px-8 grid md:grid-cols-2 gap-6 md:gap-10 h-[60vh]"
               >
-                <IconArrowLeft className="h-6 w-6 group-hover/button:rotate-12 transition-transform duration-300" />
-              </button>
-              <button
-                onClick={handleNext}
-                className="h-10 w-10 rounded-full bg-neutral-700 text-white flex items-center justify-center group/button hover:bg-blue-500 transition duration-300"
-              >
-                <IconArrowRight className="h-6 w-6 group-hover/button:-rotate-12 transition-transform duration-300" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Enlarged Image Modal */}
-      <AnimatePresence>
-        {enlargedImage && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-75"
-            onClick={handleClose}
-          >
-            <motion.div
-              className="relative max-w-4xl w-full h-[80vh] p-4"
-              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking the image
-            >
-              <Image
-                src={enlargedImage}
-                alt="Enlarged CP Profile"
-                width={800}
-                height={800}
-                className="w-full h-full object-contain rounded-lg"
-              />
-              <button
-                onClick={handleClose}
-                className="absolute top-4 right-4 h-10 w-10 rounded-full bg-neutral-700 text-white flex items-center justify-center hover:bg-red-500 transition duration-300"
-              >
-                <IconX className="h-6 w-6" />
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </section>
+                {/* Left Side: Title */}
+                <div className="space-y-4 flex flex-col justify-center">
+                  <h3 className="text-2xl md:text-3xl font-semibold text-white">{entry.title}</h3>
+                </div>
+                {/* Right Side: Content */}
+                <div className="bg-neutral-900 p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] border border-neutral-700 flex flex-col justify-center">
+                  {entry.content}
+                </div>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </motion.div>
+    </div>
   );
 };
 
-export default Projects;
+// Define props for Experience component
+interface ExperienceProps {
+  className?: string;
+}
+
+// Experience Component
+export default function Experience({ className }: ExperienceProps) {
+  const experienceData: TimelineEntry[] = [
+    {
+      title: "Present - Joplin Open Source Project",
+      content: (
+        <div className="space-y-4">
+          <p className="text-sm md:text-base font-normal text-gray-300">
+            Contributed to the development of the Joplin open-source note-taking application, showcasing proficiency in debugging and cross-platform development.
+          </p>
+          <ul className="list-disc list-inside text-gray-400 space-y-2 text-sm">
+            <li>Fixed UI bugs and implemented new markdown rendering features.</li>
+            <li>Collaborated with maintainers to improve plugin architecture.</li>
+          </ul>
+          <div className="flex flex-wrap gap-2">
+            <span className="px-3 py-1 bg-neutral-700 text-sm text-gray-300 rounded-full">JavaScript</span>
+            <span className="px-3 py-1 bg-neutral-700 text-sm text-gray-300 rounded-full">React</span>
+            <span className="px-3 py-1 bg-neutral-700 text-sm text-gray-300 rounded-full">Electron</span>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Class Representative (CR)",
+      content: (
+        <div className="space-y-4">
+          <p className="text-sm md:text-base font-normal text-gray-300">
+            Served as Class Representative, bridging communication between faculty and students.
+          </p>
+          <ul className="list-disc list-inside text-gray-400 space-y-2 text-sm">
+            <li>Organized group study sessions and events.</li>
+            <li>Coordinated feedback and announcements with professors.</li>
+          </ul>
+        </div>
+      ),
+    },
+    {
+      title: "Orator Club Member",
+      content: (
+        <div className="space-y-4">
+          <p className="text-sm md:text-base font-normal text-gray-300">
+            Enhanced public speaking and debate skills through weekly sessions, competitions, and workshops.
+          </p>
+          <ul className="list-disc list-inside text-gray-400 space-y-2 text-sm">
+            <li>Conducted debate and extempore sessions.</li>
+            <li>Participated in inter-college public speaking contests.</li>
+            <li>Led workshops to improve speech delivery and confidence.</li>
+          </ul>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <section id="experience" className={cn("bg-neutral-800 text-gray-200", className)}>
+      <div className="max-w-7xl mx-auto px-4 py-20 sm:px-6 lg:px-8 text-center">
+        <h2 className="text-3xl font-bold text-white mb-4">Experience & Contributions</h2>
+        <div className="w-20 h-1 bg-blue-500 mx-auto"></div>
+      </div>
+      <PinnedTimeline data={experienceData} />
+    </section>
+  );
+};

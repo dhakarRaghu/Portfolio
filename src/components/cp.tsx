@@ -1,7 +1,7 @@
 "use client"; // Mark as Client Component for framer-motion animations
 
 import { IconArrowLeft, IconArrowRight, IconX, IconExternalLink } from "@tabler/icons-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
@@ -36,7 +36,7 @@ const Projects: React.FC<ProjectsProps> = ({ className }) => {
       problemsSolved: "800+",
       notableAchievement: "Reached Pupil rank with consistent problem-solving.",
       src: "/codeforces.png",
-      profileLink: "https://codeforces.com/profile/pupil",
+      profileLink: "https://codeforces.com/profile/00.ghost",
     },
     {
       platform: "LeetCode",
@@ -45,7 +45,7 @@ const Projects: React.FC<ProjectsProps> = ({ className }) => {
       problemsSolved: "500+",
       notableAchievement: "Top 5% in weekly contests.",
       src: "/leetcode.png",
-      profileLink: "https://leetcode.com/raghvendra1853/",
+      profileLink: "https://leetcode.com/u/raghvendra_01/",
     },
     {
       platform: "CodeChef",
@@ -54,7 +54,7 @@ const Projects: React.FC<ProjectsProps> = ({ className }) => {
       problemsSolved: "300+",
       notableAchievement: "Achieved 4-star rating in 6 months.",
       src: "/codechef.png",
-      profileLink: "https://www.codechef.com/users/raghvendra1853",
+      profileLink: "https://www.codechef.com/users/raghvendra_04",
     },
   ];
 
@@ -79,6 +79,15 @@ const Projects: React.FC<ProjectsProps> = ({ className }) => {
     setEnlargedImage(null);
   };
 
+  const fadeInUp: Variants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
   // Auto-play effect with pause when enlarged
   useEffect(() => {
     if (enlargedImage) {
@@ -96,6 +105,18 @@ const Projects: React.FC<ProjectsProps> = ({ className }) => {
 
   return (
     <section id="projects" className={cn("py-20 bg-neutral-800", className)}>
+        <motion.div
+                 className="text-center mb-16"
+                 initial="hidden"
+                 whileInView="visible"
+                 viewport={{ once: true }}
+                 variants={fadeInUp}
+               >
+                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+                   Key Projects
+                 </h2>
+                 <div className="w-20 h-1 bg-blue-500 mx-auto"></div>
+        </motion.div>
       <div className="max-w-sm md:max-w-5xl mx-auto px-4 md:px-8 lg:px-12">
         <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20">
           {/* Left Side: Rotating CP Platform Images */}
