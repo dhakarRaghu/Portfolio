@@ -94,7 +94,7 @@ const Projects: React.FC<ProjectsProps> = ({ className }) => {
       if (intervalRef.current) clearInterval(intervalRef.current);
       return;
     }
-    intervalRef.current = setInterval(handleNext, 5000);
+    intervalRef.current = setInterval(handleNext, 2000);
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
