@@ -1,6 +1,9 @@
 "use client"; // Mark as Client Component for framer-motion animations
 
-import { motion, Variants } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
+import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 
 // Define props for Skills component
 interface SkillsProps {
@@ -8,56 +11,54 @@ interface SkillsProps {
 }
 
 const Skills: React.FC<SkillsProps> = ({ className }) => {
-  // Animation variants for sliding effect
+  // Animation variants for sliding effects
   const slideInLeft: Variants = {
     hidden: { opacity: 0, x: -100 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } },
   };
 
   const slideInRight: Variants = {
     hidden: { opacity: 0, x: 100 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } },
   };
 
   const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut", delay: 0.2 },
-    },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut", delay: 0.2 } },
   };
 
   // Card hover effect (size increase and pop-up)
   const cardHover: Variants = {
     rest: { scale: 1, y: 0, boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)" },
-    hover: {
-      scale: 1.05,
-      y: -10,
-      boxShadow: "0px 10px 15px rgba(59, 130, 246, 0.3)",
-      transition: { duration: 0.3, ease: "easeInOut" },
-    },
+    hover: { scale: 1.05, y: -10, boxShadow: "0px 10px 15px rgba(59, 130, 246, 0.3)", transition: { duration: 0.3, ease: "easeInOut" } },
   };
 
-
+  // Tag hover effect
   const tagHover: Variants = {
     rest: { scale: 1 },
-    hover: {
-      scale: 1.2,
-      transition: { duration: 0.2, ease: "easeInOut" },
-    },
+    hover: { scale: 1.2, transition: { duration: 0.2, ease: "easeInOut" } },
+  };
+
+  // Combine slide and hover variants for cards that slide in from the left
+  const combinedLeftCard: Variants = {
+    hidden: slideInLeft.hidden,
+    visible: slideInLeft.visible,
+    exit: slideInLeft.hidden,
+    rest: cardHover.rest,
+    hover: cardHover.hover,
+  };
+
+  // Combine slide and hover variants for cards that slide in from the right
+  const combinedRightCard: Variants = {
+    hidden: slideInRight.hidden,
+    visible: slideInRight.visible,
+    exit: slideInRight.hidden,
+    rest: cardHover.rest,
+    hover: cardHover.hover,
   };
 
   return (
-    <section id="skills" className={`py-20 bg-neutral-900 ${className || ''}`}>
+    <section id="skills" className={cn("py-20 bg-neutral-900", className || "")}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
         <motion.div
@@ -73,15 +74,15 @@ const Skills: React.FC<SkillsProps> = ({ className }) => {
 
         <div className="grid gap-8 md:grid-cols-2">
           
+          {/* Programming Languages Card (slides in from left) */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            variants={slideInLeft}
+            variants={combinedLeftCard}
             whileHover="hover"
             animate="rest"
             className="bg-neutral-800 rounded-xl p-6"
-            variants={cardHover}
           >
             <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-3">
               <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,16 +126,15 @@ const Skills: React.FC<SkillsProps> = ({ className }) => {
             </div>
           </motion.div>
 
-          {/* Web Development */}
+          {/* Web Development Card (slides in from right) */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            variants={slideInRight}
+            variants={combinedRightCard}
             whileHover="hover"
             animate="rest"
             className="bg-neutral-800 rounded-xl p-6"
-            variants={cardHover}
           >
             <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-3">
               <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -202,16 +202,15 @@ const Skills: React.FC<SkillsProps> = ({ className }) => {
             </div>
           </motion.div>
 
-          {/* Databases & ORM */}
+          {/* Databases & ORM Card (slides in from left) */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            variants={slideInLeft}
+            variants={combinedLeftCard}
             whileHover="hover"
             animate="rest"
             className="bg-neutral-800 rounded-xl p-6"
-            variants={cardHover}
           >
             <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-3">
               <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -271,16 +270,15 @@ const Skills: React.FC<SkillsProps> = ({ className }) => {
             </div>
           </motion.div>
 
-          {/* Developer Tools & Libraries */}
+          {/* Developer Tools & Libraries Card (slides in from right) */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            variants={slideInRight}
+            variants={combinedRightCard}
             whileHover="hover"
             animate="rest"
             className="bg-neutral-800 rounded-xl p-6"
-            variants={cardHover}
           >
             <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-3">
               <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -362,5 +360,3 @@ const Skills: React.FC<SkillsProps> = ({ className }) => {
 };
 
 export default Skills;
-
-

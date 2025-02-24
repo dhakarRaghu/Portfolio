@@ -169,7 +169,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
                 className="object-cover w-full h-full"
                 priority
                 placeholder="blur"
-                blurDataURL="/me-blur.jpg"
+                blurDataURL="/me.jpg"
               />
             </div>
           </motion.div>

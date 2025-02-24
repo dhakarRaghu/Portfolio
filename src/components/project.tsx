@@ -91,7 +91,7 @@ const projects: Project[] = [
     title: "Realtime Collaborative Workspace",
     content:
       "A real-time collaborative document workspace with live cursors, text selection, and presence indicators, using WebSocket for real-time updates.",
-    image: "/cypress.jpg",
+    image: "/cypress.png",
     tech: ["Next.js 13", "Drizzle ORM", "Supabase", "Tailwind", "WebSockets", "Redis"],
     links: [
 
