@@ -2,7 +2,7 @@ import Hero from '@/components/Hero';
 import About from '@/components/about';
 import Skills from '@/components/skill';
 import Projects from '@/components/project';
-import CompetitiveProgramming from '@/components/cp';
+import CP from '@/components/cp';
 import Experience from '@/components/experience';
 import Contact from '@/components/contact';
 import Footer from '@/components/footer';
@@ -17,7 +17,7 @@ export default function Home() {
       <About />
       <Skills />
       <Projects />
-      <CompetitiveProgramming />
+      <CP />
       <Experience />
       <Contact />
       <Footer />

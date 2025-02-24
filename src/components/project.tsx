@@ -31,25 +31,84 @@ const projects: Project[] = [
     title: "GitBuddy Live",
     content:
       "A full-stack AI-powered GitHub SaaS platform for enhanced coding workflow with automatic code reviews and AI-powered suggestions.",
-    image: "/codeforces.png",
+    image: "/gitbuddy.png",
     tech: ["Next.js 15", "Google Gemini AI", "Assembly AI", "Prisma", "Langchain"],
     links: [
-      { label: "View Code", href: "#" },
-      { label: "Live Demo", href: "#" },
+    ],
+    component: (
+      <div className="flex gap-4 mt-4">
+      <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+        <a href="https://github.com/dhakarRaghu/GitBuddy">View code</a>
+      </button>
+      <button className="border border-gray-600 text-gray-300 px-6 py-2 rounded-lg hover:border-blue-500 hover:text-blue-500 transition duration-300">
+        <a href="https://git-buddy-69w18hzyp-raghvendra-singh-dhakars-projects.vercel.app/">Explore Features</a>
+      </button>
+    </div>
+    ),
+  },
+  {
+    id: 2,
+    title: "Learnify",
+    content:
+      "Engineered an AI-powered e-learning platform that offers personalized, dynamic courses with unit-wise breakdowns and interactive chapters. Built an intelligent content generation system that automatically creates structured learning alongside YouTube videos to enhance the learning experience.",
+    image: "/learnify.png",
+    tech: ["Next.js 15", "Google Gemini", "Typescript", "Tailwind" , "Prisma"],
+    links: [
     ],
     component: (
       <div className="flex gap-4 mt-4">
         <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
-          Try AI Review
+          <a href="https://github.com/dhakarRaghu/Learnify">View code</a>
         </button>
         <button className="border border-gray-600 text-gray-300 px-6 py-2 rounded-lg hover:border-blue-500 hover:text-blue-500 transition duration-300">
-          Explore Features
+          <a href="https://learnify-chi.vercel.app/">Explore Features</a>
         </button>
       </div>
     ),
   },
   {
-    id: 2,
+    id: 3,
+    title: "WebGenie",
+    content:
+      "WebGen is a customizable web development starter kit generator that lets you create a pre-configured project with your preferred frameworks, tools, and integrations. With just a few clicks, you can set up a Next.js project with Prisma or Mongoose, TailwindCSS, and TypeScript, ready for development.",
+    image: "/webgenie.png",
+    tech: ["Next.js 15", "Express", "Tailwind"],
+    links: [
+    ],
+    component: (
+      <div className="flex gap-4 mt-4">
+        <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+          <a href="https://github.com/dhakarRaghu/WebGenie--Cli-Integration">View code</a>
+        </button>
+        <button className="border border-gray-600 text-gray-300 px-6 py-2 rounded-lg hover:border-blue-500 hover:text-blue-500 transition duration-300">
+          <a href="https://web-genie-one.vercel.app/">Explore Features</a>
+        </button>
+      </div>
+    ),
+  },
+  {
+    id: 4,
+    title: "Realtime Collaborative Workspace",
+    content:
+      "A real-time collaborative document workspace with live cursors, text selection, and presence indicators, using WebSocket for real-time updates.",
+    image: "/cypress.jpg",
+    tech: ["Next.js 13", "Drizzle ORM", "Supabase", "Tailwind", "WebSockets", "Redis"],
+    links: [
+
+    ],
+    component: (
+      <div className="flex gap-4 mt-4">
+        <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+          <a href="https://github.com/dhakarRaghu/Saas_colab_Space_">View code</a>
+        </button>
+        <button className="border border-gray-600 text-gray-300 px-6 py-2 rounded-lg hover:border-blue-500 hover:text-blue-500 transition duration-300">
+          <a href="#">Explore Features</a>
+        </button>
+      </div>
+    ),
+  },
+  {
+    id: 5,
     title: "Realtime Collaborative Workspace",
     content:
       "A real-time collaborative document workspace with live cursors, text selection, and presence indicators, using WebSocket for real-time updates.",

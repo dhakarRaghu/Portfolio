@@ -22,7 +22,7 @@ interface ProjectsProps {
   className?: string;
 }
 
-const Projects: React.FC<ProjectsProps> = ({ className }) => {
+const CP: React.FC<ProjectsProps> = ({ className }) => {
   const [active, setActive] = useState(0);
   const [enlargedImage, setEnlargedImage] = useState<string | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -41,18 +41,18 @@ const Projects: React.FC<ProjectsProps> = ({ className }) => {
     {
       platform: "LeetCode",
       username: "@raghvendra1853",
-      rating: "1800+",
-      problemsSolved: "500+",
-      notableAchievement: "Top 5% in weekly contests.",
+      rating: "1918",
+      problemsSolved: "100+",
+      notableAchievement: "Top 4% in weekly contests.",
       src: "/leetcode.png",
       profileLink: "https://leetcode.com/u/raghvendra_01/",
     },
     {
       platform: "CodeChef",
       username: "@raghvendra1853",
-      rating: "4 stars",
-      problemsSolved: "300+",
-      notableAchievement: "Achieved 4-star rating in 6 months.",
+      rating: "3 stars",
+      problemsSolved: "100+",
+      notableAchievement: "Achieved 3-star rating in 3 months.",
       src: "/codechef.png",
       profileLink: "https://www.codechef.com/users/raghvendra_04",
     },
@@ -104,7 +104,7 @@ const Projects: React.FC<ProjectsProps> = ({ className }) => {
   const randomRotateY = () => Math.floor(Math.random() * 21) - 10; // -10 to 10 deg
 
   return (
-    <section id="projects" className={cn("py-20 bg-neutral-800", className)}>
+    <section id="CP" className={cn("py-20 bg-neutral-800", className)}>
         <motion.div
                  className="text-center mb-16"
                  initial="hidden"
@@ -113,7 +113,7 @@ const Projects: React.FC<ProjectsProps> = ({ className }) => {
                  variants={fadeInUp}
                >
                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-                   Key Projects
+                 Competitive Programming
                  </h2>
                  <div className="w-20 h-1 bg-blue-500 mx-auto"></div>
         </motion.div>
@@ -121,7 +121,7 @@ const Projects: React.FC<ProjectsProps> = ({ className }) => {
         <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20">
           {/* Left Side: Rotating CP Platform Images */}
           <div>
-            <div className="relative h-[400px] md:h-[500px] w-full">
+            <div className="relative h-[400px] md:h-[500px] w-full px-4 ">
               <AnimatePresence>
                 {cpPlatforms.map((platform, index) => (
                   <motion.div
@@ -279,4 +279,4 @@ const Projects: React.FC<ProjectsProps> = ({ className }) => {
   );
 };
 
-export default Projects;
+export default CP;

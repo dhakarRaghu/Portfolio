@@ -92,7 +92,7 @@ const Contact: React.FC<ContactProps> = ({ className }) => {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
                 >
-                  Download Resume
+                  View Resume
                 </a>
               </motion.div>
             </div>
@@ -107,10 +107,10 @@ const Contact: React.FC<ContactProps> = ({ className }) => {
           >
             <form className="bg-neutral-900 p-6 rounded-xl">
               <motion.div className="space-y-6" variants={staggerChildren}>
-                <FormField label="Name" id="name" type="text" />
-                <FormField label="Email" id="email" type="email" />
-                <FormField label="Subject" id="subject" type="text" />
-                <FormField label="Message" id="message" type="textarea" />
+                <FormField className='py-1' label="Name" id="name" type="text"  />
+                <FormField className='py-1' label="Email" id="email" type="email" />
+                <FormField  className='py-1' label="Subject" id="subject" type="text" />
+                <FormField  className='py-1'label="Message" id="message" type="textarea" />
                 <motion.button
                   type="submit"
                   className="w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
@@ -184,7 +184,7 @@ const ContactItem: React.FC<{ href: string; label: string; icon: string }> = ({ 
   </motion.a>
 );
 
-const FormField: React.FC<{ label: string; id: string; type: string }> = ({ label, id, type }) => (
+const FormField: React.FC<{ label: string; id: string; type: string; className?: string }> = ({ label, id, type, className }) => (
   <motion.div variants={childFadeIn}>
     <label htmlFor={id} className="block text-sm font-medium text-gray-300">
       {label}
@@ -194,14 +194,14 @@ const FormField: React.FC<{ label: string; id: string; type: string }> = ({ labe
         id={id}
         name={id}
         rows={4}
-        className="mt-1 block w-full rounded-md bg-neutral-800 border-neutral-700 text-gray-300 focus:border-blue-500 focus:ring-blue-500"
+        className={`mt-1 block w-full rounded-md bg-neutral-800 border-neutral-700 text-gray-300 focus:border-blue-500 focus:ring-blue-500 ${className || ''}`}
       />
     ) : (
       <input
         type={type}
         id={id}
         name={id}
-        className="mt-1 block w-full rounded-md bg-neutral-800 border-neutral-700 text-gray-300 focus:border-blue-500 focus:ring-blue-500"
+        className={`mt-1 block w-full rounded-md bg-neutral-800 border-neutral-700 text-gray-300 focus:border-blue-500 focus:ring-blue-500 ${className || ''}`}
       />
     )}
   </motion.div>

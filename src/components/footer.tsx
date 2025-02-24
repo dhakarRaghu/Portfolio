@@ -21,10 +21,10 @@ const Footer: React.FC = () => {
           <div className="space-y-4">
             <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:text-blue-400">About</a></li>
-              <li><a href="#" className="hover:text-blue-400">Projects</a></li>
-              <li><a href="#" className="hover:text-blue-400">Skills</a></li>
-              <li><a href="#" className="hover:text-blue-400">Contact</a></li>
+              <li><a href="#about" className="hover:text-blue-400">About</a></li>
+              <li><a href="#projects" className="hover:text-blue-400">Projects</a></li>
+              <li><a href="#skills" className="hover:text-blue-400">Skills</a></li>
+              <li><a href="#contact" className="hover:text-blue-400">Contact</a></li>
             </ul>
           </div>
 
@@ -32,9 +32,10 @@ const Footer: React.FC = () => {
           <div className="space-y-4">
             <h3 className="text-xl font-semibold mb-4">Coding Profiles</h3>
             <ul className="space-y-2">
-              <li><a href="https://codeforces.com/profile/Raghu" className="hover:text-blue-400">Codeforces</a></li>
-              <li><a href="#" className="hover:text-blue-400">LeetCode</a></li>
-              <li><a href="#" className="hover:text-blue-400">AtCoder</a></li>
+              <li><a href="https://codeforces.com/profile/00.ghost" target='_blank'className="hover:text-blue-400">Codeforces</a></li>
+              <li><a href="https://leetcode.com/u/raghvendra_01/" target='_blank' className="hover:text-blue-400">LeetCode</a></li>
+              <li><a href="https://leetcode.com/users/raghvendra_04/" target='_blank' className="hover:text-blue-400">CodeChef</a></li>
+              <li><a href="https://github.com/dhakarRaghu" target='_blank' className="hover:text-blue-400">Github</a></li>
             </ul>
           </div>
 
