@@ -4,7 +4,6 @@ import Skills from '@/components/skill';
 import Projects from '@/components/project';
 import CompetitiveProgramming from '@/components/cp';
 import Experience from '@/components/experience';
-import Blog from '@/components/blog';
 import Contact from '@/components/contact';
 import Footer from '@/components/footer';
 import Navbar from '@/components/navbar';
@@ -20,7 +19,6 @@ export default function Home() {
       <Projects />
       <CompetitiveProgramming />
       <Experience />
-      {/* <Blog /> */}
       <Contact />
       <Footer />
     </main>
