@@ -47,7 +47,7 @@ const Skills: React.FC<SkillsProps> = ({ className }) => {
     },
   };
 
-  // Skill tag hover effect
+
   const tagHover: Variants = {
     rest: { scale: 1 },
     hover: {
@@ -59,7 +59,7 @@ const Skills: React.FC<SkillsProps> = ({ className }) => {
   return (
     <section id="skills" className={`py-20 bg-neutral-900 ${className || ''}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Title with fade-in-up effect */}
+      
         <motion.div
           className="text-center mb-16"
           initial="hidden"
@@ -72,7 +72,7 @@ const Skills: React.FC<SkillsProps> = ({ className }) => {
         </motion.div>
 
         <div className="grid gap-8 md:grid-cols-2">
-          {/* Programming Languages */}
+          
           <motion.div
             initial="hidden"
             whileInView="visible"
