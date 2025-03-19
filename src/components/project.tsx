@@ -110,6 +110,27 @@ const projects: Project[] = [
       </div>
     ),
   },
+  {
+    id: 5,
+    title: "Realtime Collaborative Workspace",
+    content:
+      "A real-time collaborative document workspace with live cursors, text selection, and presence indicators, using WebSocket for real-time updates.",
+    image: "/cypress.png",
+    tech: ["Next.js 13", "Drizzle ORM", "Supabase", "Tailwind", "WebSockets", "Redis"],
+    links: [
+
+    ],
+    component: (
+      <div className="flex gap-4 mt-4">
+        <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+          <a href="https://github.com/dhakarRaghu/Saas_colab_Space_" target="_blank" rel="noopener noreferrer">View code</a>
+        </button>
+        <button className="border border-gray-600 text-gray-300 px-6 py-2 rounded-lg hover:border-blue-500 hover:text-blue-500 transition duration-300">
+          <a href="#">Explore Features</a>
+        </button>
+      </div>
+    ),
+  },
 ]
 
 const Projects: React.FC<ProjectsProps> = ({ className, autoPlayInterval = 5000 }) => {

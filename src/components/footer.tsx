@@ -69,7 +69,7 @@ const Footer: React.FC = () => {
 
         {/* Copyright */}
         <div className="border-t border-neutral-800 mt-8 pt-8 text-center">
-          <p className="text-neutral-400">© 2024 Raghvendra Singh Dhakar. All rights reserved.</p>
+          <p className="text-neutral-400">© 2025 Raghvendra Singh Dhakar. All rights reserved.</p>
         </div>
       </div>
     </footer>
