@@ -6,6 +6,8 @@ import { motion, AnimatePresence, type Variants } from "framer-motion"
 import Image from "next/image"
 import { IconArrowLeft, IconArrowRight, IconX, IconExternalLink } from "@tabler/icons-react"
 import { cn } from "@/lib/utils"
+import { Button } from "./ui/button"
+import Link from "next/link"
 
 // Define Project interface
 interface Project {
@@ -28,6 +30,28 @@ interface ProjectsProps {
 const projects: Project[] = [
   {
     id: 1,
+    title: "Insights",
+    content:
+      "Insights is an AI-powered e-learning platform built to enhance the learning experience by providing personalized courses, intelligent content generation, and interactive features. It leverages AI to summarize YouTube videos, generate contextual quizzes, and allow users to create and share custom learning modules.",
+    image: "/insights.png",
+    tech: ["Next.js 15", "Google Gemini", "Typescript", "Tailwind" , "Prisma"],
+    links: [
+    ],
+    component: (
+      <div className="flex gap-4 mt-4">
+      <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+        <a href="https://github.com/dhakarRaghu/Insights" target="_blank" rel="noopener noreferrer">View code</a>
+      </button>
+      <Link href="https://insights.raghvendra.tech" target="_blank">
+      <Button className="border border-gray-600 text-gray-300 px-6 py-2 rounded-lg hover:border-blue-500 hover:text-blue-500 transition duration-300">
+        Explore Features
+      </Button>
+      </Link>
+    </div>
+    ),
+  },
+  {
+    id: 2,
     title: "GitBuddy Live",
     content:
       "A full-stack AI-powered GitHub SaaS platform for enhanced coding workflow with automatic code reviews and AI-powered suggestions.",
@@ -38,16 +62,16 @@ const projects: Project[] = [
     component: (
       <div className="flex gap-4 mt-4">
       <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
-        <a href="https://github.com/dhakarRaghu/GitBuddy">View code</a>
+        <a href="https://github.com/dhakarRaghu/GitBuddy" target="_blank" rel="noopener noreferrer">View code</a>
       </button>
       <button className="border border-gray-600 text-gray-300 px-6 py-2 rounded-lg hover:border-blue-500 hover:text-blue-500 transition duration-300">
-        <a href="https://git-buddy-69w18hzyp-raghvendra-singh-dhakars-projects.vercel.app/">Explore Features</a>
+        <a href="https://git-buddy-69w18hzyp-raghvendra-singh-dhakars-projects.vercel.app/" target="_blank" rel="noopener noreferrer">Explore Features</a>
       </button>
     </div>
     ),
   },
   {
-    id: 2,
+    id: 3,
     title: "Learnify",
     content:
       "Engineered an AI-powered e-learning platform that offers personalized, dynamic courses with unit-wise breakdowns and interactive chapters. Built an intelligent content generation system that automatically creates structured learning alongside YouTube videos to enhance the learning experience.",
@@ -58,16 +82,16 @@ const projects: Project[] = [
     component: (
       <div className="flex gap-4 mt-4">
         <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
-          <a href="https://github.com/dhakarRaghu/Learnify">View code</a>
+          <a href="https://github.com/dhakarRaghu/Learnify" target="_blank" rel="noopener noreferrer">View code</a>
         </button>
         <button className="border border-gray-600 text-gray-300 px-6 py-2 rounded-lg hover:border-blue-500 hover:text-blue-500 transition duration-300">
-          <a href="https://learnify-chi.vercel.app/">Explore Features</a>
+          <a href="https://learnify-chi.vercel.app/" target="_blank" rel="noopener noreferrer">Explore Features</a>
         </button>
       </div>
     ),
   },
   {
-    id: 3,
+    id: 4,
     title: "WebGenie",
     content:
       "WebGen is a customizable web development starter kit generator that lets you create a pre-configured project with your preferred frameworks, tools, and integrations. With just a few clicks, you can set up a Next.js project with Prisma or Mongoose, TailwindCSS, and TypeScript, ready for development.",
@@ -78,16 +102,16 @@ const projects: Project[] = [
     component: (
       <div className="flex gap-4 mt-4">
         <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
-          <a href="https://github.com/dhakarRaghu/WebGenie--Cli-Integration">View code</a>
+          <a href="https://github.com/dhakarRaghu/WebGenie--Cli-Integration" target="_blank" rel="noopener noreferrer">View code</a>
         </button>
         <button className="border border-gray-600 text-gray-300 px-6 py-2 rounded-lg hover:border-blue-500 hover:text-blue-500 transition duration-300">
-          <a href="https://web-genie-one.vercel.app/">Explore Features</a>
+          <a href="https://web-genie-one.vercel.app/" target="_blank" rel="noopener noreferrer">Explore Features</a>
         </button>
       </div>
     ),
   },
   {
-    id: 4,
+    id: 5,
     title: "Realtime Collaborative Workspace",
     content:
       "A real-time collaborative document workspace with live cursors, text selection, and presence indicators, using WebSocket for real-time updates.",
@@ -99,41 +123,11 @@ const projects: Project[] = [
     component: (
       <div className="flex gap-4 mt-4">
         <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
-          <a href="https://github.com/dhakarRaghu/Saas_colab_Space_">View code</a>
+          <a href="https://github.com/dhakarRaghu/Saas_colab_Space_" target="_blank" rel="noopener noreferrer">View code</a>
         </button>
         <button className="border border-gray-600 text-gray-300 px-6 py-2 rounded-lg hover:border-blue-500 hover:text-blue-500 transition duration-300">
           <a href="#">Explore Features</a>
         </button>
-      </div>
-    ),
-  },
-  {
-    id: 5,
-    title: "Realtime Collaborative Workspace",
-    content:
-      "A real-time collaborative document workspace with live cursors, text selection, and presence indicators, using WebSocket for real-time updates.",
-    image: "/me.jpg",
-    tech: ["Next.js 13", "Drizzle ORM", "Supabase", "Tailwind", "WebSockets", "Redis"],
-    links: [
-      { label: "View Code", href: "#" },
-      { label: "Live Demo", href: "#" },
-    ],
-    component: (
-      <div className="mt-4">
-        <p className="text-gray-400 mb-2">
-          Live Users: <span className="text-green-500">12</span>
-        </p>
-        <div className="flex gap-2">
-          {["User 1", "User 2", "User 3"].map((user, index) => (
-            <div
-              key={index}
-              className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm"
-            >
-              {user[5]}
-            </div>
-          ))}
-          <span className="text-gray-400">+9</span>
-        </div>
       </div>
     ),
   },
