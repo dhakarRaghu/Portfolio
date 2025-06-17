@@ -87,7 +87,7 @@ const Contact: React.FC<ContactProps> = ({ className }) => {
               </motion.div>
               <motion.div className="mt-8" variants={childFadeIn}>
                 <a
-                  href="/raghvendra_s.pdf"
+                  href="/resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"

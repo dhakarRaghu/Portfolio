@@ -103,7 +103,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
                 </Link>
               </Button>
               <Button asChild variant="outline">
-                <Link href="/raghvendra.pdf" target="_blank" rel="noopener noreferrer">
+                <Link href="/resume.pdf" target="_blank" rel="noopener noreferrer">
                   View Resume
                 </Link>
               </Button>
