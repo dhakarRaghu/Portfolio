@@ -199,7 +199,7 @@ const Projects: React.FC<ProjectsProps> = ({ className, autoPlayInterval = 5000 
           viewport={{ once: true }}
           variants={fadeInUp}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">Key Projects</h2>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">Projects</h2>
           <div className="w-20 h-1 bg-blue-500 mx-auto"></div>
         </motion.div>
 

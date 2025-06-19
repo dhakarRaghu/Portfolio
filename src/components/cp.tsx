@@ -50,9 +50,9 @@ const CP: React.FC<ProjectsProps> = ({ className }) => {
     {
       platform: "CodeChef",
       username: "@raghvendra1853",
-      rating: "3 stars (1762)",
+      rating: "4 stars (1818)",
       problemsSolved: "100+",
-      notableAchievement: "Reached rank with consistent problem-solving .",
+      notableAchievement: "Reached 4 stars with consistent problem-solving.",
       src: "/codechef.png",
       profileLink: "https://www.codechef.com/users/raghvendra_04",
     },
