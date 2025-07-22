@@ -1,152 +1,198 @@
-"use client"; // Mark as Client Component for framer-motion animations
+'use client';
 
-import { motion, Variants } from "framer-motion";
+import { useState } from 'react';
+import { GraduationCap, MapPin, Calendar, Star, Code, Database, Globe, Zap } from 'lucide-react';
 
-// Define props for About component
-interface AboutProps {
-  className?: string;
-}
+const About = () => {
+  const [activeSkillCategory, setActiveSkillCategory] = useState('languages');
 
-// Data for the sliding cards
-const expertiseCards = [
-  {
-    title: "FullStack Developer",
-    description: "Expertise in building scalable systems",
-    icon: (
-      <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4M12 4v16" />
-      </svg>
-    ),
-  },
-  {
-    title: "Problem Solving",
-    description: "Strong algorithmic skills with 1000+ problems solved",
-    icon: (
-        <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-      </svg>
-    ),
-  },
-  {
-    title: "AI Integration",
-    description: "Experience with AI tools and implementations",
-    icon: (
-      <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4M12 4v16" />
-      </svg>
-    ),
-  },
-];
-
-const About: React.FC<AboutProps> = ({ className }) => {
-  // Animation variants for sliding effect
-  const slideInLeft: Variants = {
-    hidden: { opacity: 0, x: -100 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
+  const skillCategories = {
+    languages: {
+      icon: Code,
+      title: 'Languages',
+      skills: ['C', 'C++', 'Python', 'JavaScript', 'TypeScript'],
+    },
+    web: {
+      icon: Globe,
+      title: 'Web Development',
+      skills: ['React', 'Next.js', 'Node.js', 'Express.js', 'Langchain', 'WebSockets'],
+    },
+    database: {
+      icon: Database,
+      title: 'Databases & ORMs',
+      skills: ['MongoDB', 'PostgreSQL', 'Prisma', 'Supabase', 'Redis', 'Drizzle ORM'],
+    },
+    tools: {
+      icon: Zap,
+      title: 'Developer Tools',
+      skills: ['VS Code', 'Postman', 'Git', 'GitHub', 'Docker'],
     },
   };
 
-  const fadeInUp: Variants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut", delay: 0.2 },
-    },
-  };
-
-  // Animation for cards sliding in from right and stacking
-  const cardSlide: Variants = {
-    hidden: { opacity: 0, x: 100 },
-    visible: (i: number) => ({
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut",
-        delay: i * 0.5, // Stagger each card by 0.5 seconds
-      },
-    }),
-  };
+  const quickFacts = [
+    { label: 'Current GPA', value: '7.9/10', icon: Star },
+    { label: 'Problems Solved', value: '1200+', icon: Code },
+    { label: 'Contest Participations', value: '50+', icon: Zap },
+    { label: 'Years of Experience', value: '3+', icon: Calendar },
+  ];
 
   return (
-    <section id="about" className={`py-20 bg-neutral-900 ${className || ''}`}>
+    <section id="about" className="py-20 bg-secondary/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Title with fade-in-up effect */}
-        <motion.div
-          className="text-center mb-16"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={fadeInUp}
-        >
-          <h2 className="text-3xl font-bold text-white mb-4">About Me</h2>
-          <div className="w-20 h-1 bg-blue-500 mx-auto"></div>
-        </motion.div>
+        <div className="text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+            About <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Me</span>
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Passionate about solving complex problems and building innovative solutions
+          </p>
+        </div>
 
-        <div className="grid md:grid-cols-2 gap-12 items-start">
-          {/* Left Content - Slide in from Left */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={slideInLeft}
-          >
-            <h3 className="text-2xl font-bold text-blue-500 mb-6">
-              FullStack Developer & Competitive Programmer
-            </h3>
-            <p className="text-gray-300 mb-6">
-              Currently pursuing Bachelor of Technology in Computer Science at Indian Institute of Information Technology Nagpur. My passion lies in backend development, artificial intelligence, and competitive programming.
-            </p>
-            <p className="text-gray-300 mb-6">
-              With expertise in building scalable backend systems and a strong foundation in data structures and algorithms, I've solved 1000+ problems on Codeforces and contributed to open-source projects.
-            </p>
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              <div className="bg-neutral-700 p-4 rounded-lg">
-                <h4 className="text-blue-500 text-lg font-semibold mb-2">1000+</h4>
-                <p className="text-gray-300">CP Problems Solved</p>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          {/* Personal Story */}
+          <div className="space-y-6">
+            <div className="prose prose-lg text-muted-foreground space-y-4">
+              <p>
+                I'm a Computer Science student at <strong className="text-foreground">IIIT Nagpur</strong> with a 
+                passion for competitive programming and full-stack development. My journey in tech started with 
+                curiosity about algorithms and has evolved into building AI-powered applications.
+              </p>
+              
+              <p>
+                With an <strong className="text-foreground">Expert rating on Codeforces</strong> and 
+                <strong className="text-foreground"> Knight badge on LeetCode</strong>, I've solved over 1200 
+                algorithmic problems. This strong foundation in data structures and algorithms drives my approach 
+                to building efficient, scalable applications.
+              </p>
+              
+              <p>
+                Currently focused on <strong className="text-foreground">AI/ML integration</strong> in web applications, 
+                I've developed projects like an AI-powered e-learning platform and GitHub SaaS tool that help 
+                thousands of users worldwide.
+              </p>
+            </div>
+
+            {/* Education */}
+            <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-lg p-6 hover:border-primary/50 transition-all duration-300">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="p-2 bg-primary/20 rounded-lg">
+                  <GraduationCap className="h-5 w-5 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold">Education</h3>
               </div>
-              <div className="bg-neutral-700 p-4 rounded-lg">
-                <h4 className="text-blue-500 text-lg font-semibold mb-2">Expert(1686)</h4>
-                <p className="text-gray-300">Codeforces Rating</p>
+              
+              <div className="space-y-2">
+                <h4 className="font-medium text-foreground">B.Tech in Computer Science Engineering</h4>
+                <p className="text-muted-foreground">Indian Institute of Information Technology Nagpur</p>
+                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                  <span className="flex items-center space-x-1">
+                    <Calendar className="h-4 w-4" />
+                    <span>Nov 2022 - Present</span>
+                  </span>
+                  <span className="flex items-center space-x-1">
+                    <MapPin className="h-4 w-4" />
+                    <span>Nagpur, Maharashtra</span>
+                  </span>
+                  <span className="flex items-center space-x-1">
+                    <Star className="h-4 w-4" />
+                    <span>GPA: 7.9</span>
+                  </span>
+                </div>
+                
+                <div className="mt-3">
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Coursework:</strong> Data Structures and Algorithms, Database Management System (DBMS), 
+                    Object-Oriented Programming (OOPs), Computer Networks, Operating Systems
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="flex flex-wrap gap-3">
-              <span className="px-4 py-2 bg-neutral-700 rounded-full text-gray-300">Next.js</span>
-              <span className="px-4 py-2 bg-neutral-700 rounded-full text-gray-300">Express.js</span>
-              <span className="px-4 py-2 bg-neutral-700 rounded-full text-gray-300">PostgreSQL</span>
-              <span className="px-4 py-2 bg-neutral-700 rounded-full text-gray-300">MongoDB</span>
-              <span className="px-4 py-2 bg-neutral-700 rounded-full text-gray-300">Docker</span>
-            </div>
-          </motion.div>
 
-          {/* Right Content - Cards Slide in and Stack Vertically */}
-          <motion.div
-            className="space-y-6"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {expertiseCards.map((card, index) => (
-              <motion.div
-                key={index}
-                custom={index}
-                variants={cardSlide}
-                className="bg-neutral-900 p-6 rounded-xl border border-neutral-700"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="bg-blue-500/20 p-3 rounded-lg">{card.icon}</div>
-                  <div>
-                    <h4 className="text-white font-semibold">{card.title}</h4>
-                    <p className="text-gray-400">{card.description}</p>
+            {/* Quick Facts */}
+            <div className="grid grid-cols-2 gap-4">
+              {quickFacts.map(({ label, value, icon: Icon }) => (
+                <div
+                  key={label}
+                  className="group p-4 bg-card/30 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/50 transition-all duration-300 hover:scale-105"
+                >
+                  <div className="flex items-center space-x-2 mb-1">
+                    <Icon className="h-4 w-4 text-primary group-hover:scale-110 transition-transform duration-300" />
+                    <span className="text-sm text-muted-foreground">{label}</span>
+                  </div>
+                  <div className="text-lg font-bold text-foreground">{value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Skills Section */}
+          <div className="space-y-6">
+            <h3 className="text-2xl font-semibold mb-6">Technical Skills</h3>
+            
+            {/* Skill Category Tabs */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              {Object.entries(skillCategories).map(([key, { icon: Icon, title }]) => (
+                <button
+                  key={key}
+                  onClick={() => setActiveSkillCategory(key)}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300 ${
+                    activeSkillCategory === key
+                      ? 'bg-primary text-primary-foreground shadow-lg'
+                      : 'bg-secondary/20 text-muted-foreground hover:bg-secondary/30'
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span>{title}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Skills Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {skillCategories[activeSkillCategory as keyof typeof skillCategories].skills.map((skill, index) => (
+                <div
+                  key={skill}
+                  className="group p-4 bg-card/30 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/50 transition-all duration-300 hover:scale-105 text-center"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <span className="font-medium text-foreground group-hover:text-primary transition-colors duration-300">
+                    {skill}
+                  </span>
+                  
+                  {/* Skill Level Indicator */}
+                  <div className="mt-2 h-1 bg-border rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500 group-hover:from-secondary group-hover:to-primary"
+                      style={{ width: `${Math.random() * 30 + 70}%` }}
+                    />
                   </div>
                 </div>
-              </motion.div>
-            ))}
-          </motion.div>
+              ))}
+            </div>
+
+            {/* Skill Highlights */}
+            <div className="mt-8 p-6 bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 rounded-lg">
+              <h4 className="font-semibold text-foreground mb-3">Current Focus Areas</h4>
+              <ul className="space-y-2 text-muted-foreground">
+                <li className="flex items-center space-x-2">
+                  <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                  <span>AI/ML Integration in Web Applications</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <div className="w-1.5 h-1.5 bg-secondary rounded-full" />
+                  <span>Advanced Competitive Programming Techniques</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <div className="w-1.5 h-1.5 bg-accent rounded-full" />
+                  <span>Real-time Collaborative Applications</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                  <span>Cloud Architecture & DevOps</span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </section>

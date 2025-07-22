@@ -1,210 +1,295 @@
-"use client"; // Mark as Client Component for framer-motion animations
+'use client';
 
-import React from "react";
-import { motion, Variants } from "framer-motion";
+import { useState } from 'react';
+import { Mail, Phone, MapPin, Send, Github, Linkedin, ExternalLink, CheckCircle } from 'lucide-react';
 
-// Define props for Contact component
-interface ContactProps {
-  className?: string;
-}
+const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-// Define animation variants at top level
-const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
-};
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
-const slideInLeft: Variants = {
-  hidden: { opacity: 0, x: -100 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } },
-};
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Simulate form submission
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    setIsSubmitting(false);
+    setIsSubmitted(true);
+    
+    // Reset form after 3 seconds
+    setTimeout(() => {
+      setIsSubmitted(false);
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    }, 3000);
+  };
 
-const slideInRight: Variants = {
-  hidden: { opacity: 0, x: 100 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } },
-};
+  const contactInfo = [
+    {
+      icon: Mail,
+      label: 'Email',
+      value: 'raghvendrasinghdhakar2@gmail.com',
+      href: 'mailto:raghvendrasinghdhakar2@gmail.com',
+      color: 'from-red-500 to-pink-500',
+    },
+    {
+      icon: Phone,
+      label: 'Phone',
+      value: '+91-8435271074',
+      href: 'tel:+918435271074',
+      color: 'from-green-500 to-emerald-500',
+    },
+    {
+      icon: MapPin,
+      label: 'Location',
+      value: 'Nagpur, Maharashtra',
+      href: '#',
+      color: 'from-blue-500 to-cyan-500',
+    },
+  ];
 
-const staggerChildren: Variants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
-};
+  const socialLinks = [
+    {
+      name: 'GitHub',
+      icon: Github,
+      href: '#',
+      color: 'hover:text-gray-600 dark:hover:text-gray-300',
+    },
+    {
+      name: 'LinkedIn',
+      icon: Linkedin,
+      href: '#',
+      color: 'hover:text-blue-600',
+    },
+    {
+      name: 'Portfolio',
+      icon: ExternalLink,
+      href: '#',
+      color: 'hover:text-primary',
+    },
+  ];
 
-const childFadeIn: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-};
-
-const Contact: React.FC<ContactProps> = ({ className }) => {
   return (
-    <section id="contact" className={`py-20 bg-neutral-800 ${className || ''}`}>
+    <section id="contact" className="py-20 bg-secondary/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="text-center mb-16"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={fadeInUp}
-        >
-          <motion.h2 className="text-3xl font-bold text-white mb-4" variants={childFadeIn}>
-            Get In Touch
-          </motion.h2>
-          <motion.div className="w-20 h-1 bg-blue-500 mx-auto" variants={childFadeIn}></motion.div>
-          <motion.p className="text-gray-400 mt-6" variants={childFadeIn}>
-            Feel free to reach out for collaborations or just a friendly chat
-          </motion.p>
-        </motion.div>
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+            Get In <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Touch</span>
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Ready to discuss opportunities, collaborations, or just want to connect? I'd love to hear from you!
+          </p>
+        </div>
 
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Information */}
-          <motion.div
-            className="space-y-8"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={slideInLeft}
-          >
-            <div className="bg-neutral-900 p-6 rounded-xl">
-              <motion.h3
-                className="text-xl font-semibold text-white mb-6"
-                variants={childFadeIn}
-              >
-                Contact Information
-              </motion.h3>
-              <motion.div className="space-y-4" variants={staggerChildren}>
-                <ContactItem
-                  href="mailto:raghvendrasinghdhakar2@gmail.com"
-                  label="raghvendrasinghdhakar2@gmail.com"
-                  icon="email"
-                />
-                <ContactItem
-                  href="https://linkedin.com/in/raghvendra1853"
-                  label="linkedin.com/in/raghvendra1853"
-                  icon="linkedin"
-                />
-                <ContactItem href="https://github.com/dhakarRaghu" label="github.com/dhakarRaghu" icon="github" />
-                <ContactItem href="https://x.com/Raghvendra56595" label="x.com/Raghvendra56595" icon="twitter" />
-                <ContactItem href="tel:+918435271074" label="+91 8435271074" icon="phone" />
-              </motion.div>
-              <motion.div className="mt-8" variants={childFadeIn}>
-                <a
-                  href="/resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
-                >
-                  View Resume
-                </a>
-              </motion.div>
+          <div className="space-y-8">
+            <div>
+              <h3 className="text-2xl font-semibold mb-6">Let's Connect</h3>
+              <p className="text-muted-foreground mb-8 leading-relaxed">
+                I'm always open to discussing new opportunities, interesting projects, or potential collaborations. 
+                Whether you're looking for a competitive programmer, full-stack developer, or just want to chat about tech, 
+                feel free to reach out!
+              </p>
             </div>
-          </motion.div>
+
+            {/* Contact Info Cards */}
+            <div className="space-y-4">
+              {contactInfo.map(({ icon: Icon, label, value, href, color }) => (
+                <a
+                  key={label}
+                  href={href}
+                  className="group flex items-center space-x-4 p-4 bg-card/30 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/50 transition-all duration-300 hover:scale-105"
+                >
+                  <div className={`p-3 rounded-lg bg-gradient-to-r ${color}`}>
+                    <Icon className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-foreground group-hover:text-primary transition-colors duration-300">
+                      {label}
+                    </div>
+                    <div className="text-muted-foreground">{value}</div>
+                  </div>
+                  <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors duration-300 ml-auto" />
+                </a>
+              ))}
+            </div>
+
+            {/* Social Links */}
+            <div>
+              <h4 className="font-semibold text-foreground mb-4">Follow Me</h4>
+              <div className="flex space-x-4">
+                {socialLinks.map(({ name, icon: Icon, href, color }) => (
+                  <a
+                    key={name}
+                    href={href}
+                    className={`group p-3 bg-secondary/20 hover:bg-secondary/30 rounded-lg transition-all duration-300 hover:scale-110 ${color}`}
+                    aria-label={name}
+                  >
+                    <Icon className="h-5 w-5" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Availability Status */}
+            <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <span className="text-green-600 dark:text-green-400 font-medium">Available for new opportunities</span>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2">
+                Open to full-time positions, internships, and freelance projects starting immediately.
+              </p>
+            </div>
+          </div>
 
           {/* Contact Form */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={slideInRight}
-          >
-            <form className="bg-neutral-900 p-6 rounded-xl">
-              <motion.div className="space-y-6" variants={staggerChildren}>
-                <FormField className='py-1' label="Name" id="name" type="text"  />
-                <FormField className='py-1' label="Email" id="email" type="email" />
-                <FormField  className='py-1' label="Subject" id="subject" type="text" />
-                <FormField  className='py-1'label="Message" id="message" type="textarea" />
-                <motion.button
+          <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-8">
+            <h3 className="text-2xl font-semibold mb-6">Send a Message</h3>
+            
+            {isSubmitted ? (
+              <div className="text-center py-12">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-4">
+                  <CheckCircle className="h-8 w-8 text-green-500" />
+                </div>
+                <h4 className="text-xl font-semibold text-foreground mb-2">Message Sent!</h4>
+                <p className="text-muted-foreground">
+                  Thank you for reaching out. I'll get back to you as soon as possible.
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
+                      Name *
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+                      placeholder="Your name"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
+                      Email *
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+                      placeholder="your@email.com"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="subject" className="block text-sm font-medium text-foreground mb-2">
+                    Subject *
+                  </label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300"
+                    placeholder="What's this about?"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
+                    Message *
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    rows={6}
+                    className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300 resize-none"
+                    placeholder="Tell me more about your project or opportunity..."
+                  />
+                </div>
+
+                <button
                   type="submit"
-                  className="w-full px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
-                  variants={childFadeIn}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  disabled={isSubmitting}
+                  className="group w-full flex items-center justify-center space-x-2 px-6 py-3 bg-primary hover:bg-primary/90 disabled:bg-primary/50 text-primary-foreground rounded-lg font-medium transition-all duration-300 hover:scale-[1.02] disabled:cursor-not-allowed"
                 >
-                  Send Message
-                </motion.button>
-              </motion.div>
-            </form>
-          </motion.div>
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                      <span>Send Message</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+
+        {/* Quick CTA */}
+        <div className="mt-20 text-center">
+          <div className="max-w-3xl mx-auto p-8 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 border border-primary/20 rounded-xl">
+            <h3 className="text-2xl font-semibold text-foreground mb-4">
+              Ready to work together?
+            </h3>
+            <p className="text-muted-foreground mb-6">
+              I'm always excited to take on new challenges and contribute to meaningful projects. 
+              Let's build something amazing together!
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <a
+                href="mailto:raghvendrasinghdhakar2@gmail.com"
+                className="group flex items-center space-x-2 px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-all duration-300 hover:scale-105"
+              >
+                <Mail className="h-5 w-5" />
+                <span>Email Me</span>
+              </a>
+              <button className="group flex items-center space-x-2 px-6 py-3 bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/50 rounded-lg transition-all duration-300 hover:scale-105">
+                <ExternalLink className="h-5 w-5" />
+                <span>Download Resume</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
 };
-
-const ContactItem: React.FC<{ href: string; label: string; icon: string }> = ({ href, label, icon }) => (
-  <motion.a
-    href={href}
-    className="flex items-center gap-4 text-gray-300 hover:text-blue-500 transition-colors"
-    variants={childFadeIn}
-    whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
-  >
-    <div className="bg-neutral-800 p-3 rounded-lg">
-      {icon === "email" && (
-        <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M3 8l7.5 5L18 8M3 8l7.5 5L18 8M3 8l0 10c0 1.104.896 2 2 2h14c1.104 0 2-.896 2-2V8c0-1.104-.896-2-2-2H5c-1.104 0-2 .896-2 2z"
-          />
-        </svg>
-      )}
-      {icon === "phone" && (
-        <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M6 2h12c1.104 0 2 .896 2 2v16c0 1.104-.896 2-2 2H6c-1.104 0-2-.896-2-2V4c0-1.104.896-2 2-2zM12 18h0M8 2h8"
-          />
-        </svg>
-      )}
-      {icon === "twitter" && (
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-blue-500" viewBox="0 0 50 50">
-          <path
-            d="M 11 4 C 7.1456661 4 4 7.1456661 4 11 L 4 39 C 4 42.854334 7.1456661 46 11 46 L 39 46 C 42.854334 46 46 42.854334 46 39 L 46 11 C 46 7.1456661 42.854334 4 39 4 L 11 4 z M 11 6 L 39 6 C 41.773666 6 44 8.2263339 44 11 L 44 39 C 44 41.773666 41.773666 44 39 44 L 11 44 C 8.2263339 44 6 41.773666 6 39 L 6 11 C 6 8.2263339 8.2263339 6 11 6 z M 13.085938 13 L 22.308594 26.103516 L 13 37 L 15.5 37 L 23.4375 27.707031 L 29.976562 37 L 37.914062 37 L 27.789062 22.613281 L 36 13 L 33.5 13 L 26.660156 21.009766 L 21.023438 13 L 13.085938 13 z M 16.914062 15 L 19.978516 15 L 34.085938 35 L 31.021484 35 L 16.914062 15 z"
-            fill="currentColor"
-          />
-        </svg>
-      )}
-      {icon === "linkedin" && (
-        <svg className="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 448 512">
-          <path d="M100.28 448H7.4V148.9h92.88zm-46.44-338C24.09 110 0 85.51 0 55.78 0 25.07 24.09 0 53.84 0c29.75 0 53.84 25.07 53.84 55.78 0 29.73-24.09 54.22-53.84 54.22zM447.9 448h-92.68V302.4c0-34.7-.7-79.3-48.4-79.3-48.4 0-55.8 37.8-55.8 76.9V448h-92.7V148.9h89.1v40.8h1.3c12.4-23.5 42.5-48.4 87.5-48.4 93.7 0 111 61.6 111 141.3V448z" />
-        </svg>
-      )}
-      {icon === "github" && (
-        <svg className="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.757-1.333-1.757-1.089-.744.084-.729.084-.729 1.205.084 1.84 1.236 1.84 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.418-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.47-2.38 1.236-3.22-.124-.303-.536-1.523.117-3.176 0 0 1.008-.322 3.3 1.23a11.52 11.52 0 013.003-.404c1.02.005 2.045.138 3.003.404 2.29-1.552 3.296-1.23 3.296-1.23.655 1.653.243 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.807 5.625-5.48 5.92.43.37.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .322.216 .694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-          />
-        </svg>
-      )}
-    </div>
-    <span>{label}</span>
-  </motion.a>
-);
-
-const FormField: React.FC<{ label: string; id: string; type: string; className?: string }> = ({ label, id, type, className }) => (
-  <motion.div variants={childFadeIn}>
-    <label htmlFor={id} className="block text-sm font-medium text-gray-300">
-      {label}
-    </label>
-    {type === "textarea" ? (
-      <textarea
-        id={id}
-        name={id}
-        rows={4}
-        className={`mt-1 block w-full rounded-md bg-neutral-800 border-neutral-700 text-gray-300 focus:border-blue-500 focus:ring-blue-500 ${className || ''}`}
-      />
-    ) : (
-      <input
-        type={type}
-        id={id}
-        name={id}
-        className={`mt-1 block w-full rounded-md bg-neutral-800 border-neutral-700 text-gray-300 focus:border-blue-500 focus:ring-blue-500 ${className || ''}`}
-      />
-    )}
-  </motion.div>
-);
 
 export default Contact;
