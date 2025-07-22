@@ -12,7 +12,7 @@ const Projects = () => {
       title: 'Insights | AI-Powered E-Learning Platform',
       description: 'AI-driven e-learning platform offering 100+ personalized courses with unit-wise breakdowns and interactive chapters to enhance user learning engagement.',
       longDescription: 'Developed an intelligent content generation system that auto-generates structured materials, integrates YouTube videos, and enables users to create and share custom learning modules, fostering collaborative education.',
-      image: 'https://images.pexels.com/photos/5428836/pexels-photo-5428836.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750',
+      image: '/insights.png',
       tags: ['Next.js', 'Google Gemini AI', 'TypeScript', 'PostgreSQL', 'Prisma', 'Tailwind CSS'],
       category: 'ai',
       featured: true,
@@ -26,7 +26,7 @@ const Projects = () => {
       title: 'GitBuddy | AI-Powered GitHub SaaS',
       description: 'Full-stack AI-powered GitHub SaaS to enhance developer workflows with automatic code analysis, AI suggestions, and advanced code search capabilities.',
       longDescription: 'Integrated Google Gemini AI and Assembly AI for real-time code analysis and meeting transcription. Features AI chatbot for codebase insights and multi-project management.',
-      image: 'https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750',
+      image: '/gitbuddy.png',
       tags: ['Next.js', 'Google Gemini AI', 'Assembly AI', 'Langchain', 'Prisma', 'TypeScript'],
       category: 'ai',
       featured: true,
@@ -40,7 +40,7 @@ const Projects = () => {
       title: 'WebGenie | Starter Kit Generator',
       description: 'Web development starter kit generator that allows users to create projects with customizable tech stacks, including Prisma, Authentication, and various frameworks.',
       longDescription: 'Engineered an efficient CLI-based automation system that streamlines project setup with pre-configured dependencies, reducing setup time by 50% while ensuring best coding practices.',
-      image: 'https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750',
+      image: '/webgenie.png',
       tags: ['Next.js', 'Node.js', 'React', 'TypeScript', 'Tailwind CSS'],
       category: 'web',
       featured: false,
@@ -54,7 +54,7 @@ const Projects = () => {
       title: 'Realtime Collaborative Workspace',
       description: 'Real-time collaborative document workspace enabling multiple users to work simultaneously, featuring live cursors, text selection, and presence indicators.',
       longDescription: 'Implemented WebSockets for instant UI updates and Redis Pub/Sub for efficient real-time messaging, ensuring smooth collaboration without server limitations.',
-      image: 'https://images.pexels.com/photos/3184306/pexels-photo-3184306.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750',
+      image: 'cypress.png',
       tags: ['Next.js', 'Drizzle ORM', 'Supabase', 'WebSockets', 'Redis', 'Tailwind CSS'],
       category: 'web',
       featured: false,
@@ -101,7 +101,7 @@ const Projects = () => {
                 className="group relative bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10"
               >
                 {/* Project Image */}
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative h-56 overflow-hidden">
                   <img
                     src={project.image}
                     alt={project.title}
@@ -223,7 +223,7 @@ const Projects = () => {
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Project Image */}
-              <div className="relative h-40 overflow-hidden">
+              <div className="relative h-48 overflow-hidden">
                 <img
                   src={project.image}
                   alt={project.title}

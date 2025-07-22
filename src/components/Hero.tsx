@@ -72,7 +72,7 @@ const Hero = () => {
               
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold">
                 <span className="block">Hi, I'm</span>
-                <span className="block bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent animate-gradient">
+                <span className="block p-2 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent animate-gradient">
                   Raghvendra Singh
                 </span>
               </h1>
@@ -136,7 +136,7 @@ const Hero = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary rounded-full blur-xl opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" />
               <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden border-4 border-primary/20 group-hover:border-primary/40 transition-all duration-300">
                 <img
-                  src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400"
+                  src="/me.jpg"
                   alt="Raghvendra Singh"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                 />
@@ -147,7 +147,7 @@ const Hero = () => {
               <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-secondary/20 rounded-full animate-pulse" />
             </div>
 
-            {/* Quick Stats Grid */}
+            {/* Quick Stats Grid
             <div className="grid grid-cols-2 gap-4 w-full max-w-md">
               {stats.map(({ label, value, icon: Icon }, index) => (
                 <div
@@ -162,10 +162,10 @@ const Hero = () => {
                   <div className="text-xl font-bold text-foreground">{value}</div>
                   
                   {/* Hover Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  {/* <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
               ))}
-            </div>
+            {/* </div> */}
           </div>
         </div>
       </div>
