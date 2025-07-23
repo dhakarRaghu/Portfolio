@@ -1,3 +1,4 @@
+// tsconfig.json  (at the repo root, next to package.json)
 {
   "compilerOptions": {
     "target": "ES2017",
@@ -8,20 +9,24 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",       // ← must be "node" for Next/Vercel
+    "baseUrl": ".",                   // ← all non-relative imports start from project root
+    "paths": {
+      "@/*": ["src/*"]                // ← "@/foo" → "<root>/src/foo"
+    },
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
     "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+      { "name": "next" }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
   "exclude": ["node_modules"]
 }
