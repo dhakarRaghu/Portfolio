@@ -1,15 +1,8 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Lexend } from 'next/font/google';
+import { ThemeProvider } from '@/components/ui/ThemeProvider';
 
-const inter = Inter({ subsets: ['latin'] });
-import { Geist, Geist_Mono, Lexend } from "next/font/google";
-import { ThemeProvider } from '@/components/ThemeProvider';
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
 
 const lexend = Lexend({ subsets: ["latin"] });
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { Menu, X, Moon, Sun, Zap, Gamepad2, Monitor, Palette, Waves, TreePine, Sunset, Square } from "lucide-react"
-import { useTheme } from "./ThemeProvider"
+import { useTheme } from "./ui/ThemeProvider"
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
