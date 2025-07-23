@@ -135,13 +135,13 @@ const About = () => {
                 <button
                   key={key}
                   onClick={() => setActiveSkillCategory(key)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300 ${
+                  className={`group flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300 ${
                     activeSkillCategory === key
                       ? 'bg-primary text-primary-foreground shadow-lg'
-                      : 'bg-secondary/20 text-muted-foreground hover:bg-secondary/30'
+                      : 'bg-secondary/20 text-muted-foreground hover:bg-primary/30 hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/30 hover:scale-105 active:scale-95'
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
                   <span>{title}</span>
                 </button>
               ))}
@@ -152,7 +152,7 @@ const About = () => {
               {skillCategories[activeSkillCategory as keyof typeof skillCategories].skills.map((skill, index) => (
                 <div
                   key={skill}
-                  className="group p-4 bg-card/30 backdrop-blur-sm border border-border/50 rounded-lg hover:border-primary/50 transition-all duration-300 hover:scale-105 text-center"
+                  className="group p-4 bg-card/30 backdrop-blur-sm border border-border/50 rounded-lg hover:bg-primary/10 hover:border-primary hover:shadow-xl hover:shadow-primary/40 hover:scale-105 active:scale-95 transition-all duration-300 text-center"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <span className="font-medium text-foreground group-hover:text-primary transition-colors duration-300">
@@ -162,7 +162,7 @@ const About = () => {
                   {/* Skill Level Indicator */}
                   <div className="mt-2 h-1 bg-border rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500 group-hover:from-secondary group-hover:to-primary"
+                      className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500 group-hover:from-secondary group-hover:to-primary group-hover:w-[90%]"
                       style={{ width: `${Math.random() * 30 + 70}%` }}
                     />
                   </div>
