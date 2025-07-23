@@ -1,85 +1,84 @@
-'use client';
+"use client"
 
-import { useState, useEffect, useRef } from 'react';
-import { Menu, X, Moon, Sun, Zap, Gamepad2, Monitor, Palette, Waves, TreePine, Sunset, Square } from 'lucide-react';
-import { useTheme } from './ThemeProvider';
+import { useState, useEffect, useRef } from "react"
+import { Menu, X, Moon, Sun, Zap, Gamepad2, Monitor, Palette, Waves, TreePine, Sunset, Square } from "lucide-react"
+import { useTheme } from "./ThemeProvider"
 
 const Navigation = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
-  const navRef = useRef<HTMLElement>(null);
-  const { theme, setTheme } = useTheme();
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState("home")
+  const navRef = useRef<HTMLElement>(null)
+  const { theme, setTheme } = useTheme()
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-      
+      setScrolled(window.scrollY > 50)
       // Update active section based on scroll position
-      const sections = ['home', 'about', 'projects', 'achievements', 'experience', 'contact'];
-      const scrollPosition = window.scrollY + 100;
-      
+      const sections = ["home", "about", "projects", "achievements", "experience", "contact"]
+      const scrollPosition = window.scrollY + 100
+
       for (const section of sections) {
-        const element = document.getElementById(section);
+        const element = document.getElementById(section)
         if (element) {
-          const offsetTop = element.offsetTop;
-          const offsetHeight = element.offsetHeight;
-          
+          const offsetTop = element.offsetTop
+          const offsetHeight = element.offsetHeight
           if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section);
-            break;
+            setActiveSection(section)
+            break
           }
         }
       }
-    };
+    }
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   const navItems = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Achievements', href: '#achievements' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Contact', href: '#contact' },
-  ];
+    { name: "Home", href: "#home" },
+    { name: "About", href: "#about" },
+    { name: "Projects", href: "#projects" },
+    { name: "Achievements", href: "#achievements" },
+    { name: "Experience", href: "#experience" },
+    { name: "Contact", href: "#contact" },
+  ]
 
   const themes = {
-    light: { icon: Sun, name: 'Light', color: 'from-yellow-400 to-orange-500' },
-    dark: { icon: Moon, name: 'Dark', color: 'from-slate-600 to-slate-800' },
-    cyber: { icon: Zap, name: 'Cyber', color: 'from-cyan-400 to-blue-600' },
-    neon: { icon: Gamepad2, name: 'Neon', color: 'from-pink-500 to-purple-600' },
-    midnight: { icon: Monitor, name: 'Midnight', color: 'from-indigo-900 to-purple-900' },
-    ocean: { icon: Waves, name: 'Ocean', color: 'from-blue-500 to-teal-500' },
-    forest: { icon: TreePine, name: 'Forest', color: 'from-green-600 to-emerald-600' },
-    sunset: { icon: Sunset, name: 'Sunset', color: 'from-orange-500 to-red-500' },
-    monochrome: { icon: Square, name: 'Mono', color: 'from-gray-600 to-gray-800' },
-    system: { icon: Palette, name: 'System', color: 'from-purple-500 to-pink-500' },
-  };
+    light: { icon: Sun, name: "Light", color: "from-yellow-400 to-orange-500" },
+    dark: { icon: Moon, name: "Dark", color: "from-slate-600 to-slate-800" },
+    cyber: { icon: Zap, name: "Cyber", color: "from-cyan-400 to-blue-600" },
+    neon: { icon: Gamepad2, name: "Neon", color: "from-pink-500 to-purple-600" },
+    midnight: { icon: Monitor, name: "Midnight", color: "from-indigo-900 to-purple-900" },
+    ocean: { icon: Waves, name: "Ocean", color: "from-blue-500 to-teal-500" },
+    forest: { icon: TreePine, name: "Forest", color: "from-green-600 to-emerald-600" },
+    sunset: { icon: Sunset, name: "Sunset", color: "from-orange-500 to-red-500" },
+    monochrome: { icon: Square, name: "Mono", color: "from-gray-600 to-gray-800" },
+    system: { icon: Palette, name: "System", color: "from-purple-500 to-pink-500" },
+  }
 
   const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
+    const element = document.querySelector(href)
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" })
     }
-    setIsMenuOpen(false);
-  };
+    setIsMenuOpen(false)
+  }
 
   return (
     <>
-      <nav 
+      <nav
         ref={navRef}
         className={`fixed top-0 w-full z-40 transition-all duration-500 ${
-        scrolled 
-          ? 'bg-background/70 backdrop-blur-xl border-b border-border/30 shadow-lg shadow-primary/5' 
-          : 'bg-transparent'
-      }`}>
+          scrolled
+            ? "bg-background/70 backdrop-blur-xl border-b border-border/30 shadow-lg shadow-primary/5"
+            : "bg-transparent"
+        }`}
+      >
         {/* Animated background bar */}
         <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20 relative">
             {/* Logo */}
@@ -99,8 +98,8 @@ const Navigation = () => {
                     onClick={() => scrollToSection(item.href)}
                     className={`relative px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 group ${
                       activeSection === item.href.slice(1)
-                        ? 'text-primary bg-primary/20 shadow-lg shadow-primary/25'
-                        : 'text-muted-foreground hover:text-primary hover:bg-primary/10'
+                        ? "text-primary bg-primary/20 shadow-lg shadow-primary/25"
+                        : "text-muted-foreground hover:text-primary hover:bg-primary/10"
                     }`}
                   >
                     {item.name}
@@ -121,13 +120,17 @@ const Navigation = () => {
                   onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
                   className="group relative p-3 rounded-xl bg-card/30 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all duration-300 hover:scale-105"
                 >
-                  <div className={`absolute inset-0 rounded-xl bg-gradient-to-r ${themes[theme].color} opacity-0 group-hover:opacity-20 transition-opacity duration-300`} />
+                  <div
+                    className={`absolute inset-0 rounded-xl bg-gradient-to-r ${themes[theme].color} opacity-0 group-hover:opacity-20 transition-opacity duration-300`}
+                  />
                   {(() => {
-                    const CurrentThemeIcon = themes[theme].icon;
-                    return <CurrentThemeIcon className="h-5 w-5 relative z-10 group-hover:scale-110 transition-transform duration-300" />;
+                    const CurrentThemeIcon = themes[theme].icon
+                    return (
+                      <CurrentThemeIcon className="h-5 w-5 relative z-10 group-hover:scale-110 transition-transform duration-300" />
+                    )
                   })()}
                 </button>
-                
+
                 {isThemeMenuOpen && (
                   <div className="absolute right-0 mt-3 w-64 bg-card/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl shadow-primary/10 overflow-hidden">
                     <div className="p-2">
@@ -139,23 +142,37 @@ const Navigation = () => {
                           <button
                             key={themeName}
                             onClick={() => {
-                              setTheme(themeName as any);
-                              setIsThemeMenuOpen(false);
+                              setTheme(themeName as any)
+                              setIsThemeMenuOpen(false)
                             }}
                             className={`group relative p-3 rounded-xl text-left flex flex-col items-center space-y-2 hover:bg-secondary/20 transition-all duration-300 ${
-                              theme === themeName ? 'bg-primary/20 border border-primary/30' : 'border border-transparent'
+                              theme === themeName
+                                ? "bg-primary/20 border border-primary/30"
+                                : "border border-transparent"
                             }`}
                           >
-                            <div className={`absolute inset-0 rounded-xl bg-gradient-to-r ${themeData.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+                            <div
+                              className={`absolute inset-0 rounded-xl bg-gradient-to-r ${themeData.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
+                            />
                             {(() => {
-                              const ThemeOptionIcon = themeData.icon;
-                              return <ThemeOptionIcon className={`h-5 w-5 relative z-10 transition-all duration-300 ${
-                              theme === themeName ? 'text-primary scale-110' : 'text-muted-foreground group-hover:scale-110'
-                            }`} />;
+                              const ThemeOptionIcon = themeData.icon
+                              return (
+                                <ThemeOptionIcon
+                                  className={`h-5 w-5 relative z-10 transition-all duration-300 ${
+                                    theme === themeName
+                                      ? "text-primary scale-110"
+                                      : "text-muted-foreground group-hover:scale-110"
+                                  }`}
+                                />
+                              )
                             })()}
-                            <span className={`text-xs font-medium relative z-10 transition-colors duration-300 ${
-                              theme === themeName ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'
-                            }`}>
+                            <span
+                              className={`text-xs font-medium relative z-10 transition-colors duration-300 ${
+                                theme === themeName
+                                  ? "text-primary"
+                                  : "text-muted-foreground group-hover:text-foreground"
+                              }`}
+                            >
                               {themeData.name}
                             </span>
                             {theme === themeName && (
@@ -176,10 +193,11 @@ const Navigation = () => {
                   className="group relative p-3 rounded-xl bg-card/30 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all duration-300"
                 >
                   <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary/0 to-secondary/0 group-hover:from-primary/20 group-hover:to-secondary/20 transition-all duration-300" />
-                  {isMenuOpen ? 
-                    <X className="h-6 w-6 relative z-10 group-hover:rotate-90 transition-transform duration-300" /> : 
+                  {isMenuOpen ? (
+                    <X className="h-6 w-6 relative z-10 group-hover:rotate-90 transition-transform duration-300" />
+                  ) : (
                     <Menu className="h-6 w-6 relative z-10 group-hover:scale-110 transition-transform duration-300" />
-                  }
+                  )}
                 </button>
               </div>
             </div>
@@ -196,8 +214,8 @@ const Navigation = () => {
                   onClick={() => scrollToSection(item.href)}
                   className={`group relative block w-full text-left px-4 py-3 rounded-xl transition-all duration-300 ${
                     activeSection === item.href.slice(1)
-                      ? 'text-primary bg-primary/20 border border-primary/30'
-                      : 'text-muted-foreground hover:text-primary hover:bg-primary/10 border border-transparent'
+                      ? "text-primary bg-primary/20 border border-primary/30"
+                      : "text-muted-foreground hover:text-primary hover:bg-primary/10 border border-transparent"
                   }`}
                 >
                   <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary/0 to-secondary/0 group-hover:from-primary/10 group-hover:to-secondary/10 transition-all duration-300" />
@@ -213,14 +231,9 @@ const Navigation = () => {
       </nav>
 
       {/* Click outside to close theme menu */}
-      {isThemeMenuOpen && (
-        <div
-          className="fixed inset-0 z-30"
-          onClick={() => setIsThemeMenuOpen(false)}
-        />
-      )}
+      {isThemeMenuOpen && <div className="fixed inset-0 z-30" onClick={() => setIsThemeMenuOpen(false)} />}
     </>
-  );
-};
+  )
+}
 
-export default Navigation;
+export default Navigation
