@@ -6,13 +6,13 @@ const Achievements = () => {
   const platforms = [
     {
       name: 'Codeforces',
-      rating: '1686',
+      rating: '1787',
       level: 'Expert',
       color: 'from-red-500 to-orange-500',
       icon: Code,
-      stats: { rank: 'Expert', contests: '45+', problems: '600+' },
-      highlights: ['Expert Level Rating', 'Consistent Performance', 'Algorithm Specialist'],
-      link: '#',
+      stats: { rank: 'Expert', contests: '50+', problems: '1000+' },
+      highlights: ['Expert Rated', 'Consistent Performance', 'Algorithm Specialist'],
+      link: 'https://codeforces.com/profile/00.ghost',
     },
     {
       name: 'LeetCode',
@@ -20,19 +20,19 @@ const Achievements = () => {
       level: 'Knight',
       color: 'from-yellow-500 to-orange-500',
       icon: Target,
-      stats: { rank: 'Top 2%', contests: '25+', problems: '800+' },
+      stats: { rank: 'Top 2%', contests: '10+', problems: '400+' },
       highlights: ['Knight Badge', 'Contest Specialist', 'Problem Solving'],
-      link: '#',
+      link: 'https://leetcode.com/u/cGJXZbKT0C/',
     },
     {
       name: 'CodeChef',
-      rating: '1818',
+      rating: '1929',
       level: '4-Star',
       color: 'from-purple-500 to-pink-500',
       icon: Medal,
-      stats: { rank: '4-Star', contests: '30+', problems: '400+' },
+      stats: { rank: '4-Star', contests: '30+', problems: '200+' },
       highlights: ['Global Rank 72', 'Starters 183', 'Consistent Performer'],
-      link: '#',
+      link: 'https://www.codechef.com/users/raghvendra_04',
     },
   ];
 
@@ -47,7 +47,7 @@ const Achievements = () => {
     {
       title: 'CodeChef Starters 183',
       achievement: 'Global Rank 72',
-      description: 'Outstanding performance in monthly contest',
+      description: 'Outstanding performance in weekly contest',
       icon: Award,
       date: '2024',
     },

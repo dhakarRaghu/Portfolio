@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Send, Github, Linkedin, ExternalLink, CheckCircle } from 'lucide-react';
+import { Mail, Phone, Send, Github, Linkedin, ExternalLink, CheckCircle, Twitter} from 'lucide-react';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -53,31 +53,37 @@ const Contact = () => {
       color: 'from-green-500 to-emerald-500',
     },
     {
-      icon: MapPin,
-      label: 'Location',
-      value: 'Nagpur, Maharashtra',
-      href: '#',
+      icon: Linkedin,
+      label: 'LinkedIn',
+      value: 'linkedin.com/in/raghvendra1853/',
+      href: 'https://www.linkedin.com/in/raghvendra1853/',
       color: 'from-blue-500 to-cyan-500',
     },
   ];
 
   const socialLinks = [
     {
-      name: 'GitHub',
-      icon: Github,
-      href: '#',
-      color: 'hover:text-gray-600 dark:hover:text-gray-300',
-    },
-    {
       name: 'LinkedIn',
       icon: Linkedin,
-      href: '#',
+      href: 'https://www.linkedin.com/in/raghvendra1853/',
       color: 'hover:text-blue-600',
+    },
+    {
+      name: 'X',
+      icon: Twitter,
+      href: 'https://x.com/raghvendra1853',
+      color: 'hover:text-blue-600',
+    },
+     {
+      name: 'GitHub',
+      icon: Github,
+      href: 'https://github.com/dhakarRaghu',
+      color: 'hover:text-gray-600 dark:hover:text-gray-300',
     },
     {
       name: 'Portfolio',
       icon: ExternalLink,
-      href: '#',
+      href: 'https://portfolio.raghvendra.tech',
       color: 'hover:text-primary',
     },
   ];
@@ -280,10 +286,14 @@ const Contact = () => {
                 <Mail className="h-5 w-5" />
                 <span>Email Me</span>
               </a>
-              <button className="group flex items-center space-x-2 px-6 py-3 bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/50 rounded-lg transition-all duration-300 hover:scale-105">
+              <a
+                href="/resume.pdf"
+                target='_blank'
+                className="group flex items-center space-x-2 px-6 py-3 bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/50 rounded-lg transition-all duration-300 hover:scale-105"
+              >
                 <ExternalLink className="h-5 w-5" />
                 <span>Download Resume</span>
-              </button>
+              </a>
             </div>
           </div>
         </div>

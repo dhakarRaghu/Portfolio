@@ -40,29 +40,56 @@ const Experience = () => {
     },
   ];
 
-  const projects = [
-    {
-      title: 'AI-Powered E-Learning Platform',
-      organization: 'Personal Project',
-      period: '2024',
-      type: 'Development',
-      description: 'Developed Insights - an AI-driven e-learning platform with 100+ personalized courses and interactive content generation.',
-      technologies: ['Next.js', 'Google Gemini AI', 'PostgreSQL', 'TypeScript'],
-      impact: '2.5k+ active users',
-      icon: Code,
-      color: 'from-green-500 to-emerald-500',
-    },
-    {
-      title: 'GitHub SaaS Platform',
-      organization: 'Personal Project',
-      period: '2024',
-      type: 'Development',
-      description: 'Built GitBuddy - AI-powered GitHub SaaS for developer workflow enhancement with code analysis and team collaboration.',
-      technologies: ['Next.js', 'Assembly AI', 'Langchain', 'Prisma'],
-      impact: '1.8k+ developers using',
-      icon: Lightbulb,
-      color: 'from-orange-500 to-red-500',
-    },
+  interface Experience {
+    title: string;
+    organization: string;
+    period: string;
+    location?: string;
+    type: string;
+    description: string;
+    achievements?: string[];
+    skills?: string[];
+    icon: React.ElementType;
+    color: string;
+    impact?: string;
+    technologies?: string[];
+  }
+
+  interface Project {
+    title: string;
+    organization: string;
+    period: string;
+    type: string;
+    description: string;
+    technologies: string[];
+    impact: string;
+    icon: React.ElementType;
+    color: string;
+  }
+
+  const projects: Project[] = [
+    // {
+    //   title: 'AI-Powered E-Learning Platform',
+    //   organization: 'Personal Project',
+    //   period: '2024',
+    //   type: 'Development',
+    //   description: 'Developed Insights - an AI-driven e-learning platform with 100+ personalized courses and interactive content generation.',
+    //   technologies: ['Next.js', 'Google Gemini AI', 'PostgreSQL', 'TypeScript'],
+    //   impact: '2.5k+ active users',
+    //   icon: Code,
+    //   color: 'from-green-500 to-emerald-500',
+    // },
+    // {
+    //   title: 'GitHub SaaS Platform',
+    //   organization: 'Personal Project',
+    //   period: '2024',
+    //   type: 'Development',
+    //   description: 'Built GitBuddy - AI-powered GitHub SaaS for developer workflow enhancement with code analysis and team collaboration.',
+    //   technologies: ['Next.js', 'Assembly AI', 'Langchain', 'Prisma'],
+    //   impact: '1.8k+ developers using',
+    //   icon: Lightbulb,
+    //   color: 'from-orange-500 to-red-500',
+    // },
   ];
 
   const allExperiences = [...experiences, ...projects];
@@ -204,7 +231,7 @@ const Experience = () => {
         </div>
 
         {/* Summary Stats */}
-        <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6">
+        {/* <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
             { label: 'Students Mentored', value: '100+', color: 'text-blue-500' },
             { label: 'Events Organized', value: '5+', color: 'text-purple-500' },
@@ -216,7 +243,7 @@ const Experience = () => {
               <div className="text-sm text-muted-foreground">{label}</div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </section>
   );

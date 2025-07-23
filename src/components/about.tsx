@@ -10,7 +10,7 @@ const About = () => {
     languages: {
       icon: Code,
       title: 'Languages',
-      skills: ['C', 'C++', 'Python', 'JavaScript', 'TypeScript'],
+      skills: ['C', 'C++', 'Python', 'Go', 'JavaScript', 'TypeScript'],
     },
     web: {
       icon: Globe,
@@ -29,12 +29,12 @@ const About = () => {
     },
   };
 
-  const quickFacts = [
-    { label: 'Current GPA', value: '7.9/10', icon: Star },
-    { label: 'Problems Solved', value: '1200+', icon: Code },
-    { label: 'Contest Participations', value: '50+', icon: Zap },
-    { label: 'Years of Experience', value: '3+', icon: Calendar },
-  ];
+  // const quickFacts = [
+  //   { label: 'Current GPA', value: '7.9/10', icon: Star },
+  //   { label: 'Problems Solved', value: '1200+', icon: Code },
+  //   { label: 'Contest Participations', value: '50+', icon: Zap },
+  //   { label: 'Years of Experience', value: '3+', icon: Calendar },
+  // ];
 
   return (
     <section id="about" className="py-20 bg-secondary/5">
@@ -99,16 +99,17 @@ const About = () => {
                   </span>
                 </div>
                 
-                <div className="mt-3">
-                  <p className="text-sm text-muted-foreground">
-                    <strong>Coursework:</strong> Data Structures and Algorithms, Database Management System (DBMS), 
-                    Object-Oriented Programming (OOPs), Computer Networks, Operating Systems
-                  </p>
+               <div className="mt-6 p-4 bg-primary/5 rounded-lg">
+                      <h5 className="font-medium text-foreground mb-2">Academic Focus</h5>
+                      <p className="text-sm text-muted-foreground">
+                        Specializing in algorithms, data structures, and software engineering with a focus on AI-powered
+                        applications. Active participant in coding competitions and technical societies.
+                      </p>
                 </div>
               </div>
             </div>
 
-            {/* Quick Facts */}
+            {/* Quick Facts
             <div className="grid grid-cols-2 gap-4">
               {quickFacts.map(({ label, value, icon: Icon }) => (
                 <div
@@ -123,6 +124,7 @@ const About = () => {
                 </div>
               ))}
             </div>
+            */}
           </div>
 
           {/* Skills Section */}
@@ -171,12 +173,12 @@ const About = () => {
             </div>
 
             {/* Skill Highlights */}
-            <div className="mt-8 p-6 bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 rounded-lg">
+            <div className="mt-8 p-8 bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 rounded-lg">
               <h4 className="font-semibold text-foreground mb-3">Current Focus Areas</h4>
               <ul className="space-y-2 text-muted-foreground">
                 <li className="flex items-center space-x-2">
                   <div className="w-1.5 h-1.5 bg-primary rounded-full" />
-                  <span>AI/ML Integration in Web Applications</span>
+                  <span>Building AI-powered applications</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <div className="w-1.5 h-1.5 bg-secondary rounded-full" />
@@ -184,11 +186,15 @@ const About = () => {
                 </li>
                 <li className="flex items-center space-x-2">
                   <div className="w-1.5 h-1.5 bg-accent rounded-full" />
-                  <span>Real-time Collaborative Applications</span>
+                  <p> Advanced System Design Patterns</p>
                 </li>
                 <li className="flex items-center space-x-2">
                   <div className="w-1.5 h-1.5 bg-primary rounded-full" />
-                  <span>Cloud Architecture & DevOps</span>
+                  <span>Contributing to community projects</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                  <span>Learn , Grow and Improve</span>
                 </li>
               </ul>
             </div>
