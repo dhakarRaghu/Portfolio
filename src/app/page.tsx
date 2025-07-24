@@ -1,8 +1,8 @@
 'use client'
 import Hero from "../components/Hero"
-import About from "../components/About"
+import About from "../components/about"
 import Achievements from "../components/Achievements"  
-import Projects from "../components/Projects"
+import Projects from "../components/project"
 import Contact from "../components/contact"
 import Experience from "../components/experience"
 import Footer from "../components/footer"
