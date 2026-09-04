@@ -1,37 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio — Raghvendra Singh Dhakar
 
-## Getting Started
+Personal site built with Next.js 15 (App Router), TypeScript, and Tailwind CSS.
 
-First, run the development server:
+## Run it
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The site runs at http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Where the content lives
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+All résumé content sits in one file: `src/lib/content.ts`.
+Edit that file to update the profile, experience, projects, skills, ratings, and
+education. The section components read from it, so no other file needs changes.
 
-## Learn More
+| Export | Used by |
+| --- | --- |
+| `profile`, `socials`, `navItems` | header, hero, contact, footer |
+| `experience` | Experience section |
+| `projects` | Selected work section |
+| `skills` | Technical toolkit section |
+| `ratings`, `highlights`, `education` | Competitive programming section |
 
-To learn more about Next.js, take a look at the following resources:
+## Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+  app/
+    layout.tsx      fonts, metadata, theme script, header and footer
+    page.tsx        section order
+    globals.css     design tokens, base styles, reveal animation
+  components/
+    site-nav.tsx        sticky header with active-section tracking
+    site-footer.tsx
+    section-heading.tsx numbered section header
+    reveal.tsx          scroll-into-view fade
+    theme-toggle.tsx    light and dark switch
+    sections/           one file per page section
+  lib/
+    content.ts      all résumé data
+    utils.ts        className helper
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Design notes
 
-## Deploy on Vercel
+- Two themes, light and dark, defined as HSL custom properties in `globals.css`.
+  A blocking script in `layout.tsx` applies the stored theme before first paint.
+- One accent colour, used only for links, focus rings, and small markers.
+- Motion is limited to a single fade-and-rise on scroll. It turns off when the
+  visitor sets `prefers-reduced-motion`.
+- Typography: Newsreader for display text, Inter for body text, JetBrains Mono
+  for labels and metadata.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Assets
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# Portfolio
+- `public/Raghvendra-Singh-Dhakar-Resume.pdf` — the file the Résumé links open.
+- `public/me.jpg` — hero portrait.
+- Project screenshots are PNGs in `public/`.
