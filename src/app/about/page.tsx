@@ -44,7 +44,7 @@ export default function AboutPage() {
               <Link href="/projects#mission-hq" className="link">
                 Mission HQ
               </Link>
-              , a self-hosted multi-agent system that runs on my laptop. Its agents share one
+              , a self-hosted multi-agent system that runs for me. Its agents share one
               task board and one markdown vault. They study with me, write my daily note, and
               draft what I publish here. Nothing leaves the machine without my approval. It is
               where I test what I read about agents against something that actually runs.
