@@ -10,7 +10,7 @@ import { contacts } from "@/lib/site";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Who I am, what I am doing now, and where I have worked. The résumé lives here so the rest of the site can be about the work.",
+    "Experience, projects, education and the résumé of Raghvendra Singh Dhakar, software engineer in Bengaluru.",
   alternates: { canonical: "/about" },
 };
 
@@ -21,82 +21,38 @@ export default function AboutPage() {
     <>
       <PageHeader
         title="About"
-        blurb="Who I am, what I am doing now, and where I have worked."
+        blurb="Experience, projects, education and the résumé."
       />
 
       <div className="shell grid gap-12 md:grid-cols-[1fr_16rem] md:gap-16 lg:grid-cols-[1fr_18rem]">
         <div className="min-w-0 space-y-16">
           <section className="max-w-[68ch] space-y-4 text-[16.5px] leading-[1.75] text-fg">
             <p>
-              I am {profile.name}, a software engineer working on backend systems and applied
-              AI. Currently, I work at{" "}
+              I am {profile.name}, a software engineer in {profile.location}. I work at{" "}
               <a href="https://juspay.io/" target="_blank" rel="noreferrer" className="link">
                 {profile.company}
               </a>{" "}
-              in {profile.location}, on BreezeBuddy.ai, a conversational AI product. I
-              built its chatbot-to-human handoff, which moves a conversation to a live agent with
-              the full context intact, and its guardrail layer, which checks every voice and text
-              reply for prompt injection, toxicity, policy violations and off-topic answers, with
-              rules each tenant can set without a code change.
+              on BreezeBuddy.ai, where I built the human handoff and the guardrail layer for its
+              voice and text agents.
             </p>
             <p>
-              On the side, I am building{" "}
-              <Link href="/projects#mission-hq" className="link">
-                Mission HQ
-              </Link>
-              , a self-hosted multi-agent system that runs for me. Its agents share one
-              task board and one markdown vault. They study with me, write my daily note, and
-              draft what I publish here. Nothing leaves the machine without my approval. It is
-              where I test what I read about agents against something that actually runs.
-            </p>
-            <p>
-              Before Juspay, I interned at{" "}
+              Before that, I interned at{" "}
               <a href="https://www.mindtickle.com/" target="_blank" rel="noreferrer" className="link">
                 Mindtickle
-              </a>{" "}
-              on AI and backend systems. I shipped LanguageAndVoiceService, a Go gRPC service
-              that moved voice configuration out of code and into the database, so new voices
-              and languages went live without a deploy, across 25+ languages and 800+ voices. I
-              also built the voice lifecycle pipeline with ElevenLabs and the evaluation pipeline
-              for AI roleplay with Maxim.
-            </p>
-            <p>
-              Alongside that, I co-founded and built{" "}
+              </a>
+              , where I shipped the voice platform behind 25+ languages and 800+ voices, and
+              co-founded{" "}
               <a href="https://verlyai.xyz" target="_blank" rel="noreferrer" className="link">
                 Verly
               </a>
-              , an AI customer support platform for businesses across web chat, WhatsApp and
-              voice. I built the agent stack in Go: a graph-based RAG pipeline, identity
-              verification, and per-tenant tool access through custom MCP servers, plus the
-              analytics layer that showed us where conversations failed.
+              , an AI customer support platform I built in Go.
             </p>
             <p>
-              I am going deep on how LLM systems behave in production: inference, retrieval,
-              agents, and evals. I test what I read with small labs before I believe it, and I
-              write up what I find in the{" "}
-              <Link href="/blog" className="link">
-                blog
-              </Link>{" "}
-              and in short{" "}
-              <Link href="/notes" className="link">
-                notes
+              This page is the record: where I have worked, what I built, and where I studied.
+              The story behind it is on the{" "}
+              <Link href="/" className="link">
+                home page
               </Link>
-              .
-            </p>
-            <p>
-              I studied computer science at IIIT Nagpur, where I spent a lot of my time on
-              competitive programming:{" "}
-              <a href="https://codeforces.com/profile/00.ghost" target="_blank" rel="noreferrer" className="link">
-                Expert on Codeforces
-              </a>
-              ,{" "}
-              <a href="https://leetcode.com/u/cGJXZbKT0C/" target="_blank" rel="noreferrer" className="link">
-                Guardian on LeetCode
-              </a>{" "}
-              and{" "}
-              <a href="https://www.codechef.com/users/raghvendra_04" target="_blank" rel="noreferrer" className="link">
-                4-star on CodeChef
-              </a>
               .
             </p>
             <p className="text-fg-muted">

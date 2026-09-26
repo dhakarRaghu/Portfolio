@@ -26,38 +26,75 @@ export default async function HomePage() {
 
             <div className="mt-7 max-w-[68ch] space-y-4 text-[16px] leading-[1.75] text-fg lg:text-[17px]">
               <p>
-                I work at{" "}
+                Currently, I work at{" "}
                 <a href="https://juspay.io/" target="_blank" rel="noreferrer" className="link">
                   Juspay
                 </a>{" "}
-                in Bengaluru on BreezeBuddy.ai, a conversational AI product. I built its
-                chatbot-to-human handoff and the guardrail layer that checks every voice and
-                text reply before a customer sees it.
+                in Bengaluru, on BreezeBuddy.ai, a conversational AI product. I built its
+                chatbot-to-human handoff, which moves a conversation to a live agent with the full
+                context intact, and its guardrail layer, which checks every voice and text reply
+                for prompt injection, toxicity, policy violations and off-topic answers, with
+                rules each tenant can set without a code change.
               </p>
               <p>
                 On the side, I am building{" "}
                 <Link href="/projects#mission-hq" className="link">
                   Mission HQ
                 </Link>
-                , a multi-agent system that runs on my own laptop. Its agents study with me,
-                write my daily note and draft what I publish here. Nothing leaves the machine
-                without my approval.
+                , a self-hosted multi-agent system that runs on my own laptop. Its agents share one
+                task board and one markdown vault. They study with me, write my daily note, and
+                draft what I publish here. Nothing leaves the machine without my approval. It is
+                where I test what I read about agents against something that actually runs.
               </p>
               <p>
                 Before Juspay, I interned at{" "}
                 <a href="https://www.mindtickle.com/" target="_blank" rel="noreferrer" className="link">
                   Mindtickle
-                </a>
-                , where my voice platform service took new voices live in 25+ languages without
-                a deploy. Alongside that, I co-founded{" "}
-                <a href="https://verlyai.xyz" target="_blank" rel="noreferrer" className="link">
-                  Verly
                 </a>{" "}
-                and built its AI support agents in Go.
+                on AI and backend systems. I shipped LanguageAndVoiceService, a Go gRPC service
+                that moved voice configuration out of code and into the database, so new voices
+                and languages went live without a deploy, across 25+ languages and 800+ voices. I
+                also built the voice lifecycle pipeline with ElevenLabs and the evaluation pipeline
+                for AI roleplay with Maxim.
               </p>
               <p>
-                Here I write about how LLM systems behave in production: inference, retrieval,
-                agents and evals. The longer story is on the{" "}
+                Alongside that, I co-founded and built{" "}
+                <a href="https://verlyai.xyz" target="_blank" rel="noreferrer" className="link">
+                  Verly
+                </a>
+                , an AI customer support platform for businesses across web chat, WhatsApp and
+                voice. I built the agent stack in Go: a graph-based RAG pipeline, identity
+                verification, and per-tenant tool access through custom MCP servers, plus the
+                analytics layer that showed us where conversations failed.
+              </p>
+              <p>
+                I am going deep on how LLM systems behave in production: inference, retrieval,
+                agents, and evals. I test what I read with small labs before I believe it, and I
+                write up what I find in the{" "}
+                <Link href="/blog" className="link">
+                  blog
+                </Link>{" "}
+                and in short{" "}
+                <Link href="/notes" className="link">
+                  notes
+                </Link>
+                .
+              </p>
+              <p>
+                I studied computer science at IIIT Nagpur, where I spent a lot of my time on
+                competitive programming:{" "}
+                <a href="https://codeforces.com/profile/00.ghost" target="_blank" rel="noreferrer" className="link">
+                  Expert on Codeforces
+                </a>
+                ,{" "}
+                <a href="https://leetcode.com/u/cGJXZbKT0C/" target="_blank" rel="noreferrer" className="link">
+                  Guardian on LeetCode
+                </a>{" "}
+                and{" "}
+                <a href="https://www.codechef.com/users/raghvendra_04" target="_blank" rel="noreferrer" className="link">
+                  4-star on CodeChef
+                </a>
+                . My full experience and résumé are on the{" "}
                 <Link href="/about" className="link">
                   About
                 </Link>{" "}
