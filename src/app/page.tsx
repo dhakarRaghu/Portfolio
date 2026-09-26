@@ -133,6 +133,13 @@ export default async function HomePage() {
                 </div>
               ))}
             </dl>
+            <Link
+              href="/about"
+              className="mt-6 inline-flex items-center gap-1.5 rounded-md border border-line bg-surface px-3.5 py-2 text-[14px] text-fg transition-colors hover:border-line-strong"
+            >
+              More about me
+              <span aria-hidden>→</span>
+            </Link>
           </figure>
         </div>
       </section>
