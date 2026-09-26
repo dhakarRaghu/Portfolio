@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 import { EntryList } from "@/components/entry-list";
 import { profile } from "@/lib/content";
@@ -133,12 +134,9 @@ export default async function HomePage() {
                 </div>
               ))}
             </dl>
-            <Link
-              href="/about"
-              className="mt-6 inline-flex items-center gap-1.5 rounded-md border border-line bg-surface px-3.5 py-2 text-[14px] text-fg transition-colors hover:border-line-strong"
-            >
+            <Link href="/about" className="btn btn-primary mt-6">
               More about me
-              <span aria-hidden>→</span>
+              <ArrowRight aria-hidden strokeWidth={1.8} />
             </Link>
           </figure>
         </div>

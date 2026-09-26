@@ -8,23 +8,25 @@ type PageHeaderProps = {
   children?: ReactNode;
 };
 
-/** Title block at the top of a list page: kicker, serif title, one-line blurb. */
+/** Title block at the top of a page: kicker, title with an optional count, blurb. */
 export function PageHeader({ kicker, title, count, blurb, children }: PageHeaderProps) {
   return (
     <header className="shell pb-10 pt-12 md:pb-12 md:pt-16">
       {kicker ? <p className="label">{kicker}</p> : null}
-      <h1 className="mt-2 font-heading font-semibold text-[36px] leading-[1.1] tracking-[-0.015em] text-fg md:text-[44px]">
-        {title}
+      <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <h1 className="font-heading text-[36px] font-semibold leading-[1.1] tracking-[-0.02em] text-fg md:text-[46px]">
+          {title}
+        </h1>
         {typeof count === "number" ? (
-          <span className="ml-3 align-middle font-mono text-[14px] tracking-normal text-fg-faint">
+          <span className="rounded-full border border-line bg-surface px-2.5 py-0.5 font-mono text-[12px] text-fg-muted">
             {count}
           </span>
         ) : null}
-      </h1>
+      </div>
       {blurb ? (
-        <p className="mt-4 max-w-[60ch] text-[16px] leading-relaxed text-fg-muted">{blurb}</p>
+        <p className="mt-4 max-w-[60ch] text-[16.5px] leading-relaxed text-fg-muted">{blurb}</p>
       ) : null}
-      {children ? <div className="mt-6">{children}</div> : null}
+      {children ? <div className="mt-7">{children}</div> : null}
     </header>
   );
 }
