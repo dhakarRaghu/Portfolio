@@ -4,71 +4,78 @@
 
 /* ---------------------------------------------------------------------------
    Design tokens
-   Light theme is warm paper; dark theme is warm near-black.
-   One accent colour, used only for links, markers, and focus rings.
+   The same palette as the Mission HQ console: a warm cream page with white
+   cards and warm hairline borders. Chroma stays under 0.012 so text contrast
+   is unaffected. Dark is the same hue stepped down, not an inverted light.
+   One accent colour, used only for links, focus rings and small markers.
 --------------------------------------------------------------------------- */
 
 @layer base {
   :root {
-    --bg: 45 25% 98%;
-    --bg-subtle: 42 18% 95.5%;
-    --surface: 0 0% 100%;
-    --fg: 220 16% 12%;
-    --fg-muted: 220 8% 40%;
-    --fg-faint: 220 7% 55%;
-    --border: 38 14% 87%;
-    --border-strong: 36 12% 78%;
-    --accent: 212 54% 34%;
-    --accent-hover: 212 58% 27%;
-    --accent-wash: 212 45% 94%;
-    --radius: 4px;
+    --bg: oklch(0.972 0.008 84);
+    --bg-subtle: oklch(0.955 0.008 84);
+    --surface: oklch(1 0 0);
+    --fg: oklch(0.21 0.008 60);
+    --fg-muted: oklch(0.53 0.012 68);
+    --fg-faint: oklch(0.64 0.012 70);
+    --border: oklch(0.9 0.01 82);
+    --border-strong: oklch(0.82 0.012 78);
+    --accent: oklch(0.52 0.2 262);
+    --accent-hover: oklch(0.44 0.2 262);
+    --accent-wash: oklch(0.95 0.02 262);
+    --code-bg: oklch(0.955 0.008 84);
+    --radius: 0.75rem;
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --font-sans: "Geist";
+    --font-mono: "Geist Mono";
   }
 
   .dark {
-    --bg: 220 14% 7%;
-    --bg-subtle: 220 12% 9.5%;
-    --surface: 220 12% 11%;
-    --fg: 40 14% 92%;
-    --fg-muted: 220 7% 63%;
-    --fg-faint: 220 6% 48%;
-    --border: 220 8% 19%;
-    --border-strong: 220 8% 27%;
-    --accent: 210 62% 70%;
-    --accent-hover: 210 70% 79%;
-    --accent-wash: 212 30% 16%;
+    --bg: oklch(0.155 0.006 70);
+    --bg-subtle: oklch(0.198 0.006 70);
+    --surface: oklch(0.198 0.006 70);
+    --fg: oklch(0.965 0.004 84);
+    --fg-muted: oklch(0.72 0.01 78);
+    --fg-faint: oklch(0.58 0.01 74);
+    --border: oklch(1 0 0 / 11%);
+    --border-strong: oklch(1 0 0 / 20%);
+    --accent: oklch(0.74 0.14 262);
+    --accent-hover: oklch(0.82 0.12 262);
+    --accent-wash: oklch(0.3 0.06 262);
+    --code-bg: oklch(0.185 0.006 70);
   }
 
   * {
-    border-color: hsl(var(--border));
+    border-color: var(--border);
   }
 
   html {
-    scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
   }
 
   body {
-    background-color: hsl(var(--bg));
-    color: hsl(var(--fg));
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    background-color: var(--bg);
+    color: var(--fg);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
 
   ::selection {
-    background-color: hsl(var(--accent) / 0.22);
-    color: hsl(var(--fg));
+    background-color: color-mix(in oklch, var(--accent) 22%, transparent);
+    color: var(--fg);
   }
 
   :focus-visible {
-    outline: 2px solid hsl(var(--accent));
+    outline: 2px solid var(--accent);
     outline-offset: 3px;
     border-radius: 2px;
   }
 
   h1, h2, h3, h4 {
     text-wrap: balance;
+    letter-spacing: -0.015em;
   }
 
   p {
@@ -81,12 +88,13 @@
 --------------------------------------------------------------------------- */
 
 @layer components {
-  /* Page gutters, shared by every section. */
+  /* Page gutters, shared by every page. 80rem is about 1280px of content on
+     a wide screen; below that the gutters shrink with the viewport. */
   .shell {
     width: 100%;
-    max-width: 68rem;
+    max-width: 80rem;
     margin-inline: auto;
-    padding-inline: 1.5rem;
+    padding-inline: 1.25rem;
   }
 
   @media (min-width: 768px) {
@@ -95,79 +103,340 @@
     }
   }
 
-  /* Small uppercase mono label used for section numbers and meta rows. */
+  @media (min-width: 1280px) {
+    .shell {
+      padding-inline: 3rem;
+    }
+  }
+
+  /* Small uppercase mono label used for dates, kickers and meta rows. */
   .label {
     font-family: var(--font-mono), ui-monospace, monospace;
     font-size: 0.6875rem;
-    letter-spacing: 0.11em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: hsl(var(--fg-faint));
+    color: var(--fg-faint);
   }
 
   /* Inline text link with a hairline underline that thickens on hover. */
   .link {
-    color: hsl(var(--accent));
-    text-decoration: none;
-    background-image: linear-gradient(hsl(var(--accent) / 0.45), hsl(var(--accent) / 0.45));
-    background-repeat: no-repeat;
-    background-position: 0 100%;
-    background-size: 100% 1px;
-    transition: background-size 150ms ease, color 150ms ease;
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, var(--accent) 45%, transparent);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    transition: color 150ms ease, text-decoration-color 150ms ease;
   }
 
   .link:hover {
-    color: hsl(var(--accent-hover));
-    background-size: 100% 2px;
+    color: var(--accent-hover);
+    text-decoration-color: currentColor;
   }
 
-  /* Chip used for technology tags. */
+  /* Quiet link: inherits colour, underlines on hover. Used for titles. */
+  .quiet {
+    color: inherit;
+    text-decoration: none;
+    text-decoration-color: var(--border-strong);
+    text-underline-offset: 3px;
+  }
+
+  .quiet:hover {
+    text-decoration: underline;
+  }
+
+  /* Chip used for tags and categories. */
   .chip {
     display: inline-flex;
     align-items: center;
-    border: 1px solid hsl(var(--border));
+    border: 1px solid var(--border);
     border-radius: 999px;
+    background: var(--surface);
     padding: 0.15rem 0.6rem;
     font-family: var(--font-mono), ui-monospace, monospace;
     font-size: 0.6875rem;
     letter-spacing: 0.02em;
-    color: hsl(var(--fg-muted));
+    color: var(--fg-muted);
     white-space: nowrap;
+    text-decoration: none;
+    transition: border-color 150ms ease, color 150ms ease;
+  }
+
+  a.chip:hover,
+  .chip[data-active="true"] {
+    border-color: var(--fg-muted);
+    color: var(--fg);
+  }
+
+  /* Card: white surface on the cream page, warm hairline, console radius. */
+  .card {
+    display: block;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    padding: 1.1rem 1.25rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 150ms ease;
+  }
+
+  .card:hover {
+    border-color: var(--border-strong);
+  }
+
+  /* Sticky header background with a little transparency. */
+  .header-bg {
+    background: color-mix(in oklch, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
   }
 }
 
 /* ---------------------------------------------------------------------------
-   Scroll reveal
-   Elements start slightly lowered and fade in once they enter the viewport.
+   Prose
+   Article bodies rendered from markdown. Sized for a 44rem column.
 --------------------------------------------------------------------------- */
 
-.reveal {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 620ms cubic-bezier(0.22, 1, 0.36, 1),
-              transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: var(--reveal-delay, 0ms);
+.prose {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--fg);
 }
 
-.reveal[data-visible="true"] {
-  opacity: 1;
-  transform: none;
+.prose > * + * {
+  margin-top: 1.25em;
 }
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+  color: var(--fg);
+  scroll-margin-top: 5rem;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  margin-top: 2.4em;
+}
+
+.prose h3 {
+  font-size: 1.1875rem;
+  margin-top: 1.9em;
+}
+
+.prose h4 {
+  font-size: 1.0625rem;
+}
+
+.prose .heading-anchor {
+  margin-left: 0.4em;
+  color: var(--fg-faint);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.prose h2:hover .heading-anchor,
+.prose h3:hover .heading-anchor,
+.prose h4:hover .heading-anchor,
+.prose .heading-anchor:focus-visible {
+  opacity: 1;
+}
+
+.prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--accent) 40%, transparent);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.prose a:hover {
+  color: var(--accent-hover);
+  text-decoration-color: currentColor;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.5rem;
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li + li {
+  margin-top: 0.4em;
+}
+
+.prose li > p + p {
+  margin-top: 0.6em;
+}
+
+.prose blockquote {
+  border-left: 2px solid var(--border-strong);
+  padding-left: 1.1rem;
+  color: var(--fg-muted);
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin-block: 2.5em;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+
+.prose figure {
+  margin-block: 1.6em;
+}
+
+.prose figcaption {
+  margin-top: 0.5em;
+  font-size: 0.875rem;
+  color: var(--fg-muted);
+}
+
+/* Tables scroll sideways on a phone instead of breaking the column. */
+.prose table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.prose thead th {
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-strong);
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  white-space: nowrap;
+}
+
+.prose tbody td {
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+  padding: 0.55rem 0.75rem 0.55rem 0;
+}
+
+/* Inline code. */
+.prose :not(pre) > code {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.875em;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+
+/* Code blocks from rehype-pretty-code. Both themes are in the HTML; the
+   .dark class chooses which colour variable each token uses. */
+.prose pre {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8375rem;
+  line-height: 1.6;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 0;
+  overflow-x: auto;
+}
+
+.dark .prose pre {
+  background: var(--code-bg);
+}
+
+.prose pre > code {
+  display: grid;
+  min-width: 100%;
+}
+
+.prose pre [data-line] {
+  padding-inline: 1rem;
+}
+
+.prose pre [data-highlighted-line] {
+  background: color-mix(in oklch, var(--accent) 10%, transparent);
+}
+
+.prose code[data-theme*=" "],
+.prose code[data-theme*=" "] span {
+  color: var(--shiki-light);
+}
+
+.dark .prose code[data-theme*=" "],
+.dark .prose code[data-theme*=" "] span {
+  color: var(--shiki-dark);
+}
+
+.prose figure[data-rehype-pretty-code-figure] {
+  margin-block: 1.4em;
+}
+
+.prose figcaption[data-rehype-pretty-code-title] {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+  margin: 0 0 0.4rem;
+}
+
+.prose pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+/* ---------------------------------------------------------------------------
+   Table of contents (essay pages, wide screens)
+--------------------------------------------------------------------------- */
+
+.toc a {
+  display: block;
+  color: var(--fg-muted);
+  text-decoration: none;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  padding-block: 0.25rem;
+  padding-left: 0.75rem;
+}
+
+.toc a[data-depth="3"] {
+  padding-left: 1.5rem;
+  font-size: 0.75rem;
+}
+
+.toc a:hover {
+  color: var(--fg);
+}
+
+/* ---------------------------------------------------------------------------
+   Motion and scrollbar
+--------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
   }
 }
-
-/* ---------------------------------------------------------------------------
-   Scrollbar
---------------------------------------------------------------------------- */
 
 ::-webkit-scrollbar {
   width: 10px;
@@ -175,15 +444,15 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--bg));
+  background: var(--bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--border-strong));
-  border: 3px solid hsl(var(--bg));
+  background: var(--border-strong);
+  border: 3px solid var(--bg);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--fg-faint));
+  background: var(--fg-faint);
 }

@@ -1,42 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
-import { navItems, profile } from "@/lib/content";
+import { nav, site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export function SiteNav() {
-  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState<string>("");
 
+  // Close the phone menu when the route changes.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Highlights the nav item for the section currently in the upper viewport.
-  useEffect(() => {
-    const sections = navItems
-      .map((item) => document.querySelector(item.href))
-      .filter((node): node is Element => node !== null);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) setActive(`#${entry.target.id}`);
-        }
-      },
-      { rootMargin: "-20% 0px -70% 0px" },
-    );
-
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
-  }, []);
+    setOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -45,50 +25,36 @@ export function SiteNav() {
     };
   }, [open]);
 
-  return (
-    <header
-      className={cn(
-        "sticky top-0 z-40 border-b transition-colors duration-300",
-        scrolled
-          ? "border-line bg-bg/85 backdrop-blur-md supports-[backdrop-filter]:bg-bg/70"
-          : "border-transparent bg-transparent",
-      )}
-    >
-      <nav className="shell flex h-16 items-center justify-between gap-6">
-        <a
-          href="#top"
-          className="font-serif text-[17px] tracking-tight text-fg transition-opacity hover:opacity-70"
-        >
-          {profile.shortName}
-          <span className="text-fg-faint">.</span>
-        </a>
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
-        <div className="hidden items-center gap-1 md:flex">
-          {navItems.map((item) => (
-            <a
+  return (
+    <header className="header-bg sticky top-0 z-40 border-b border-line">
+      <nav className="shell flex h-14 items-center justify-between gap-6">
+        <Link
+          href="/"
+          className="font-heading font-semibold text-[19px] tracking-tight text-fg transition-opacity hover:opacity-70"
+        >
+          {site.shortName}
+          <span className="text-fg-faint"> Dhakar</span>
+        </Link>
+
+        <div className="hidden items-center gap-0.5 md:flex">
+          {nav.map((item) => (
+            <Link
               key={item.href}
               href={item.href}
+              aria-current={isActive(item.href) ? "page" : undefined}
               className={cn(
-                "rounded px-3 py-1.5 text-[13px] transition-colors",
-                active === item.href
-                  ? "text-fg"
-                  : "text-fg-muted hover:text-fg",
+                "rounded px-3 py-1.5 text-[13.5px] transition-colors",
+                isActive(item.href) ? "text-fg" : "text-fg-muted hover:text-fg",
               )}
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </div>
 
         <div className="flex items-center gap-2">
-          <a
-            href={profile.resume}
-            target="_blank"
-            rel="noreferrer"
-            className="hidden rounded border border-line px-3 py-1.5 text-[13px] text-fg-muted transition-colors hover:border-line-strong hover:text-fg sm:inline-block"
-          >
-            Résumé
-          </a>
           <ThemeToggle />
           <button
             type="button"
@@ -109,24 +75,18 @@ export function SiteNav() {
       {open ? (
         <div className="border-t border-line bg-bg md:hidden">
           <div className="shell flex flex-col py-2">
-            {navItems.map((item) => (
-              <a
+            {nav.map((item) => (
+              <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setOpen(false)}
-                className="border-b border-line py-3 text-[15px] text-fg-muted last:border-0 hover:text-fg"
+                className={cn(
+                  "border-b border-line py-3 text-[15px] last:border-0",
+                  isActive(item.href) ? "text-fg" : "text-fg-muted hover:text-fg",
+                )}
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
-            <a
-              href={profile.resume}
-              target="_blank"
-              rel="noreferrer"
-              className="py-3 text-[15px] text-fg-muted hover:text-fg"
-            >
-              Résumé
-            </a>
           </div>
         </div>
       ) : null}

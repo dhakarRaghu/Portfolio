@@ -1,0 +1,85 @@
+/**
+ * Site-wide settings: name, URL, navigation, the fixed set of blog
+ * categories, and the social handles. Résumé content stays in content.ts.
+ */
+
+/** The domain is not bought yet. Set NEXT_PUBLIC_SITE_URL on Vercel when it is. */
+export const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://raghvendra.tech";
+
+export const site = {
+  name: "Raghvendra Singh Dhakar",
+  shortName: "Raghvendra",
+  title: "Raghvendra Singh Dhakar",
+  description:
+    "Software engineer in Bengaluru working on backend systems and applied AI: agents, retrieval, guardrails and evals. Blog posts, notes and projects.",
+  locale: "en_IN",
+  twitterHandle: "@raghvendra1853",
+  github: "https://github.com/dhakarRaghu",
+  linkedin: "https://www.linkedin.com/in/raghvendra1853/",
+  x: "https://x.com/raghvendra1853",
+  email: "raghvendrasinghdhakar2@gmail.com",
+} as const;
+
+/** Contact rows shown beside the photo on the home and About pages. */
+export const contacts = [
+  { label: "Email", value: site.email, href: `mailto:${site.email}` },
+  { label: "GitHub", value: "dhakarRaghu", href: site.github },
+  { label: "X", value: "raghvendra1853", href: site.x },
+  { label: "LinkedIn", value: "raghvendra1853", href: site.linkedin },
+] as const;
+
+export const nav = [
+  { label: "Blog", href: "/blog" },
+  { label: "Notes", href: "/notes" },
+  { label: "Projects", href: "/projects" },
+  { label: "About", href: "/about" },
+] as const;
+
+/** Sections that live in the content folder. */
+export type Section = "blog" | "notes" | "papershelf" | "projects";
+
+export const sections: Record<
+  Section,
+  { label: string; singular: string; blurb: string }
+> = {
+  blog: {
+    label: "Blog",
+    singular: "post",
+    blurb: "Longer pieces on what I build: guardrails, human handoff, retrieval, evals and the backend around them.",
+  },
+  notes: {
+    label: "Notes",
+    singular: "note",
+    blurb: "One idea per note, with the source it came from.",
+  },
+  papershelf: {
+    label: "Papershelf",
+    singular: "paper note",
+    blurb: "Papers I read closely: what they claim, what they measured, and where the result stops holding.",
+  },
+  projects: {
+    label: "Projects",
+    singular: "project",
+    blurb: "Things I built, with links to the code or the product where they are public.",
+  },
+};
+
+/**
+ * The fixed list of categories. A post names one of these in its
+ * frontmatter. Keep the list short so the filter row stays readable.
+ */
+export const categories = [
+  { slug: "inference", label: "Inference and serving" },
+  { slug: "retrieval", label: "Retrieval" },
+  { slug: "agents", label: "Agents" },
+  { slug: "evals", label: "Evals and observability" },
+  { slug: "backend", label: "Backend systems" },
+  { slug: "career", label: "Career and learning" },
+] as const;
+
+export type CategorySlug = (typeof categories)[number]["slug"];
+
+export function categoryLabel(slug: string | undefined): string | undefined {
+  return categories.find((c) => c.slug === slug)?.label;
+}

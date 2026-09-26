@@ -6,27 +6,29 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: "hsl(var(--bg))",
-        "bg-subtle": "hsl(var(--bg-subtle))",
-        surface: "hsl(var(--surface))",
-        fg: "hsl(var(--fg))",
-        "fg-muted": "hsl(var(--fg-muted))",
-        "fg-faint": "hsl(var(--fg-faint))",
-        line: "hsl(var(--border))",
-        "line-strong": "hsl(var(--border-strong))",
+        bg: "var(--bg)",
+        "bg-subtle": "var(--bg-subtle)",
+        surface: "var(--surface)",
+        fg: "var(--fg)",
+        "fg-muted": "var(--fg-muted)",
+        "fg-faint": "var(--fg-faint)",
+        line: "var(--border)",
+        "line-strong": "var(--border-strong)",
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          hover: "hsl(var(--accent-hover))",
-          wash: "hsl(var(--accent-wash))",
+          DEFAULT: "var(--accent)",
+          hover: "var(--accent-hover)",
+          wash: "var(--accent-wash)",
         },
       },
       fontFamily: {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
-        serif: ["var(--font-serif)", "ui-serif", "Georgia", "serif"],
+        heading: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       borderRadius: {
-        DEFAULT: "var(--radius)",
+        DEFAULT: "var(--radius-sm)",
+        md: "var(--radius-md)",
+        lg: "var(--radius)",
       },
       maxWidth: {
         prose: "62ch",

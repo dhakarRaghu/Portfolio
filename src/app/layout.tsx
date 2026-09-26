@@ -1,74 +1,56 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Newsreader } from "next/font/google";
 
 import "./globals.css";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
-import { profile } from "@/lib/content";
+import { site, siteUrl } from "@/lib/site";
 
-const sans = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-sans",
-});
-
-const serif = Newsreader({
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["300", "400", "500"],
-  style: ["normal", "italic"],
-  variable: "--font-serif",
-});
-
-const mono = JetBrains_Mono({
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500"],
-  variable: "--font-mono",
-});
+/**
+ * Fonts come from Google Fonts as a stylesheet. next/font/google fails on the
+ * current Google Fonts responses with this Next version, and a stylesheet link
+ * needs no build-time fetch. The families are named in globals.css.
+ */
+const fontsHref =
+  "https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://portfolio.raghvendra.tech"),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: `${profile.name} — ${profile.role}`,
-    template: `%s — ${profile.name}`,
+    default: site.title,
+    template: `%s · ${site.shortName}`,
   },
-  description: profile.tagline,
-  keywords: [
-    "Raghvendra Singh Dhakar",
-    "Product Engineer",
-    "Backend Engineer",
-    "Go",
-    "gRPC",
-    "AI Engineer",
-    "Juspay",
-  ],
-  authors: [{ name: profile.name, url: "https://github.com/dhakarRaghu" }],
+  description: site.description,
+  authors: [{ name: site.name, url: site.github }],
+  alternates: {
+    canonical: "/",
+    types: { "application/rss+xml": [{ url: "/rss.xml", title: `${site.name}: blog` }] },
+  },
   openGraph: {
-    type: "profile",
-    title: `${profile.name} — ${profile.role}`,
-    description: profile.tagline,
-    url: "https://portfolio.raghvendra.tech",
-    siteName: profile.name,
+    type: "website",
+    title: site.title,
+    description: site.description,
+    url: siteUrl,
+    siteName: site.name,
+    locale: site.locale,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${profile.name} — ${profile.role}`,
-    description: profile.tagline,
-    creator: "@raghvendra1853",
+    title: site.title,
+    description: site.description,
+    creator: site.twitterHandle,
   },
+  robots: { index: true, follow: true },
 };
 
 /**
  * Applies the stored theme before the first paint so the page never flashes
- * the wrong background.
+ * the wrong background. Light is the default; dark only when chosen.
  */
 const themeScript = `
 (function () {
   try {
     var stored = localStorage.getItem("theme");
-    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    var dark = stored ? stored === "dark" : prefersDark;
+    var dark = stored === "dark";
     document.documentElement.classList.toggle("dark", dark);
     document.documentElement.style.colorScheme = dark ? "dark" : "light";
   } catch (e) {}
@@ -79,15 +61,14 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${sans.variable} ${serif.variable} ${mono.variable}`}
-    >
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href={fontsHref} />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="font-sans antialiased">
+      <body className="flex min-h-screen flex-col font-sans antialiased">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:border focus:border-line focus:bg-surface focus:px-4 focus:py-2 focus:text-sm"
@@ -95,7 +76,9 @@ export default function RootLayout({
           Skip to content
         </a>
         <SiteNav />
-        <main id="main">{children}</main>
+        <main id="main" className="flex-1">
+          {children}
+        </main>
         <SiteFooter />
       </body>
     </html>
