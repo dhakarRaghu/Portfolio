@@ -28,32 +28,62 @@ export default function AboutPage() {
         <div className="min-w-0 space-y-16">
           <section className="max-w-[68ch] space-y-4 text-[16.5px] leading-[1.75] text-fg">
             <p>
-              I am {profile.name}, a software engineer in {profile.location}. I work at{" "}
+              I am {profile.name}, a software engineer in {profile.location}. I work on backend
+              systems and applied AI, on the part of a product that sits between a language model
+              and the people who use it.
+            </p>
+            <p>
+              Since July 2026 I have been at{" "}
               <a href="https://juspay.io/" target="_blank" rel="noreferrer" className="link">
                 {profile.company}
-              </a>{" "}
-              on BreezeBuddy.ai, where I built the human handoff and the guardrail layer for its
-              voice and text agents.
+              </a>
+              , working on BreezeBuddy.ai. I built its chatbot-to-human handoff, so a
+              conversation reaches a live agent with its full context, and a guardrail layer for
+              voice and text agents that each tenant can configure without a code change.
             </p>
             <p>
-              Before that, I interned at{" "}
+              From August 2025 to July 2026 I interned at{" "}
               <a href="https://www.mindtickle.com/" target="_blank" rel="noreferrer" className="link">
                 Mindtickle
-              </a>
-              , where I shipped the voice platform behind 25+ languages and 800+ voices, and
-              co-founded{" "}
+              </a>{" "}
+              on AI and backend systems. My main work there was LanguageAndVoiceService, which
+              turned adding a voice or a language into a database change instead of a deploy,
+              across 25+ languages and 800+ voices. From November 2025 to May 2026, alongside the
+              internship, I co-founded{" "}
               <a href="https://verlyai.xyz" target="_blank" rel="noreferrer" className="link">
                 Verly
-              </a>
-              , an AI customer support platform I built in Go.
+              </a>{" "}
+              and built its agent stack: graph-based RAG, identity verification and per-tenant
+              tools through custom MCP servers.
             </p>
             <p>
-              This page is the record: where I have worked, what I built, and where I studied.
-              The story behind it is on the{" "}
-              <Link href="/" className="link">
-                home page
+              Outside work I learn by building.{" "}
+              <Link href="/projects#mission-hq" className="link">
+                Mission HQ
+              </Link>
+              , my self-hosted multi-agent system, is where I try ideas about agents, memory and
+              evals on something that runs every day. What holds up goes into the{" "}
+              <Link href="/blog" className="link">
+                blog
+              </Link>{" "}
+              and{" "}
+              <Link href="/notes" className="link">
+                notes
               </Link>
               .
+            </p>
+            <p>
+              At IIIT Nagpur I studied computer science, was a core member of the Google
+              Developer Group, where I ran competitive programming sessions and mentored 100+
+              students, and helped host MUN 23 with the Orator Club.
+            </p>
+            <p>
+              The rest of this page is the record: where I have worked, what I built, and where I
+              studied. The{" "}
+              <Link href="/" className="link">
+                home page
+              </Link>{" "}
+              has the story in one read.
             </p>
             <p className="text-fg-muted">
               <a href={profile.resume} target="_blank" rel="noreferrer" className="link">
