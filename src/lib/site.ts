@@ -14,10 +14,10 @@ export const site = {
   description:
     "Software engineer in Bengaluru working on backend systems and applied AI: agents, retrieval, guardrails and evals. Blog posts, notes and projects.",
   locale: "en_IN",
-  twitterHandle: "@raghvendra1853",
+  twitterHandle: "@Raghvendra56595",
   github: "https://github.com/dhakarRaghu",
   linkedin: "https://www.linkedin.com/in/raghvendra1853/",
-  x: "https://x.com/raghvendra1853",
+  x: "https://x.com/Raghvendra56595",
   email: "raghvendrasinghdhakar2@gmail.com",
 } as const;
 
@@ -25,7 +25,7 @@ export const site = {
 export const contacts = [
   { label: "Email", value: site.email, href: `mailto:${site.email}` },
   { label: "GitHub", value: "dhakarRaghu", href: site.github },
-  { label: "X", value: "raghvendra1853", href: site.x },
+  { label: "X", value: "Raghvendra56595", href: site.x },
   { label: "LinkedIn", value: "raghvendra1853", href: site.linkedin },
 ] as const;
 

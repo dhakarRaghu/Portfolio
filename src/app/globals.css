@@ -300,6 +300,29 @@
   margin-top: 1.25em;
 }
 
+/* The result, stated first. The one paragraph every visitor reads. */
+.prose > p.in-short {
+  margin-top: 0;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.prose > p.in-short > strong:first-child {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
 /* Smaller prose for card bodies, such as project descriptions. */
 .prose.prose-sm {
   font-size: 0.9375rem;

@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
+import type { Element, Root as HtmlRoot } from "hast";
 import type { Root, Heading, Text, InlineCode } from "mdast";
 
 export type TocItem = { id: string; text: string; depth: 2 | 3 };
@@ -18,10 +19,30 @@ const prettyCode: PrettyCodeOptions = {
   defaultLang: "text",
 };
 
+/**
+ * A post opens with its result: a first paragraph that starts with a bold
+ * "In short". It gets a class so the page can set it apart, because it is
+ * the one paragraph every visitor reads.
+ */
+function rehypeInShort() {
+  return (tree: HtmlRoot) => {
+    const first = tree.children.find(
+      (node): node is Element => node.type === "element",
+    );
+    if (!first || first.tagName !== "p") return;
+    const lead = first.children[0];
+    if (!lead || lead.type !== "element" || lead.tagName !== "strong") return;
+    const label = lead.children[0];
+    if (!label || label.type !== "text" || !/^in short\b/i.test(label.value)) return;
+    first.properties = { ...first.properties, className: ["in-short"] };
+  };
+}
+
 const processor = unified()
   .use(remarkParse)
   .use(remarkGfm)
   .use(remarkRehype, { allowDangerousHtml: false })
+  .use(rehypeInShort)
   .use(rehypeSlug)
   .use(rehypeAutolinkHeadings, {
     behavior: "append",
