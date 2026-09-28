@@ -5,6 +5,7 @@ summary: "When an agent retries its search, better retriever recall barely chang
 tags: [retrieval, agents, evals, recall]
 category: retrieval
 section: blog
+draft: true
 ---
 **In short:** If one search finds the right chunk 60% of the time, five independent searches find it at least once 99% of the time. Raising the retriever from 60% to 75% then moves the result by less than one percentage point. So for a system that searches once, measure retriever recall first. For an agent that retries, measure end to end: whether the whole task succeeds.
 

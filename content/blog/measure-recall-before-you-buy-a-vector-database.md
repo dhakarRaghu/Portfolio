@@ -5,6 +5,7 @@ summary: "A 30-line script measures how often your search returns the right chun
 tags: [rag, retrieval, evals, recall]
 category: retrieval
 section: blog
+draft: true
 ---
 **In short:** An average recall of 70% can hide a type of question where recall is 5%. A short script can measure recall for each type of question on your own documents, with test questions written by a model. When one type scores low, first check whether the answer exists in your data at all.
 
