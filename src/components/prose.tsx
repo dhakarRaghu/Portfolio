@@ -1,3 +1,5 @@
+import { Diagrams } from "@/components/diagrams";
+import { Widgets } from "@/components/widgets";
 import { renderMarkdown } from "@/lib/markdown";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +12,10 @@ type ProseProps = {
 export async function Prose({ markdown, className }: ProseProps) {
   const html = await renderMarkdown(markdown);
   return (
-    <div className={cn("prose", className)} dangerouslySetInnerHTML={{ __html: html }} />
+    <>
+      <div className={cn("prose", className)} dangerouslySetInnerHTML={{ __html: html }} />
+      {html.includes('class="mermaid"') ? <Diagrams /> : null}
+      {html.includes('class="widget"') ? <Widgets /> : null}
+    </>
   );
 }

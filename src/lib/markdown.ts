@@ -1,5 +1,6 @@
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode, { type Options as PrettyCodeOptions } from "rehype-pretty-code";
+import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
 import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
@@ -7,7 +8,7 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import type { Element, Root as HtmlRoot } from "hast";
-import type { Root, Heading, Text, InlineCode } from "mdast";
+import type { Root, Heading, Text, InlineCode, Code } from "mdast";
 
 export type TocItem = { id: string; text: string; depth: 2 | 3 };
 
@@ -38,10 +39,85 @@ function rehypeInShort() {
   };
 }
 
+/**
+ * A ```mermaid block is a figure, not code: a flow diagram or a chart. It
+ * becomes <figure class="diagram"><pre class="mermaid">source</pre></figure>,
+ * which the Diagrams client component draws in the page's theme. The pre has
+ * no <code> child, so rehype-pretty-code leaves it alone. A block may start
+ * with a line `%% caption: ...`, shown under the figure.
+ */
+function remarkMermaid() {
+  return (tree: Root) => {
+    tree.children = tree.children.map((node) => {
+      if (node.type === "code" && (node as Code).lang === "widget") return widget(node as Code);
+      if (node.type !== "code" || (node as Code).lang !== "mermaid") return node;
+      const source = (node as Code).value;
+      const caption = /^%%\s*caption:\s*(.+)$/m.exec(source)?.[1]?.trim();
+      const children: Element[] = [
+        {
+          type: "element",
+          tagName: "pre",
+          properties: { className: ["mermaid"] },
+          children: [{ type: "text", value: source }],
+        },
+      ];
+      if (caption) {
+        children.push({
+          type: "element",
+          tagName: "figcaption",
+          properties: {},
+          children: [{ type: "text", value: caption }],
+        });
+      }
+      return {
+        type: "paragraph",
+        children: [],
+        data: { hName: "figure", hProperties: { className: ["diagram"] }, hChildren: children },
+      } as unknown as Root["children"][number];
+    });
+  };
+}
+
+/**
+ * A ```widget <name> block is an interactive piece, such as a calculator.
+ * Its body is JSON props. It becomes <div class="widget" data-widget=...
+ * data-props=...>, which the Widgets client component mounts. The div holds
+ * a plain-text fallback for readers without JavaScript.
+ */
+function widget(node: Code): Root["children"][number] {
+  const name = (node.meta ?? "").trim();
+  let props = "{}";
+  try {
+    props = JSON.stringify(JSON.parse(node.value || "{}"));
+  } catch {
+    throw new Error(`widget ${name}: its props are not valid JSON`);
+  }
+  return {
+    type: "paragraph",
+    children: [],
+    data: {
+      hName: "div",
+      hProperties: { className: ["widget"], dataWidget: name, dataProps: props },
+      hChildren: [
+        {
+          type: "element",
+          tagName: "p",
+          properties: { className: ["widget-fallback"] },
+          children: [{ type: "text", value: "Loading the interactive calculator." }],
+        },
+      ],
+    },
+  } as unknown as Root["children"][number];
+}
+
 const processor = unified()
   .use(remarkParse)
   .use(remarkGfm)
-  .use(remarkRehype, { allowDangerousHtml: false })
+  .use(remarkMermaid)
+  // Posts are written by the owner and his own pipeline, so they may carry
+  // HTML: a callout, a <details> fold for the arithmetic, a comparison table.
+  .use(remarkRehype, { allowDangerousHtml: true })
+  .use(rehypeRaw)
   .use(rehypeInShort)
   .use(rehypeSlug)
   .use(rehypeAutolinkHeadings, {

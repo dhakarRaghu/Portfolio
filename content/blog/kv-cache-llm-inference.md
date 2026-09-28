@@ -15,9 +15,27 @@ This essay explains what the KV cache is, derives the formula for its size, and 
 
 A language model is a stack of transformer layers, and it generates text one token at a time. Each new token is chosen using the attention state of every token before it. The attention state of a token is two vectors per layer, called K and V. When your prompt arrives, the server runs one parallel pass over the whole prompt, and every layer computes K and V for every prompt token. That pass is called <dfn>prefill</dfn>.
 
-After prefill, generation starts. This phase is called <dfn>decode</dfn>, and it produces one token per step. Step 500 needs the K and V of tokens 1 to 499. The naive approach stores nothing, so step 500 recomputes those vectors for all 499 earlier tokens. The cost of that choice grows fast. Step t redoes work proportional to t, so a 1,000-token answer redoes work proportional to 1 + 2 + 3 + ... + 1,000. That sum is 1,000 x 1,001 / 2 = 500,500 token computations, instead of the 1,000 you would do if the past were stored. The answer is 500 times more compute for the same text.
+After prefill, generation starts. This phase is called <dfn>decode</dfn>, and it produces one token per step. Step 500 needs the K and V of tokens 1 to 499. The naive approach stores nothing, so step 500 recomputes those vectors for all 499 earlier tokens. The cost of that choice grows fast. Step t redoes work proportional to t, so a 1,000-token answer redoes work proportional to 1 + 2 + 3 + ... + 1,000. That sum is 500,500 token computations, instead of the 1,000 you would do if the past were stored. The answer is 500 times more compute for the same text.
+
+<details>
+<summary>Show the arithmetic</summary>
+
+Step t recomputes K and V for the t earlier tokens, so a 1,000-token answer recomputes 1 + 2 + ... + 1,000 tokens. The sum of 1 to n is n x (n + 1) / 2, so 1,000 x 1,001 / 2 = 500,500. With a cache, each token's K and V are computed once: 1,000 computations. 500,500 / 1,000 = about 500.
+
+</details>
 
 The fix is to store every K and V after computing it once. That store is the <dfn>KV cache</dfn>. With it, each decode step reads the cache instead of recomputing the past. Reading memory is far cheaper than running the model's layers again, but the cache itself must live in GPU memory. The rest of this essay shows that this memory, and not compute, is what limits a serving system.
+
+```mermaid
+%% caption: Prefill writes K and V for every prompt token once. Each decode step reads the whole cache, then adds one token's K and V.
+flowchart TD
+  P["Prompt tokens"] --> PF["Prefill: one parallel pass"]
+  PF -->|"K and V for every prompt token"| C[("KV cache in GPU memory")]
+  C -->|"read all past K and V"| D["Decode step"]
+  D -->|"add the new token's K and V"| C
+  D --> O["One new output token"]
+```
+
 
 ## One formula gives the memory per token
 
@@ -31,7 +49,11 @@ All four numbers come from the model's public config file. The config for Llama-
 
 2 x 32 x 8 x 128 x 2 bytes = 131,072 bytes = 128 KB per token.
 
-Two consequences follow from that one number. An 8,000-token context costs about 1 GB of GPU memory for one request. A 128,000-token context costs about 16 GB. The second number is the size of the model's own weights, so one long request needs as much memory for its cache as the whole model needs to exist on the card.
+### One long request needs as much memory as the model
+
+Two consequences follow from that one number. An 8,192-token context costs exactly 1 GB of GPU memory for one request, because 8,192 x 128 KB = 1,048,576 KB. A 131,072-token context, the model's 128k limit, costs 16 GB. The second number is the size of the model's own weights, so one long request needs as much memory for its cache as the whole model needs to exist on the card.
+
+<aside class="callout">This essay counts memory in binary units: 1 KB is 1,024 bytes and 1 GB is 1,073,741,824 bytes. With these units, 8,192 tokens of 128 KB each make exactly 1 GB, so the arithmetic below stays whole.</aside>
 
 The formula is short enough to keep as code:
 
@@ -54,7 +76,12 @@ Take the running example: one 80 GB H100 serving Llama-3-8B, whose weights need 
 
 80 GB x 0.92 - 16 GB = 57.6 GB available for KV caches.
 
-At 1 GB per request with an 8,000-token context, 57.6 GB fits about 57 concurrent requests. That is the card's capacity for this model at this context length. Request number 58 waits for memory to free up, not for compute to free up. That waiting line is the queue you see as a slower first token at peak time.
+```widget chart
+{"type": "stack", "title": "Where one 80 GB H100 goes, serving Llama-3-8B", "unit": "GB", "labels": ["KV cache pool", "Model weights", "Held back by gpu_memory_utilization 0.92"], "series": [{"name": "GB", "values": [57.6, 16, 6.4]}], "caption": "80 x 0.92 = 73.6 GB usable. Minus 16 GB of weights leaves 57.6 GB for KV caches."}
+```
+
+
+At 1 GB per request with an 8,192-token context, 57.6 GB fits 57 concurrent requests, because 57.6 / 1 = 57.6 and a request cannot be split. That is the card's capacity for this model at this context length. Request number 58 waits for memory to free up, not for compute to free up. That waiting line is the queue you see as a slower first token at peak time.
 
 Batch APIs follow from the same arithmetic. A batch API is an endpoint where you submit many requests at once and accept results hours later instead of streamed now. At off-peak times, some of the 57 slots hold no request, so the provider can fill them with batch work and charge less for it, because the memory would otherwise sit unused.
 
@@ -66,7 +93,18 @@ The config lists 8 key-value heads but 32 attention heads. This is grouped-query
 
 Consider what that design choice means. Llama's designers changed the attention mechanism, the core computation of the model, in order to make this one stored object smaller. A more aggressive variant, multi-query attention, shares a single key-value head across all 32 attention heads, which shrinks the cache 32 times. When a field keeps redesigning its architectures around the same stored object, that object is the one whose size matters most.
 
-The formula turns these choices into numbers. If a model of the same size used 2 key-value heads instead of 8, each token would cost 32 KB instead of 128 KB, and the same 57.6 GB budget would fit roughly 230 requests at 8k context, four times as many. Halve the context length instead and the fit count doubles. Capacity is arithmetic you can do before you run any benchmark.
+The formula turns these choices into numbers. If a model of the same size used 2 key-value heads instead of 8, each token would cost 32 KB instead of 128 KB, and the same 57.6 GB budget would fit 230 requests at 8k context, four times as many. Halve the context length instead, to 4,096 tokens, and the fit count doubles to 115. Capacity is arithmetic you can do before you run any benchmark.
+
+```widget chart
+{"type": "bar", "title": "Requests that fit in the 57.6 GB pool", "labels": ["8 key-value heads, 8,192-token context", "8 key-value heads, 4,096-token context", "2 key-value heads, 8,192-token context"], "series": [{"name": "Requests", "values": [57, 115, 230]}], "caption": "Computed from the per-token formula, not measured."}
+```
+
+Try it yourself. Move the sliders to see how context length, key-value heads and the memory setting change the number of requests one card can serve. The defaults are the running example.
+
+```widget kv-calculator
+{"layers": 32, "kvHeads": 8, "headDim": 128, "bytesPerValue": 2, "gpuGb": 80, "util": 0.92, "weightsGb": 16, "context": 8192}
+```
+
 
 ## Why output tokens cost more
 

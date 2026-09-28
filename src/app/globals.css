@@ -334,6 +334,373 @@
   color: var(--accent);
 }
 
+/* A diagram or chart drawn from a ```mermaid block. */
+.prose figure.diagram {
+  margin-top: 1.75em;
+  margin-bottom: 1.75em;
+  padding: 1.25rem 1rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  overflow-x: auto;
+}
+
+.prose figure.diagram pre.mermaid {
+  margin: 0;
+  padding: 0;
+  background: none;
+  display: flex;
+  justify-content: center;
+  white-space: pre;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  color: var(--fg-muted);
+}
+
+/* The source text shows until the drawing replaces it; keep it quiet. */
+.prose figure.diagram pre.mermaid:not([data-drawn="true"]) {
+  justify-content: flex-start;
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+.prose figure.diagram pre.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mermaid names its text nodes "label", the same name as the site's small
+   uppercase label style. Inside a diagram, text keeps the diagram's font. */
+.prose figure.diagram pre.mermaid .label,
+.prose figure.diagram pre.mermaid text {
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* A pie drawn at full column width is taller than the screen. */
+.prose figure.diagram pre.mermaid svg[aria-roledescription="pie"] {
+  max-width: 480px !important;
+}
+
+/* A flow diagram keeps readable text: it scrolls sideways before it shrinks. */
+.prose figure.diagram pre.mermaid svg[aria-roledescription^="flowchart"] {
+  min-width: min(100%, 520px);
+}
+
+.prose figure.diagram figcaption {
+  margin-top: 0.75rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+/* A callout: one point the reader should not miss. */
+.prose aside.callout {
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 0.975rem;
+  line-height: 1.65;
+}
+
+.prose aside.callout > * + * {
+  margin-top: 0.6em;
+}
+
+.prose aside.callout.warn {
+  border-left-color: oklch(0.7 0.15 70);
+}
+
+/* A fold for arithmetic or detail most readers can skip. */
+.prose details {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  padding: 0.65rem 1rem;
+}
+
+.prose details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--fg);
+}
+
+.prose details[open] > summary {
+  margin-bottom: 0.6rem;
+}
+
+.prose details > * + * {
+  margin-top: 0.75em;
+}
+
+/* Interactive calculator. */
+.prose div.widget {
+  margin-top: 1.75em;
+  margin-bottom: 1.75em;
+}
+
+.widget-fallback {
+  font-size: 0.875rem;
+  color: var(--fg-muted);
+}
+
+.calc {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: 1.1rem 1.1rem 1rem;
+  font-size: 0.9375rem;
+}
+
+.calc-title {
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+}
+
+.calc-controls {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 0.9rem;
+}
+
+.calc-field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.calc-field span {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--fg-muted);
+}
+
+.calc-field strong {
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.calc-field input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.calc-results {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+@media (min-width: 640px) {
+  .calc-results {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.calc-results dt {
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+}
+
+.calc-results dd {
+  margin: 0.15rem 0 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+}
+
+.calc-results dd.calc-big {
+  color: var(--accent);
+  font-size: 1.25rem;
+}
+
+.calc-note {
+  margin-top: 0.85rem;
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+}
+
+/* Charts drawn by the chart widget. */
+.chart {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: 1rem 1.1rem;
+  font-size: 0.875rem;
+}
+
+.chart-title {
+  font-weight: 600;
+  color: var(--fg);
+  margin-bottom: 0.85rem;
+}
+
+.chart figcaption {
+  margin-top: 0.85rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+.prose .chart ul,
+.chart-bars {
+  list-style: none;
+  padding-left: 0;
+}
+
+.chart-bars {
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.chart-bars li {
+  margin: 0;
+}
+
+.chart-bars li::before {
+  display: none;
+}
+
+.chart-label {
+  display: block;
+  color: var(--fg-muted);
+  margin-bottom: 0.25rem;
+}
+
+.chart-track {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.chart-bar {
+  display: block;
+  height: 0.9rem;
+  min-width: 2px;
+  border-radius: 3px;
+  background: var(--accent);
+}
+
+.chart-value {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+.chart-stack {
+  display: flex;
+  height: 1.4rem;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.chart-part.part-0,
+.chart-swatch.part-0 {
+  background: var(--accent);
+}
+
+.chart-part.part-1,
+.chart-swatch.part-1 {
+  background: var(--fg-muted);
+}
+
+.chart-part.part-2,
+.chart-swatch.part-2 {
+  background: var(--border-strong);
+}
+
+.chart-part.part-3,
+.chart-swatch.part-3 {
+  background: var(--fg-faint);
+}
+
+.chart-legend {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  color: var(--fg-muted);
+}
+
+.chart-legend li {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.chart-legend li::before {
+  display: none;
+}
+
+.chart-legend strong {
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-share {
+  color: var(--fg-faint);
+}
+
+.chart-swatch {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 2px;
+}
+
+.chart-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.chart-grid {
+  stroke: var(--border);
+}
+
+.chart-axis {
+  fill: var(--fg-muted);
+  font-size: 14px;
+}
+
+.chart-point {
+  fill: var(--fg);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.chart-svg .series-0 polyline {
+  stroke: var(--accent);
+}
+
+.chart-svg .series-0 circle {
+  fill: var(--accent);
+}
+
+.chart-svg .series-1 polyline {
+  stroke: var(--fg-muted);
+}
+
+.chart-svg .series-1 circle {
+  fill: var(--fg-muted);
+}
+
+.chart-unit {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--fg-faint);
+}
+
 /* Smaller prose for card bodies, such as project descriptions. */
 .prose.prose-sm {
   font-size: 0.9375rem;

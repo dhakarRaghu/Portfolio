@@ -25,6 +25,20 @@ That one-request model is correct but incomplete. A real server runs a loop over
 
 Step 4 is the one that surprises. One iteration produces one token per request. A batch of 40 requests therefore produces 40 tokens in about the time one request takes for one token.
 
+```mermaid
+%% caption: One scheduler iteration. Every running request gets one token per forward pass, and a finished request frees its memory for the queue.
+flowchart TD
+  Q["Waiting queue"] --> S{"Fits the token and memory budget?"}
+  S -->|yes| B["Running batch"]
+  S -->|no, wait| Q
+  B --> F["One forward pass: one token per request"]
+  F --> E{"Request finished?"}
+  E -->|no| B
+  E -->|yes| R["Free its KV memory"]
+  R --> S
+```
+
+
 ## A decode iteration reads the weights once for the whole batch
 
 The reason needs one layer of detail. A decode step must read every model weight from GPU memory into the compute units, because producing one token requires the whole model. That read is the expensive part. Once the weights are loaded, the arithmetic for one sequence is a small set of vector operations. A second sequence uses the same loaded weights for almost no extra time. So the cost of a decode iteration is set by reading the weights, not by how many sequences are in the batch. The Databricks team measured this in its post "LLM Inference Performance Engineering: Best Practices" (October 2023): at batch size 1, model bandwidth utilisation on an A100 was only about 55% to 60%. Memory reads set the speed while compute has spare capacity.
@@ -85,7 +99,14 @@ Now return to the question this essay opened with. In the simulator, doubling th
 
 Nothing about your request changed. Mean TTFT rose about 1.9x, because more requests waited in the queue and shared the batch. This is a simulation of uniform short prompts, so read it as the direction and the mechanism, not as a prediction of your spike. Your real queue also holds longer prompts and other tenants, and this simulator does not model either. When your TTFT jumped at 3pm, the cause was the arrival rate, not your prompt. On a hosted API you cannot see the queue. You see only its effect on your TTFT.
 
+```widget chart
+{"type": "line", "title": "Mean time to first token when arrivals double", "unit": "milliseconds", "labels": ["6 requests per second", "12 requests per second"], "series": [{"name": "Static batching", "values": [5357, 6551]}, {"name": "Continuous batching", "values": [867, 1674]}], "caption": "From the teaching simulator: 40 short, uniform prompts. The prompts are the same at both rates."}
+```
+
+
 ### Retrying makes a queue longer
+
+<aside class="callout warn">Do not retry when the first token is slow. A retry is one more request in the same queue, so it makes the wait longer for everyone, including you.</aside>
 
 The instinct at this point is to retry when TTFT passes a threshold. A retry adds one more request to the same queue. The queue grows longer and the spike gets worse. On a provider API, back off instead. On your own server, recent vLLM versions can refuse work instead of queueing it. vLLM v0.29.0, released in September 2026, added two flags, `--max-num-queued-reqs` and `--max-num-queued-tokens`. Once the queue limit is hit, a new request is rejected with HTTP 503 instead of waiting. The docstring for these flags in vllm/config/scheduler.py at that release describes them as a TTFT quality-of-service control, meant to be set near your target TTFT multiplied by prefill throughput.
 
@@ -120,6 +141,12 @@ Each token in the KV cache stores two sets of vectors, one key and one value. Th
 
 For llama-3-8b in fp16: 2 x 8 x 128 x 2 bytes x 32 = 131,072 bytes, so each token costs 128KB of cache.
 
+The calculator below uses the same formula. Set the context to 32,768 tokens to see the contiguous case, where each request reserves 4 GB.
+
+```widget kv-calculator
+{"layers": 32, "kvHeads": 8, "headDim": 128, "bytesPerValue": 2, "gpuGb": 80, "util": 0.90, "weightsGb": 16, "context": 32768}
+```
+
 ### The measured capacity gain
 
 Running the arithmetic end to end on the same 80GB GPU, with requests that hold 1,800 tokens each on average:
@@ -147,6 +174,11 @@ private per request = ceil(600 / 16) = 38 blocks
 ```
 
 That is 2.97x more than paging without sharing, and 54x more than contiguous reservation. This arithmetic is one reason to keep a system prompt stable and at the start of every request.
+
+```widget chart
+{"type": "bar", "title": "Concurrent requests on one 80 GB GPU", "labels": ["Contiguous reservation, 32,768 tokens each", "Paged, 16-token blocks", "Paged, with a shared 1,200-token prefix"], "series": [{"name": "Requests", "values": [14, 253, 752]}], "caption": "56 GB KV pool, llama-3-8b, 1,800 tokens per request. Arithmetic from the per-token cost, not measured."}
+```
+
 
 ## A worked example you can check by hand
 
