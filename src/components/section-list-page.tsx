@@ -47,7 +47,7 @@ export async function SectionListPage({
         <EntryList
           entries={shown}
           byYear
-          summaries={section !== "notes"}
+          summaries={section === "papershelf"}
           emptyText={
             all.length === 0
               ? `No ${meta.singular} is published yet.`

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
@@ -5,7 +6,7 @@ import { EntryList } from "@/components/entry-list";
 import { Prose } from "@/components/prose";
 import { Toc } from "@/components/toc";
 import { extractToc } from "@/lib/markdown";
-import { formatDate, related, type Entry } from "@/lib/posts";
+import { formatDate, listEntries, related, type Entry } from "@/lib/posts";
 import { categoryLabel, sections, site } from "@/lib/site";
 
 type EntryPageProps = {
@@ -14,12 +15,79 @@ type EntryPageProps = {
   pool: Entry[];
 };
 
+/** A post opens with a bold "In short" paragraph when it has one. */
+const IN_SHORT = /^\*\*in short\b/i;
+
+/** Name, photo and one line, under the title: who wrote this. */
+function Byline({ project }: { project?: Entry }) {
+  return (
+    <div className="mt-6 flex items-center gap-3">
+      <Image
+        src={site.portrait}
+        alt=""
+        width={44}
+        height={44}
+        className="h-11 w-11 rounded-full object-cover"
+      />
+      <div className="min-w-0 text-[14px] leading-snug">
+        <Link href="/about" className="font-semibold text-fg hover:text-accent">
+          {site.name}
+        </Link>
+        <p className="text-fg-muted">
+          {project ? (
+            <>
+              From my work on{" "}
+              <Link href={`/projects#${project.slug}`} className="link">
+                {project.title}
+              </Link>
+            </>
+          ) : (
+            site.tagline
+          )}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/** The right rail on wide screens: a short bio, then the contents. */
+function AboutCard() {
+  return (
+    <div className="rounded-md border border-line bg-surface p-4 text-[13.5px] leading-relaxed text-fg-muted">
+      <p>
+        I am a software engineer in Bengaluru. I build backend systems and applied AI: agents,
+        retrieval, guardrails and evals.
+      </p>
+      <p className="mt-3 flex flex-wrap gap-x-3 gap-y-1">
+        <a href={site.x} target="_blank" rel="noreferrer" className="link">
+          X
+        </a>
+        <a href={site.github} target="_blank" rel="noreferrer" className="link">
+          GitHub
+        </a>
+        <a href={site.linkedin} target="_blank" rel="noreferrer" className="link">
+          LinkedIn
+        </a>
+        <a href="/rss.xml" className="link">
+          RSS
+        </a>
+      </p>
+    </div>
+  );
+}
+
 /** The full page for one post, note or paper note. */
 export async function EntryPage({ entry, pool }: EntryPageProps) {
   const toc = entry.section === "blog" ? extractToc(entry.body) : [];
   const more = related(entry, pool);
   const category = categoryLabel(entry.category);
   const section = sections[entry.section];
+  const project = entry.project
+    ? (await listEntries("projects")).find((p) => p.slug === entry.project)
+    : undefined;
+  // The "In short" box already states the point; a summary above it would
+  // say it twice on the first screen.
+  const dek = entry.summary && !IN_SHORT.test(entry.body) ? entry.summary : "";
 
   return (
     <article className="shell pt-10 md:pt-14">
@@ -46,9 +114,22 @@ export async function EntryPage({ entry, pool }: EntryPageProps) {
           {entry.title}
         </h1>
 
-        {entry.summary ? (
-          <p className="mt-4 text-[18px] leading-relaxed text-fg-muted">{entry.summary}</p>
-        ) : null}
+        {dek ? <p className="mt-4 text-[18px] leading-relaxed text-fg-muted">{dek}</p> : null}
+
+        <p className="mt-5 flex flex-wrap items-center gap-2">
+          {category ? (
+            <Link href={`/${entry.section}?category=${entry.category}`} className="badge">
+              {category}
+            </Link>
+          ) : null}
+          {entry.tags.map((tag) => (
+            <Link key={tag} href={`/${entry.section}?tag=${tag}`} className="chip">
+              #{tag}
+            </Link>
+          ))}
+        </p>
+
+        {entry.section === "blog" ? <Byline project={project} /> : null}
 
         <p className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-fg-muted">
           <time dateTime={entry.date}>{formatDate(entry.date)}</time>
@@ -62,16 +143,6 @@ export async function EntryPage({ entry, pool }: EntryPageProps) {
             </>
           ) : null}
         </p>
-
-        {entry.tags.length > 0 ? (
-          <p className="mt-3 flex flex-wrap gap-2">
-            {entry.tags.map((tag) => (
-              <Link key={tag} href={`/${entry.section}?tag=${tag}`} className="chip">
-                #{tag}
-              </Link>
-            ))}
-          </p>
-        ) : null}
 
         {entry.source ? (
           <p className="mt-5 border-l-2 border-line-strong pl-4 text-[14px] text-fg-muted">
@@ -90,7 +161,8 @@ export async function EntryPage({ entry, pool }: EntryPageProps) {
           <Prose markdown={entry.body} />
         </div>
         <aside className="hidden xl:block">
-          <div className="sticky top-20 pl-6">
+          <div className="sticky top-20 max-w-[18rem] space-y-8 pl-6">
+            {entry.section === "blog" ? <AboutCard /> : null}
             <Toc items={toc} />
           </div>
         </aside>

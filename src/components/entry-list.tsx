@@ -36,15 +36,16 @@ function Row({ entry, summary }: { entry: Entry; summary: boolean }) {
           {entry.draft ? <span className="ml-2 text-accent">draft</span> : null}
         </time>
         <div className="min-w-0">
-          <p className="text-[16.5px] font-medium leading-snug text-fg">{entry.title}</p>
+          <p className="text-[16.5px] font-semibold leading-snug text-fg group-hover:text-accent">
+            {entry.title}
+          </p>
           {summary && entry.summary ? (
             <p className="mt-1 text-[14px] leading-relaxed text-fg-muted">{entry.summary}</p>
           ) : null}
-          <p className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-fg-faint">
-            {category ? <span>{category}</span> : null}
-            {entry.section === "blog" ? <span>{entry.minutes} min read</span> : null}
+          <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[12px] text-fg-faint">
+            {category ? <span className="badge">{category}</span> : null}
             {entry.tags.slice(0, 3).map((tag) => (
-              <span key={tag} className="font-mono">
+              <span key={tag} className="chip">
                 #{tag}
               </span>
             ))}

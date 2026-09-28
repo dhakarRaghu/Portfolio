@@ -37,6 +37,7 @@ date: 2026-09-16
 summary: "One line. Shown in lists, in the RSS feed and as the page description."
 tags: [inference, vllm, evals]
 category: inference          # one of the slugs in src/lib/site.ts
+project: mission-hq          # optional: a slug in content/projects; shown under the byline
 section: blog
 draft: true                  # true = visible in dev only
 ---

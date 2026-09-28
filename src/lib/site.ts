@@ -19,6 +19,9 @@ export const site = {
   linkedin: "https://www.linkedin.com/in/raghvendra1853/",
   x: "https://x.com/Raghvendra56595",
   email: "raghvendrasinghdhakar2@gmail.com",
+  /** One line under the name in a post's byline. */
+  tagline: "Backend systems and applied AI. Always building.",
+  portrait: "/me-portrait.jpg",
 } as const;
 
 /** Contact rows shown beside the photo on the home and About pages. */
@@ -46,7 +49,8 @@ export const sections: Record<
   blog: {
     label: "Blog",
     singular: "post",
-    blurb: "Longer pieces on what I build: guardrails, human handoff, retrieval, evals and the backend around them.",
+    blurb:
+      "Long-form essays on AI systems, retrieval, LLM inference, evals and the backend systems around them. Each one teaches one topic from first principles.",
   },
   notes: {
     label: "Notes",

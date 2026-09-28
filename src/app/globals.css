@@ -164,6 +164,25 @@
     transition: border-color 150ms ease, color 150ms ease;
   }
 
+  /* Filled badge for a post's category, beside its tag chips. */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 4px;
+    background: var(--fg);
+    padding: 0.15rem 0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--bg);
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  a.badge:hover {
+    background: var(--accent);
+  }
+
   a.chip:hover,
   .chip[data-active="true"] {
     border-color: var(--fg-muted);

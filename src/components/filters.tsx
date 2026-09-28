@@ -18,9 +18,11 @@ function href(section: Section, params: Record<string, string | undefined>) {
   return qs ? `/${section}?${qs}` : `/${section}`;
 }
 
-/** Two chip rows: the fixed categories, then the most used tags. */
-export function Filters({ section, categoryCounts, tags, active, total }: FiltersProps) {
-  const shownTags = tags.slice(0, 14);
+/**
+ * The fixed categories with their counts. Tags are reached from a post; an
+ * active tag filter shows here as one chip that clears it.
+ */
+export function Filters({ section, categoryCounts, active, total }: FiltersProps) {
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap gap-2">
@@ -44,20 +46,14 @@ export function Filters({ section, categoryCounts, tags, active, total }: Filter
             </Link>
           ))}
       </div>
-      {shownTags.length > 0 ? (
-        <div className="flex flex-wrap gap-x-3 gap-y-1.5">
-          {shownTags.map(({ tag, count }) => (
-            <Link
-              key={tag}
-              href={href(section, { tag })}
-              className="font-mono text-[12px] text-fg-faint hover:text-fg data-[active=true]:text-fg"
-              data-active={active.tag === tag}
-            >
-              #{tag}
-              <span className="ml-1 opacity-70">{count}</span>
-            </Link>
-          ))}
-        </div>
+      {active.tag ? (
+        <p className="text-[13px] text-fg-muted">
+          Tagged{" "}
+          <Link href={href(section, { category: active.category })} className="chip" data-active>
+            #{active.tag} <span className="ml-1.5" aria-hidden>×</span>
+            <span className="sr-only">Clear the tag filter</span>
+          </Link>
+        </p>
       ) : null}
     </div>
   );

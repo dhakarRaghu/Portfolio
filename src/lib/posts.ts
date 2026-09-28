@@ -39,6 +39,8 @@ export type Entry = {
   period?: string;
   role?: string;
   status?: "active" | "shipped" | "archived";
+  /** Posts: the slug of the project on /projects this post came from. */
+  project?: string;
   /** Projects and posts: the one number the piece stands on. */
   metric?: string;
   featured?: boolean;
@@ -100,6 +102,7 @@ function parseEntry(section: Section, slug: string, raw: string): Entry {
     role: optionalString(data.role),
     status:
       status === "active" || status === "shipped" || status === "archived" ? status : undefined,
+    project: optionalString(data.project),
     metric: optionalString(data.metric),
     featured: data.featured === true,
   };
