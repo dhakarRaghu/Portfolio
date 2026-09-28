@@ -18,14 +18,14 @@ export default async function HomePage() {
   return (
     <>
       <section className="shell pb-16 pt-12 md:pb-20 md:pt-16">
-        <div className="grid gap-10 md:grid-cols-12 md:gap-10 lg:gap-14">
-          <div className="min-w-0 md:col-span-8">
+        <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_14rem] md:gap-10 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-12">
+          <div className="min-w-0">
             <p className="label">{profile.name}</p>
-            <h1 className="mt-3 max-w-[22ch] font-heading text-[32px] font-semibold leading-[1.12] tracking-[-0.02em] text-fg sm:text-[38px] lg:text-[46px]">
-              Software engineer, working on backend systems and applied AI.
+            <h1 className="mt-2 max-w-[34ch] font-heading text-[27px] font-semibold leading-[1.2] tracking-[-0.015em] text-fg sm:text-[31px] lg:text-[35px]">
+              I build AI agents and the backend that keeps them safe in production.
             </h1>
 
-            <div className="mt-7 max-w-[68ch] space-y-4 text-[16px] leading-[1.75] text-fg lg:text-[17px]">
+            <div className="mt-5 max-w-[44rem] space-y-4 text-[16.5px] leading-[1.75] text-fg lg:text-[18px]">
               <p>
                 Currently, I work at{" "}
                 <a href="https://juspay.io/" target="_blank" rel="noreferrer" className="link">
@@ -104,20 +104,20 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <figure className="mx-auto w-full max-w-[260px] md:col-span-4 md:mt-1 md:max-w-none">
-            <div className="overflow-hidden rounded-lg border border-line bg-bg-subtle">
+          <figure className="mx-auto w-full max-w-[16rem] md:mx-0 md:mt-1">
+            <div className="aspect-square w-full overflow-hidden rounded-lg border border-line bg-bg-subtle">
               <Image
                 src={profile.photo}
                 alt={`Portrait of ${profile.name}`}
                 width={922}
                 height={1232}
                 priority
-                sizes="(min-width: 1280px) 380px, (min-width: 768px) 30vw, 260px"
-                className="aspect-[3/4] w-full object-cover"
+                sizes="256px"
+                className="h-full w-full object-cover object-top"
               />
             </div>
-            <figcaption className="label mt-3 text-right">{profile.location}</figcaption>
-            <dl className="mt-6 grid grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-1">
+            <figcaption className="label mt-2">{profile.location}</figcaption>
+            <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-1">
               {contacts.map((c) => (
                 <div key={c.label} className="min-w-0">
                   <dt className="label">{c.label}</dt>

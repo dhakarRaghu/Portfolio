@@ -66,7 +66,14 @@ function Byline({ entry, project }: { entry: Entry; project?: Entry }) {
 /** The right rail on wide screens: a short bio, then the contents. */
 function AboutCard() {
   return (
-    <div className="text-[14px] leading-relaxed text-fg-muted">
+    <div className="text-[14.5px] leading-relaxed text-fg-muted">
+      <Image
+        src={site.portrait}
+        alt=""
+        width={64}
+        height={64}
+        className="mb-3 h-16 w-16 rounded-full object-cover"
+      />
       <p className="font-semibold text-fg">{site.name}</p>
       <p className="mt-1">
         Software engineer in Bengaluru. I build backend systems and applied AI: agents,
@@ -105,7 +112,13 @@ export async function EntryPage({ entry, pool }: EntryPageProps) {
 
   return (
     <article className="shell pb-2 pt-8 md:pt-10">
-      <div className="mx-auto grid max-w-[44rem] gap-12 xl:max-w-[64rem] xl:grid-cols-[minmax(0,44rem)_16rem] xl:justify-between">
+      <div className="mx-auto grid max-w-[42rem] gap-8 xl:max-w-none xl:grid-cols-[13rem_minmax(0,42rem)_15rem] xl:justify-between">
+        <aside className="hidden xl:block">
+          <div className="sticky top-24">
+            <Toc items={toc} />
+          </div>
+        </aside>
+
         <div className="min-w-0">
           <header className="border-b border-line pb-6">
             <nav aria-label="Breadcrumb" className="label flex flex-wrap items-center gap-2">
@@ -198,9 +211,8 @@ export async function EntryPage({ entry, pool }: EntryPageProps) {
         </div>
 
         <aside className="hidden xl:block">
-          <div className="sticky top-24 space-y-8">
+          <div className="sticky top-24">
             {entry.section === "blog" ? <AboutCard /> : null}
-            <Toc items={toc} />
           </div>
         </aside>
       </div>

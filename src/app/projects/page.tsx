@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { ArrowUpRight, Github } from "lucide-react";
 
 import { EmptyState } from "@/components/entry-list";
@@ -30,19 +29,20 @@ function Status({ status }: { status: Entry["status"] }) {
   );
 }
 
+/** Small text links: the product and the code. */
 function Links({ project }: { project: Entry }) {
   if (!project.link && !project.repo) return null;
   return (
-    <p className="flex flex-wrap gap-2">
+    <p className="flex flex-wrap gap-x-4 gap-y-1 text-[14px]">
       {project.link ? (
-        <a href={project.link} target="_blank" rel="noreferrer" className="btn btn-secondary h-9 px-3.5 text-[13px]">
+        <a href={project.link} target="_blank" rel="noreferrer" className="link inline-flex items-center gap-0.5">
           Visit
-          <ArrowUpRight aria-hidden strokeWidth={1.8} />
+          <ArrowUpRight aria-hidden className="h-3.5 w-3.5" strokeWidth={1.8} />
         </a>
       ) : null}
       {project.repo ? (
-        <a href={project.repo} target="_blank" rel="noreferrer" className="btn btn-secondary h-9 px-3.5 text-[13px]">
-          <Github aria-hidden strokeWidth={1.8} />
+        <a href={project.repo} target="_blank" rel="noreferrer" className="link inline-flex items-center gap-1">
+          <Github aria-hidden className="h-3.5 w-3.5" strokeWidth={1.8} />
           Source
         </a>
       ) : null}
@@ -50,74 +50,54 @@ function Links({ project }: { project: Entry }) {
   );
 }
 
-/** A large card for a featured project: text on the left, details below. */
-function FeaturedCard({ project }: { project: Entry }) {
+/**
+ * One project as a row, like a blog row: dates on the left, then the name,
+ * one line of what it is, the stack, and the links. The longer story opens
+ * under "What I built".
+ */
+function ProjectRow({ project }: { project: Entry }) {
   return (
-    <article id={project.slug} className="card scroll-mt-24 p-6 md:p-8">
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <h2 className="font-heading text-[26px] font-semibold leading-tight text-fg">{project.title}</h2>
-        <Status status={project.status} />
-      </div>
-      <p className="mt-1.5 flex flex-wrap gap-x-3 text-[13px] text-fg-muted">
-        {project.period ? <span>{project.period}</span> : null}
-        {project.role ? <span>· {project.role}</span> : null}
-      </p>
-      {project.summary ? (
-        <p className="mt-4 max-w-[70ch] text-[16px] leading-relaxed text-fg">{project.summary}</p>
-      ) : null}
-      {project.body ? (
-        <Prose markdown={project.body} className="prose-sm mt-4 max-w-[70ch]" />
-      ) : null}
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-5">
-        <p className="flex flex-wrap gap-2">
-          {project.tags.map((tag) => (
-            <span key={tag} className="chip">
-              {tag}
-            </span>
-          ))}
-        </p>
-        <Links project={project} />
-      </div>
-    </article>
-  );
-}
-
-/** A compact card for earlier projects: screenshot on top, then text. */
-function CompactCard({ project }: { project: Entry }) {
-  return (
-    <article id={project.slug} className="card flex scroll-mt-24 flex-col overflow-hidden p-0">
-      {project.image ? (
-        <div className="border-b border-line bg-bg-subtle">
-          <Image
-            src={project.image}
-            alt={`Screenshot of ${project.title}`}
-            width={800}
-            height={500}
-            sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
-            className="aspect-[16/10] w-full object-cover object-top"
-          />
-        </div>
-      ) : null}
-      <div className="flex flex-1 flex-col p-5">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-          <h3 className="font-heading text-[19px] font-semibold leading-tight text-fg">{project.title}</h3>
-          <Status status={project.status} />
-        </div>
-        {project.summary ? (
-          <p className="mt-2 text-[14.5px] leading-relaxed text-fg-muted">{project.summary}</p>
-        ) : null}
-        <p className="mt-4 flex flex-wrap gap-1.5">
-          {project.tags.slice(0, 5).map((tag) => (
-            <span key={tag} className="chip">
-              {tag}
-            </span>
-          ))}
-        </p>
-        <div className="mt-auto pt-5">
-          <Links project={project} />
+    <li id={project.slug} className="scroll-mt-24 border-b border-line py-5 last:border-b-0">
+      <div className="grid gap-1.5 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-5">
+        <p className="label whitespace-nowrap pt-[6px]">{project.period ?? project.date.slice(0, 4)}</p>
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+            <h3 className="font-heading text-[19px] font-semibold leading-snug text-fg">
+              {project.link ? (
+                <a href={project.link} target="_blank" rel="noreferrer" className="hover:text-accent">
+                  {project.title}
+                </a>
+              ) : (
+                project.title
+              )}
+            </h3>
+            <Status status={project.status} />
+            {project.role ? <span className="text-[13.5px] text-fg-muted">{project.role}</span> : null}
+            <Links project={project} />
+          </div>
+          {project.summary ? (
+            <p className="mt-1.5 max-w-[48rem] text-[16px] leading-relaxed text-fg-muted">
+              {project.summary}
+            </p>
+          ) : null}
+          <p className="mt-2.5 flex flex-wrap gap-1.5">
+            {project.tags.slice(0, 6).map((tag) => (
+              <span key={tag} className="chip">
+                {tag}
+              </span>
+            ))}
+          </p>
+          {project.body ? (
+            <details className="group mt-3 max-w-[48rem]">
+              <summary className="cursor-pointer text-[14px] font-semibold text-fg hover:text-accent">
+                What I built
+              </summary>
+              <Prose markdown={project.body} className="prose-sm mt-2" />
+            </details>
+          ) : null}
         </div>
       </div>
-    </article>
+    </li>
   );
 }
 
@@ -128,27 +108,40 @@ export default async function ProjectsPage() {
   return (
     <>
       <PageHeader title="Projects" count={projects.length} blurb={sections.projects.blurb} />
-      <div className="shell space-y-14">
+      <div className="shell space-y-8 pb-4">
         {projects.length === 0 ? <EmptyState text="No project is published yet." /> : null}
 
         {featured.length > 0 ? (
-          <section aria-label="Current projects" className="space-y-4">
-            {featured.map((p) => (
-              <FeaturedCard key={p.slug} project={p} />
-            ))}
+          <section aria-labelledby="current">
+            <h2
+              id="current"
+              className="flex items-baseline gap-2 border-b border-line pb-2 font-heading text-[20px] font-semibold text-fg"
+            >
+              Current
+              <span className="font-mono text-[12px] font-normal text-fg-faint">({featured.length})</span>
+            </h2>
+            <ul>
+              {featured.map((p) => (
+                <ProjectRow key={p.slug} project={p} />
+              ))}
+            </ul>
           </section>
         ) : null}
 
         {rest.length > 0 ? (
           <section aria-labelledby="earlier">
-            <h2 id="earlier" className="font-heading text-[22px] font-semibold text-fg">
+            <h2
+              id="earlier"
+              className="flex items-baseline gap-2 border-b border-line pb-2 font-heading text-[20px] font-semibold text-fg"
+            >
               Earlier
+              <span className="font-mono text-[12px] font-normal text-fg-faint">({rest.length})</span>
             </h2>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <ul>
               {rest.map((p) => (
-                <CompactCard key={p.slug} project={p} />
+                <ProjectRow key={p.slug} project={p} />
               ))}
-            </div>
+            </ul>
           </section>
         ) : null}
       </div>

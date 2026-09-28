@@ -27,7 +27,7 @@
     --radius: 0.75rem;
     --radius-md: calc(var(--radius) * 0.8);
     --radius-sm: calc(var(--radius) * 0.6);
-    --font-sans: "Geist";
+    --font-sans: "Assistant";
     --font-mono: "Geist Mono";
   }
 
@@ -70,8 +70,8 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
+    outline: 1.5px solid color-mix(in oklch, var(--accent) 70%, transparent);
+    outline-offset: 2px;
     border-radius: 2px;
   }
 
@@ -90,20 +90,15 @@
 --------------------------------------------------------------------------- */
 
 @layer components {
-  /* Page gutters, shared by every page. 80rem is about 1280px of content on
-     a wide screen; below that the gutters shrink with the viewport. */
+  /* One container for every page: up to 90rem wide, with side padding that
+     grows with the screen, from 16px on a phone to 48px on a desktop. */
   .shell {
     width: 100%;
-    max-width: 68rem;
+    max-width: 90rem;
     margin-inline: auto;
-    padding-inline: 1.25rem;
+    padding-inline: clamp(1rem, 3.5vw, 3rem);
   }
 
-  @media (min-width: 768px) {
-    .shell {
-      padding-inline: 2.5rem;
-    }
-  }
 
   @media (min-width: 1280px) {
     .shell {
@@ -309,8 +304,11 @@
    Article bodies rendered from markdown. Sized for a 44rem column.
 --------------------------------------------------------------------------- */
 
+/* Assistant at 18px on a 42rem column: about 75 characters a line. Line
+   height and paragraph gaps stay at or under arpitbhayani.me's 31.5px and
+   24px, so text reads as one block, not loose lines. */
 .prose {
-  font-size: 1.0625rem;
+  font-size: 1.125rem;
   line-height: 1.75;
   color: var(--fg);
 }
@@ -723,7 +721,7 @@
 }
 
 .prose h2 {
-  font-size: 1.375rem;
+  font-size: 1.5rem;
   margin-top: 2em;
 }
 

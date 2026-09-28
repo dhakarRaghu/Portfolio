@@ -24,9 +24,9 @@ export default function AboutPage() {
         blurb="Experience, projects, education and the résumé."
       />
 
-      <div className="shell grid gap-12 md:grid-cols-[1fr_16rem] md:gap-16 lg:grid-cols-[1fr_18rem]">
+      <div className="shell grid gap-10 md:grid-cols-[minmax(0,1fr)_14rem] lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-12">
         <div className="min-w-0 space-y-16">
-          <section className="max-w-[68ch] space-y-4 text-[16.5px] leading-[1.75] text-fg">
+          <section className="max-w-[44rem] space-y-4 text-[16.5px] leading-[1.75] text-fg lg:text-[18px]">
             <p>
               I am {profile.name}, a software engineer in {profile.location}. I work on backend
               systems and applied AI, on the part of a product that sits between a language model
@@ -239,15 +239,15 @@ export default function AboutPage() {
 
         <aside className="order-first md:order-none">
           <div className="md:sticky md:top-20">
-            <div className="mx-auto max-w-[240px] overflow-hidden rounded-lg border border-line bg-bg-subtle md:mx-0 md:max-w-none">
+            <div className="mx-auto aspect-square w-full max-w-[16rem] overflow-hidden rounded-lg border border-line bg-bg-subtle md:mx-0">
               <Image
                 src={profile.photo}
                 alt={`Portrait of ${profile.name}`}
                 width={922}
                 height={1232}
                 priority
-                sizes="(min-width: 1024px) 288px, (min-width: 768px) 256px, 240px"
-                className="aspect-[3/4] w-full object-cover"
+                sizes="256px"
+                className="h-full w-full object-cover object-top"
               />
             </div>
             <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-1">
