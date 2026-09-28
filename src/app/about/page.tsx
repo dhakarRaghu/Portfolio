@@ -24,9 +24,9 @@ export default function AboutPage() {
         blurb="Experience, projects, education and the résumé."
       />
 
-      <div className="shell grid gap-10 md:grid-cols-[minmax(0,1fr)_14rem] lg:grid-cols-[minmax(0,44rem)_16rem] lg:gap-12 2xl:grid-cols-[minmax(0,48rem)_16rem]">
+      <div className="shell grid gap-10 md:grid-cols-[minmax(0,1fr)_15rem] lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-14 xl:grid-cols-[minmax(0,1fr)_20rem] xl:gap-16">
         <div className="min-w-0 space-y-16">
-          <section className="space-y-4 text-[16.5px] leading-[1.75] text-fg lg:text-[18px] 2xl:text-[19px]">
+          <section className="space-y-4 text-[16.5px] leading-[1.75] text-fg lg:text-[18px] xl:text-[19px] 2xl:text-[20px]">
             <p>
               I am {profile.name}, a software engineer in {profile.location}. I work on backend
               systems and applied AI, on the part of a product that sits between a language model
@@ -239,14 +239,14 @@ export default function AboutPage() {
 
         <aside className="order-first md:order-none">
           <div className="md:sticky md:top-20">
-            <div className="mx-auto aspect-square w-full max-w-[16rem] overflow-hidden rounded-lg border border-line bg-bg-subtle md:mx-0">
+            <div className="mx-auto aspect-square w-full max-w-[16rem] overflow-hidden rounded-lg border border-line bg-bg-subtle md:mx-0 md:max-w-none">
               <Image
                 src={profile.photo}
                 alt={`Portrait of ${profile.name}`}
                 width={922}
                 height={1232}
                 priority
-                sizes="256px"
+                sizes="(min-width: 1280px) 320px, 272px"
                 className="h-full w-full object-cover object-top"
               />
             </div>

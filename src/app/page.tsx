@@ -18,7 +18,7 @@ export default async function HomePage() {
   return (
     <>
       <section className="shell pb-16 pt-12 md:pb-20 md:pt-16">
-        <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_14rem] lg:grid-cols-[minmax(0,44rem)_16rem] lg:gap-12 2xl:grid-cols-[minmax(0,48rem)_16rem]">
+        <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_15rem] lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-14 xl:grid-cols-[minmax(0,1fr)_20rem] xl:gap-16">
           <div className="min-w-0">
             <h1 className="font-heading text-[30px] font-semibold leading-[1.15] tracking-[-0.015em] text-fg sm:text-[36px]">
               Hey, I am Raghvendra
@@ -27,7 +27,7 @@ export default async function HomePage() {
               backend systems and applied AI. always building.
             </p>
 
-            <div className="mt-6 space-y-4 text-[16.5px] leading-[1.75] text-fg lg:text-[18px] 2xl:text-[19px]">
+            <div className="mt-6 space-y-4 text-[16.5px] leading-[1.75] text-fg lg:text-[18px] xl:text-[19px] 2xl:text-[20px]">
               <p>
                 Currently, I work at{" "}
                 <a href="https://juspay.io/" target="_blank" rel="noreferrer" className="link">
@@ -106,7 +106,7 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <figure className="mx-auto w-full max-w-[16rem] md:mx-0 md:mt-1">
+          <figure className="mx-auto w-full max-w-[16rem] md:mx-0 md:mt-1 md:max-w-none">
             <div className="aspect-square w-full overflow-hidden rounded-lg border border-line bg-bg-subtle">
               <Image
                 src={profile.photo}
@@ -114,7 +114,7 @@ export default async function HomePage() {
                 width={922}
                 height={1232}
                 priority
-                sizes="256px"
+                sizes="(min-width: 1280px) 320px, 272px"
                 className="h-full w-full object-cover object-top"
               />
             </div>
