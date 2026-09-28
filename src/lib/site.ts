@@ -3,9 +3,9 @@
  * categories, and the social handles. Résumé content stays in content.ts.
  */
 
-/** The domain is not bought yet. Set NEXT_PUBLIC_SITE_URL on Vercel when it is. */
+/** The live domain. NEXT_PUBLIC_SITE_URL on Vercel overrides it. */
 export const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://raghvendra.tech";
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://www.raghvendra.xyz";
 
 export const site = {
   name: "Raghvendra Singh Dhakar",
