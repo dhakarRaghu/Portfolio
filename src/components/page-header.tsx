@@ -5,28 +5,31 @@ type PageHeaderProps = {
   title: string;
   count?: number;
   blurb?: string;
+  /** Shown on the title line, at the right: an RSS link, for example. */
+  actions?: ReactNode;
   children?: ReactNode;
 };
 
-/** Title block at the top of a page: kicker, title with an optional count, blurb. */
-export function PageHeader({ kicker, title, count, blurb, children }: PageHeaderProps) {
+/** Title block at the top of a page: title with a count, one-line blurb, then filters. */
+export function PageHeader({ kicker, title, count, blurb, actions, children }: PageHeaderProps) {
   return (
-    <header className="shell pb-10 pt-12 md:pb-12 md:pt-16">
+    <header className="shell pb-6 pt-8 md:pt-10">
       {kicker ? <p className="label">{kicker}</p> : null}
-      <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <h1 className="font-heading text-[36px] font-semibold leading-[1.1] tracking-[-0.02em] text-fg md:text-[46px]">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <h1 className="font-heading text-[30px] font-semibold leading-[1.15] tracking-[-0.02em] text-fg md:text-[36px]">
           {title}
+          {typeof count === "number" ? (
+            <span className="ml-2 align-middle font-mono text-[15px] font-normal text-fg-faint">
+              ({count})
+            </span>
+          ) : null}
         </h1>
-        {typeof count === "number" ? (
-          <span className="rounded-full border border-line bg-surface px-2.5 py-0.5 font-mono text-[12px] text-fg-muted">
-            {count}
-          </span>
-        ) : null}
+        {actions}
       </div>
       {blurb ? (
-        <p className="mt-4 max-w-[60ch] text-[16.5px] leading-relaxed text-fg-muted">{blurb}</p>
+        <p className="mt-2 max-w-[65ch] text-[15.5px] leading-relaxed text-fg-muted">{blurb}</p>
       ) : null}
-      {children ? <div className="mt-7">{children}</div> : null}
+      {children ? <div className="mt-5 border-t border-line pt-5">{children}</div> : null}
     </header>
   );
 }

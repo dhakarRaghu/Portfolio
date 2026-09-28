@@ -29,20 +29,20 @@ function Row({ entry, summary }: { entry: Entry; summary: boolean }) {
     <li>
       <Link
         href={href}
-        className="group -mx-3 grid gap-1 rounded-lg px-3 py-3.5 transition-colors hover:bg-surface sm:grid-cols-[6.5rem_1fr_auto] sm:gap-6"
+        className="group -mx-3 grid gap-1 rounded-md px-3 py-2.5 transition-colors hover:bg-surface sm:grid-cols-[6rem_1fr_auto] sm:gap-5"
       >
-        <time dateTime={entry.date} className="label pt-[5px]">
+        <time dateTime={entry.date} className="label whitespace-nowrap pt-[5px]">
           {formatDate(entry.date, "short")}
-          {entry.draft ? <span className="ml-2 text-accent">draft</span> : null}
+          {entry.draft ? <span className="ml-2 text-accent sm:ml-0 sm:block">draft</span> : null}
         </time>
         <div className="min-w-0">
-          <p className="text-[16.5px] font-semibold leading-snug text-fg group-hover:text-accent">
+          <p className="text-[16px] font-semibold leading-snug text-fg group-hover:text-accent">
             {entry.title}
           </p>
           {summary && entry.summary ? (
             <p className="mt-1 text-[14px] leading-relaxed text-fg-muted">{entry.summary}</p>
           ) : null}
-          <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[12px] text-fg-faint">
+          <p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[12px] text-fg-faint">
             {category ? <span className="badge">{category}</span> : null}
             {entry.tags.slice(0, 3).map((tag) => (
               <span key={tag} className="chip">
@@ -87,19 +87,19 @@ export function EntryList({
   }
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-7">
       {groupByYear(entries).map((group) => (
         <section key={group.year} aria-labelledby={`year-${group.year}`}>
           <h2
             id={`year-${group.year}`}
-            className="flex items-baseline gap-3 border-b border-line pb-3 font-heading text-[22px] font-semibold text-fg"
+            className="flex items-baseline gap-2 border-b border-line pb-2 font-heading text-[20px] font-semibold text-fg"
           >
             {group.year}
             <span className="font-mono text-[12px] font-normal text-fg-faint">
-              {group.entries.length}
+              ({group.entries.length})
             </span>
           </h2>
-          <ul className="mt-2">
+          <ul className="mt-1.5">
             {group.entries.map((entry) => (
               <Row key={entry.slug} entry={entry} summary={summaries} />
             ))}

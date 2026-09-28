@@ -1,3 +1,5 @@
+import { Rss } from "lucide-react";
+
 import { EntryList } from "@/components/entry-list";
 import { Filters } from "@/components/filters";
 import { PageHeader } from "@/components/page-header";
@@ -34,7 +36,19 @@ export async function SectionListPage({
 
   return (
     <>
-      <PageHeader title={meta.label} count={all.length} blurb={meta.blurb}>
+      <PageHeader
+        title={meta.label}
+        count={all.length}
+        blurb={meta.blurb}
+        actions={
+          section === "blog" ? (
+            <a href="/rss.xml" className="chip gap-1.5" aria-label="RSS feed">
+              <Rss className="h-3 w-3" strokeWidth={2} aria-hidden />
+              RSS
+            </a>
+          ) : null
+        }
+      >
         <Filters
           section={section}
           categoryCounts={categoryCounts}
@@ -43,7 +57,7 @@ export async function SectionListPage({
           total={all.length}
         />
       </PageHeader>
-      <div className="shell">
+      <div className="shell pb-4">
         <EntryList
           entries={shown}
           byYear

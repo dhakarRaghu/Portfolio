@@ -68,8 +68,7 @@ function AboutCard() {
   return (
     <div className="text-[14px] leading-relaxed text-fg-muted">
       <p className="font-semibold text-fg">{site.name}</p>
-      <p className="mt-1">{site.tagline}</p>
-      <p className="mt-2">
+      <p className="mt-1">
         Software engineer in Bengaluru. I build backend systems and applied AI: agents,
         retrieval, guardrails and evals.
       </p>
@@ -105,7 +104,7 @@ export async function EntryPage({ entry, pool }: EntryPageProps) {
   const dek = entry.summary && !IN_SHORT.test(entry.body) ? entry.summary : "";
 
   return (
-    <article className="shell pb-4 pt-8 md:pt-12">
+    <article className="shell pb-2 pt-8 md:pt-10">
       <div className="mx-auto grid max-w-[44rem] gap-12 xl:max-w-[64rem] xl:grid-cols-[minmax(0,44rem)_16rem] xl:justify-between">
         <div className="min-w-0">
           <header className="border-b border-line pb-6">
@@ -176,7 +175,7 @@ export async function EntryPage({ entry, pool }: EntryPageProps) {
             <Prose markdown={entry.body} />
           </div>
 
-          <footer className="mt-14 border-t border-line pt-8">
+          <footer className="mt-12 border-t border-line pt-6">
             <p className="text-[15px] leading-relaxed text-fg-muted">
               If something here is wrong, tell me on{" "}
               <a href={site.x} target="_blank" rel="noreferrer" className="link">
@@ -191,7 +190,7 @@ export async function EntryPage({ entry, pool }: EntryPageProps) {
 
             {more.length > 0 ? (
               <section className="mt-10">
-                <h2 className="label">More {section.label.toLowerCase()} like this</h2>
+                <h2 className="label">More {section.singular}s like this</h2>
                 <EntryList entries={more} summaries={false} />
               </section>
             ) : null}
