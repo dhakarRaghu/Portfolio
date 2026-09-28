@@ -24,9 +24,9 @@ export default function AboutPage() {
         blurb="Experience, projects, education and the résumé."
       />
 
-      <div className="shell grid gap-10 md:grid-cols-[minmax(0,1fr)_14rem] lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-12">
+      <div className="shell grid gap-10 md:grid-cols-[minmax(0,1fr)_14rem] lg:grid-cols-[minmax(0,44rem)_16rem] lg:gap-12 2xl:grid-cols-[minmax(0,48rem)_16rem]">
         <div className="min-w-0 space-y-16">
-          <section className="max-w-[44rem] space-y-4 text-[16.5px] leading-[1.75] text-fg lg:text-[18px]">
+          <section className="space-y-4 text-[16.5px] leading-[1.75] text-fg lg:text-[18px] 2xl:text-[19px]">
             <p>
               I am {profile.name}, a software engineer in {profile.location}. I work on backend
               systems and applied AI, on the part of a product that sits between a language model

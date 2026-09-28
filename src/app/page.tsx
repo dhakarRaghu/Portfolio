@@ -18,14 +18,16 @@ export default async function HomePage() {
   return (
     <>
       <section className="shell pb-16 pt-12 md:pb-20 md:pt-16">
-        <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_14rem] md:gap-10 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-12">
+        <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_14rem] lg:grid-cols-[minmax(0,44rem)_16rem] lg:gap-12 2xl:grid-cols-[minmax(0,48rem)_16rem]">
           <div className="min-w-0">
-            <p className="label">{profile.name}</p>
-            <h1 className="mt-2 max-w-[34ch] font-heading text-[27px] font-semibold leading-[1.2] tracking-[-0.015em] text-fg sm:text-[31px] lg:text-[35px]">
-              I build AI agents and the backend that keeps them safe in production.
+            <h1 className="font-heading text-[30px] font-semibold leading-[1.15] tracking-[-0.015em] text-fg sm:text-[36px]">
+              Hey, I am Raghvendra
             </h1>
+            <p className="mt-1.5 text-[17px] text-fg-muted">
+              backend systems and applied AI. always building.
+            </p>
 
-            <div className="mt-5 max-w-[44rem] space-y-4 text-[16.5px] leading-[1.75] text-fg lg:text-[18px]">
+            <div className="mt-6 space-y-4 text-[16.5px] leading-[1.75] text-fg lg:text-[18px] 2xl:text-[19px]">
               <p>
                 Currently, I work at{" "}
                 <a href="https://juspay.io/" target="_blank" rel="noreferrer" className="link">
