@@ -18,33 +18,46 @@ type EntryPageProps = {
 /** A post opens with a bold "In short" paragraph when it has one. */
 const IN_SHORT = /^\*\*in short\b/i;
 
-/** Name, photo and one line, under the title: who wrote this. */
-function Byline({ project }: { project?: Entry }) {
+/** Photo, name, date and reading time on one block under the title. */
+function Byline({ entry, project }: { entry: Entry; project?: Entry }) {
   return (
-    <div className="mt-6 flex items-center gap-3">
+    <div className="flex items-center gap-3">
       <Image
         src={site.portrait}
         alt=""
-        width={44}
-        height={44}
-        className="h-11 w-11 rounded-full object-cover"
+        width={40}
+        height={40}
+        className="h-10 w-10 shrink-0 rounded-full object-cover"
       />
-      <div className="min-w-0 text-[14px] leading-snug">
+      <div className="min-w-0 text-[13.5px] leading-snug">
         <Link href="/about" className="font-semibold text-fg hover:text-accent">
           {site.name}
         </Link>
-        <p className="text-fg-muted">
-          {project ? (
+        <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-fg-muted">
+          <time dateTime={entry.date}>{formatDate(entry.date)}</time>
+          <span aria-hidden>·</span>
+          <span>{entry.minutes} min read</span>
+          {entry.updated ? (
             <>
-              From my work on{" "}
-              <Link href={`/projects#${project.slug}`} className="link">
-                {project.title}
-              </Link>
+              <span aria-hidden>·</span>
+              <span>updated {formatDate(entry.updated)}</span>
             </>
-          ) : (
-            site.tagline
-          )}
+          ) : null}
+          {entry.draft ? (
+            <>
+              <span aria-hidden>·</span>
+              <span className="text-accent">draft</span>
+            </>
+          ) : null}
         </p>
+        {project ? (
+          <p className="mt-0.5 text-fg-muted">
+            From my work on{" "}
+            <Link href={`/projects#${project.slug}`} className="link">
+              {project.title}
+            </Link>
+          </p>
+        ) : null}
       </div>
     </div>
   );
@@ -53,12 +66,14 @@ function Byline({ project }: { project?: Entry }) {
 /** The right rail on wide screens: a short bio, then the contents. */
 function AboutCard() {
   return (
-    <div className="rounded-md border border-line bg-surface p-4 text-[13.5px] leading-relaxed text-fg-muted">
-      <p>
-        I am a software engineer in Bengaluru. I build backend systems and applied AI: agents,
+    <div className="text-[14px] leading-relaxed text-fg-muted">
+      <p className="font-semibold text-fg">{site.name}</p>
+      <p className="mt-1">{site.tagline}</p>
+      <p className="mt-2">
+        Software engineer in Bengaluru. I build backend systems and applied AI: agents,
         retrieval, guardrails and evals.
       </p>
-      <p className="mt-3 flex flex-wrap gap-x-3 gap-y-1">
+      <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
         <a href={site.x} target="_blank" rel="noreferrer" className="link">
           X
         </a>
@@ -90,107 +105,106 @@ export async function EntryPage({ entry, pool }: EntryPageProps) {
   const dek = entry.summary && !IN_SHORT.test(entry.body) ? entry.summary : "";
 
   return (
-    <article className="shell pt-10 md:pt-14">
-      <div className="mx-auto max-w-[44rem]">
-        <nav aria-label="Breadcrumb" className="label flex flex-wrap items-center gap-2">
-          <Link href="/" className="hover:text-fg">
-            Home
-          </Link>
-          <span aria-hidden>/</span>
-          <Link href={`/${entry.section}`} className="hover:text-fg">
-            {section.label}
-          </Link>
-          {category ? (
-            <>
-              <span aria-hidden>/</span>
-              <Link href={`/${entry.section}?category=${entry.category}`} className="hover:text-fg">
-                {category}
-              </Link>
-            </>
-          ) : null}
-        </nav>
-
-        <h1 className="mt-5 font-heading font-semibold text-[34px] leading-[1.12] tracking-[-0.015em] text-fg md:text-[44px]">
-          {entry.title}
-        </h1>
-
-        {dek ? <p className="mt-4 text-[18px] leading-relaxed text-fg-muted">{dek}</p> : null}
-
-        <p className="mt-5 flex flex-wrap items-center gap-2">
-          {category ? (
-            <Link href={`/${entry.section}?category=${entry.category}`} className="badge">
-              {category}
-            </Link>
-          ) : null}
-          {entry.tags.map((tag) => (
-            <Link key={tag} href={`/${entry.section}?tag=${tag}`} className="chip">
-              #{tag}
-            </Link>
-          ))}
-        </p>
-
-        {entry.section === "blog" ? <Byline project={project} /> : null}
-
-        <p className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-fg-muted">
-          <time dateTime={entry.date}>{formatDate(entry.date)}</time>
-          {entry.updated ? <span>updated {formatDate(entry.updated)}</span> : null}
-          <span aria-hidden>·</span>
-          <span>{entry.minutes} min read</span>
-          {entry.draft ? (
-            <>
-              <span aria-hidden>·</span>
-              <span className="text-accent">draft, not published</span>
-            </>
-          ) : null}
-        </p>
-
-        {entry.source ? (
-          <p className="mt-5 border-l-2 border-line-strong pl-4 text-[14px] text-fg-muted">
-            Source:{" "}
-            <a href={entry.source} target="_blank" rel="noreferrer" className="link">
-              {entry.sourceTitle ?? entry.source}
-              <ArrowUpRight className="ml-0.5 inline h-3.5 w-3.5" strokeWidth={1.7} />
-            </a>
-          </p>
-        ) : null}
-      </div>
-
-      <div className="mx-auto mt-10 grid max-w-[44rem] gap-10 xl:max-w-none xl:grid-cols-[1fr_44rem_1fr]">
-        <div className="hidden xl:block" />
+    <article className="shell pb-4 pt-8 md:pt-12">
+      <div className="mx-auto grid max-w-[44rem] gap-12 xl:max-w-[64rem] xl:grid-cols-[minmax(0,44rem)_16rem] xl:justify-between">
         <div className="min-w-0">
-          <Prose markdown={entry.body} />
+          <header className="border-b border-line pb-6">
+            <nav aria-label="Breadcrumb" className="label flex flex-wrap items-center gap-2">
+              <Link href="/" className="hover:text-fg">
+                Home
+              </Link>
+              <span aria-hidden>/</span>
+              <Link href={`/${entry.section}`} className="hover:text-fg">
+                {section.label}
+              </Link>
+              {category ? (
+                <>
+                  <span aria-hidden>/</span>
+                  <Link
+                    href={`/${entry.section}?category=${entry.category}`}
+                    className="hover:text-fg"
+                  >
+                    {category}
+                  </Link>
+                </>
+              ) : null}
+            </nav>
+
+            <h1 className="mt-4 font-heading text-[28px] font-semibold leading-[1.18] tracking-[-0.015em] text-fg md:text-[36px]">
+              {entry.title}
+            </h1>
+
+            {dek ? (
+              <p className="mt-3 text-[17px] leading-relaxed text-fg-muted">{dek}</p>
+            ) : null}
+
+            <p className="mt-4 flex flex-wrap items-center gap-2">
+              {category ? (
+                <Link href={`/${entry.section}?category=${entry.category}`} className="badge">
+                  {category}
+                </Link>
+              ) : null}
+              {entry.tags.map((tag) => (
+                <Link key={tag} href={`/${entry.section}?tag=${tag}`} className="chip">
+                  #{tag}
+                </Link>
+              ))}
+            </p>
+
+            <div className="mt-5">
+              {entry.section === "blog" ? (
+                <Byline entry={entry} project={project} />
+              ) : (
+                <p className="text-[13px] text-fg-muted">
+                  <time dateTime={entry.date}>{formatDate(entry.date)}</time>
+                </p>
+              )}
+            </div>
+
+            {entry.source ? (
+              <p className="mt-4 border-l-2 border-line-strong pl-4 text-[14px] text-fg-muted">
+                Source:{" "}
+                <a href={entry.source} target="_blank" rel="noreferrer" className="link">
+                  {entry.sourceTitle ?? entry.source}
+                  <ArrowUpRight className="ml-0.5 inline h-3.5 w-3.5" strokeWidth={1.7} />
+                </a>
+              </p>
+            ) : null}
+          </header>
+
+          <div className="mt-8">
+            <Prose markdown={entry.body} />
+          </div>
+
+          <footer className="mt-14 border-t border-line pt-8">
+            <p className="text-[15px] leading-relaxed text-fg-muted">
+              If something here is wrong, tell me on{" "}
+              <a href={site.x} target="_blank" rel="noreferrer" className="link">
+                X
+              </a>{" "}
+              or by{" "}
+              <a href={`mailto:${site.email}`} className="link">
+                email
+              </a>
+              . I am happy to help if you work on the same problem.
+            </p>
+
+            {more.length > 0 ? (
+              <section className="mt-10">
+                <h2 className="label">More {section.label.toLowerCase()} like this</h2>
+                <EntryList entries={more} summaries={false} />
+              </section>
+            ) : null}
+          </footer>
         </div>
+
         <aside className="hidden xl:block">
-          <div className="sticky top-20 max-w-[18rem] space-y-8 pl-6">
+          <div className="sticky top-24 space-y-8">
             {entry.section === "blog" ? <AboutCard /> : null}
             <Toc items={toc} />
           </div>
         </aside>
       </div>
-
-      <footer className="mx-auto mt-16 max-w-[44rem]">
-        <div className="rounded-md border border-line bg-surface p-5">
-          <p className="text-[15px] leading-relaxed text-fg">
-            I am {site.name}, a software engineer in Bengaluru working on backend systems and
-            applied AI. If something here is wrong, tell me on{" "}
-            <a href={site.x} target="_blank" rel="noreferrer" className="link">
-              X
-            </a>{" "}
-            or by{" "}
-            <a href={`mailto:${site.email}`} className="link">
-              email
-            </a>
-            . Happy to help if you are working on the same problem.
-          </p>
-        </div>
-
-        {more.length > 0 ? (
-          <section className="mt-12">
-            <h2 className="label">More {section.label.toLowerCase()} like this</h2>
-            <EntryList entries={more} summaries={false} />
-          </section>
-        ) : null}
-      </footer>
     </article>
   );
 }
