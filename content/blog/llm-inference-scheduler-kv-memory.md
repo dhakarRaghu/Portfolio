@@ -5,7 +5,7 @@ summary: "Why your LLM TTFT spikes at busy hours: the scheduler loop, continuous
 tags: [llm-inference, continuous-batching, pagedattention, kv-cache, ttft, vllm]
 category: inference
 section: blog
-draft: true
+draft: false
 ---
 Your LLM API call took three times longer to start at 3pm than at 9am. Your prompt did not change, your code sent the same bytes, and the answer was the same. The explanation is not in your code. It is inside the server, in the requests from other people that arrived at the same second as yours.
 

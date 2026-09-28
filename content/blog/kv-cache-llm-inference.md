@@ -5,7 +5,7 @@ summary: "One formula from a model's config file tells you how much GPU memory e
 tags: [kv-cache, llm-inference, gpu-memory, prompt-caching, gqa]
 category: inference
 section: blog
-draft: true
+draft: false
 ---
 When a server runs a large language model for you, the scarce resource is not the GPU's math units. It is the GPU's memory. One stored object, the KV cache, uses that memory, and its size decides how many requests one card can serve at once. That count decides why you wait in a queue at peak time and why output tokens cost more than input tokens on every price sheet.
 
