@@ -37,9 +37,10 @@ export default function AboutPage() {
               <a href="https://juspay.io/" target="_blank" rel="noreferrer" className="link">
                 {profile.company}
               </a>
-              , working on BreezeBuddy.ai. I built its chatbot-to-human handoff, so a
-              conversation reaches a live agent with its full context, and a guardrail layer for
-              voice and text agents that each tenant can configure without a code change.
+              , working on Breeze Buddy. I built configurable guardrails for its voice and chat
+              agents, shipped Buddy Assist features such as one-click merchant onboarding,
+              virtual try-on and order tracking, and worked on UPI payments made by AI agents,
+              through NPCI&apos;s Unified Agentic Protocol.
             </p>
             <p>
               From August 2025 to July 2026 I interned at{" "}

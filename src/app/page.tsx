@@ -33,11 +33,12 @@ export default async function HomePage() {
                 <a href="https://juspay.io/" target="_blank" rel="noreferrer" className="link">
                   Juspay
                 </a>{" "}
-                in Bengaluru, on BreezeBuddy.ai, a conversational AI product. I built its
-                chatbot-to-human handoff, which moves a conversation to a live agent with the full
-                context intact, and its guardrail layer, which checks every voice and text reply
-                for prompt injection, toxicity, policy violations and off-topic answers, with
-                rules each tenant can set without a code change.
+                in Bengaluru, on Breeze Buddy, a conversational AI product. I built its
+                guardrails, which let each merchant set input and output policies for voice and
+                chat agents without a deploy. I also ship commerce features for Buddy Assist, its
+                shopping assistant for Shopify stores: one-click onboarding, virtual try-on and
+                order tracking. And I work on UPI payments made by AI agents, through NPCI&apos;s
+                Unified Agentic Protocol.
               </p>
               <p>
                 On the side, I am building{" "}

@@ -38,13 +38,13 @@ export const experience: Role[] = [
     location: "Bengaluru, India",
     current: true,
     summary:
-      "I work on the escalation, safety, and policy layers of BreezeBuddy.ai's conversational AI.",
+      "I work on guardrails, commerce features, and agentic payments for Breeze Buddy, Juspay's conversational AI product.",
     points: [
-      "Built BreezeBuddy.ai's chatbot-to-human handoff system. The escalation workflow routes complex conversations to live agents and preserves the full context and state.",
-      "Designed and implemented a unified AI guardrail layer for voice and text agents, enforcing system-level checks for prompt injection, toxicity, policy violations, and off-topic responses.",
-      "Built a configurable guardrail engine that lets tenants define custom compliance rules, business boundaries, and agent behaviour without code changes, supporting per-agent and per-tenant policies.",
+      "Built configurable AI guardrails for Breeze Buddy voice and chat agents. A platform focus policy runs on every agent, and each merchant can add its own input and output policies with fixed redirect replies, set per agent with no deploy.",
+      "Shipped Buddy Assist commerce features such as one-click merchant onboarding, which crawls the merchant's website and creates a tailored agent automatically, virtual try-on, and order tracking (WISMO).",
+      "Worked on NPCI's Unified Agentic Protocol (UAP), which lets AI agents make UPI payments within limits the user sets, and integrated it into Breeze Buddy Assist for Namma Yatri.",
     ],
-    stack: ["Go", "LLM Guardrails", "Voice Agents", "Multi-tenancy"],
+    stack: ["Python", "FastAPI", "LLM Guardrails", "Voice Agents", "Gemini", "Shopify"],
   },
   {
     company: "Mindtickle",
@@ -85,7 +85,7 @@ export const ratings = [
   },
   {
     platform: "Codeforces",
-    rating: "1800",
+    rating: "1801",
     badge: "Expert",
     note: "Maximum rating",
     href: "https://codeforces.com/profile/00.ghost",
@@ -101,7 +101,7 @@ export const highlights = [
 export const education = {
   institute: "Indian Institute of Information Technology, Nagpur",
   degree: "B.Tech, Computer Science and Engineering",
-  period: "Nov 2022 — 2026",
+  period: "Nov 2022 — May 2026",
   location: "Nagpur, Maharashtra",
   gpa: "8.03 / 10",
 } as const;
