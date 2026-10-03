@@ -12,7 +12,7 @@ export const site = {
   shortName: "Raghvendra",
   title: "Raghvendra Singh Dhakar",
   description:
-    "Software engineer in Bengaluru working on backend systems and applied AI: agents, retrieval, guardrails and evals. Blog posts, notes and projects.",
+    "Software engineer in Bengaluru working on backend systems and applied AI: agents, retrieval, guardrails and evals. Blog posts, notes, videos and projects.",
   locale: "en_IN",
   twitterHandle: "@Raghvendra56595",
   github: "https://github.com/dhakarRaghu",
@@ -35,6 +35,7 @@ export const contacts = [
 export const nav = [
   { label: "Blog", href: "/blog" },
   { label: "Notes", href: "/notes" },
+  { label: "Videos", href: "/videos" },
   { label: "Projects", href: "/projects" },
   { label: "About", href: "/about" },
 ] as const;

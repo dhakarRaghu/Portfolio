@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { listEntries } from "@/lib/posts";
 import { siteUrl } from "@/lib/site";
+import { listVideos, playlists } from "@/lib/videos";
 
 export const dynamic = "force-static";
 
@@ -33,5 +34,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: e.section === "blog" ? 0.8 : 0.5,
     }));
 
-  return [...pages, ...entries];
+  // listVideos() already hides drafts in production.
+  const videos = await listVideos();
+  const videoPages: MetadataRoute.Sitemap = videos.length
+    ? [
+        { url: `${siteUrl}/videos`, lastModified: newest(videos.map((v) => v.date)), priority: 0.7 },
+        ...playlists
+          .filter((p) => videos.some((v) => v.playlist === p.slug))
+          .map((p) => ({ url: `${siteUrl}/videos/playlist/${p.slug}`, priority: 0.6 })),
+        ...videos.map((v) => ({
+          url: `${siteUrl}/videos/${v.slug}`,
+          lastModified: new Date(`${v.date}T00:00:00Z`),
+          priority: 0.7,
+        })),
+      ]
+    : [];
+
+  return [...pages, ...entries, ...videoPages];
 }
