@@ -67,6 +67,9 @@ export function VideoPlayer({ title, youtube, thumbnail, chapters }: VideoPlayer
           <h2 id="chapters" className="label">
             Chapters
           </h2>
+          {!youtube ? (
+            <p className="mt-1 text-[13.5px] text-fg-muted">Each chapter opens the video at its time once the video is on YouTube.</p>
+          ) : null}
           <ol className="mt-2 divide-y divide-line rounded-lg border border-line bg-surface">
             {chapters.map((chapter) => (
               <li key={chapter.at}>
@@ -76,7 +79,7 @@ export function VideoPlayer({ title, youtube, thumbnail, chapters }: VideoPlayer
                   onClick={() => setStart(chapter.seconds)}
                   className="flex w-full items-baseline gap-4 px-4 py-2.5 text-left text-[15px] text-fg transition-colors enabled:hover:bg-bg-subtle disabled:cursor-default"
                 >
-                  <span className="w-14 shrink-0 font-mono text-[13px] text-accent">{chapter.at}</span>
+                  <span className={`w-14 shrink-0 font-mono text-[13px] ${youtube ? "text-accent" : "text-fg-faint"}`}>{chapter.at}</span>
                   <span>{chapter.title}</span>
                 </button>
               </li>

@@ -1,19 +1,24 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { EntryList } from "@/components/entry-list";
 import { profile } from "@/lib/content";
 import { listEntries } from "@/lib/posts";
+import { listVideos } from "@/lib/videos";
 import { contacts } from "@/lib/site";
 
+/** At most this many items in each home page list: blog, notes, videos and projects. */
+const HOME_MAX = 5;
+
 export default async function HomePage() {
-  const [blog, notes, projects] = await Promise.all([
+  const [blog, notes, projects, videos] = await Promise.all([
     listEntries("blog"),
     listEntries("notes"),
     listEntries("projects"),
+    listVideos(),
   ]);
-  const featured = projects.filter((p) => p.featured).slice(0, 2);
+  const featured = projects.filter((p) => p.featured).slice(0, HOME_MAX);
 
   return (
     <>
@@ -154,7 +159,7 @@ export default async function HomePage() {
             </Link>
           </div>
           <EntryList
-            entries={blog.slice(0, 5)}
+            entries={blog.slice(0, HOME_MAX)}
             summaries={false}
             emptyText="The first post is being written."
           />
@@ -167,12 +172,49 @@ export default async function HomePage() {
             </Link>
           </div>
           <EntryList
-            entries={notes.slice(0, 6)}
+            entries={notes.slice(0, HOME_MAX)}
             summaries={false}
             emptyText="The first note is being written."
           />
         </div>
       </section>
+
+      {videos.length > 0 ? (
+        <section className="shell mt-20" aria-labelledby="home-videos">
+          <div className="flex items-baseline justify-between">
+            <h2 id="home-videos" className="font-heading text-[22px] font-semibold text-fg">
+              Videos
+            </h2>
+            <Link href="/videos" className="text-[13.5px] text-fg-muted hover:text-fg">
+              All videos →
+            </Link>
+          </div>
+          <ul className="mt-2">
+            {videos.slice(0, HOME_MAX).map((v) => (
+              <li key={v.slug}>
+                <Link
+                  href={`/videos/${v.slug}`}
+                  className="group -mx-3 grid gap-1 rounded-md px-3 py-2.5 transition-colors hover:bg-surface sm:grid-cols-[6rem_1fr_auto] sm:gap-5"
+                >
+                  <span className="label whitespace-nowrap pt-[5px]">{v.part ?? "Video"}</span>
+                  <div className="min-w-0">
+                    <p className="text-[16px] font-semibold leading-snug text-fg group-hover:text-accent">{v.title}</p>
+                    <p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[12px] text-fg-faint">
+                      <span className="chip">{v.duration}</span>
+                      {!v.youtube ? <span className="chip">coming soon</span> : null}
+                    </p>
+                  </div>
+                  <ArrowUpRight
+                    aria-hidden
+                    className="hidden h-4 w-4 translate-y-1 text-fg-faint opacity-0 transition-opacity group-hover:opacity-100 sm:block"
+                    strokeWidth={1.8}
+                  />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {featured.length > 0 ? (
         <section className="shell mt-20" aria-labelledby="home-projects">

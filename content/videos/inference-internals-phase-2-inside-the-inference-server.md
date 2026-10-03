@@ -45,15 +45,17 @@ A server never runs one request alone, because it runs a loop over a batch of re
 
 ### Think it through
 
-Here is the question. Your prompt is the same at 3pm. So why does its first token arrive almost twice as late? Let's think it through.
+Your prompt is the same at 3pm. So why does its first token arrive almost twice as late?
 
-- **First thought.** A first thought is that the request was unlucky, so a retry will land on a faster moment.
-- **What it misses.** That is reasonable for network errors, but it misses that the request spent its time waiting in the server's queue.
-- **The real question.** So the real question is what decides how long a request waits for its first pass.
+A first thought is that the request was unlucky, so a retry will land on a faster moment.
+
+That is reasonable for network errors, but it misses that the request spent its time waiting in the server's queue.
+
+So the real question is what decides how long a request waits for its first pass.
 
 ### The mechanism, step by step
 
-![Why does your latency depend on other requests: the mechanism, as drawn in the video](/videos/inference-internals-phase-2/c1-mechanism.webp)
+<img src="/videos/inference-internals-phase-2/c1-mechanism.webp" alt="Why does your latency depend on other requests: the mechanism, as drawn in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 1. A decode pass reads all the weights once, so 16 requests cost 19.92 ms and one request costs 18.12.
 2. Static batching admits nothing new until the slowest request finishes, so finished slots sit idle.
@@ -64,13 +66,13 @@ Here is the question. Your prompt is the same at 3pm. So why does its first toke
 
 The course simulator ran 40 requests at 6 per second, and continuous batching cut mean TTFT from 5,357 to 867 ms. At 12 arrivals per second, the same prompts gave 1,674 ms, almost twice as much. One column stays at 764 ms in both runs, the worst gap between two tokens, and Part B explains it.
 
-![Why does your latency depend on other requests: the number and its source, as shown in the video](/videos/inference-internals-phase-2/c1-number.webp)
+<img src="/videos/inference-internals-phase-2/c1-number.webp" alt="Why does your latency depend on other requests: the number and its source, as shown in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 ### Key points
 
-- **Remember.** throughput comes from batch size, and your latency comes from what else is in the batch.
-- **The trap.** a retry adds one more request to the same queue, so under load the spike gets worse.
-- **Try this.** run batching_sim.py with rate 12, and compare its mean TTFT with the default run.
+- **Remember.** Throughput comes from batch size, and your latency comes from what else is in the batch.
+- **The trap.** A retry adds one more request to the same queue, so under load the spike gets worse.
+- **Try this.** Run batching_sim.py with rate 12, and compare its mean TTFT with the default run.
 
 *A slot is only half the resource, because the KV memory behind it runs out first. Concept 2 asks why paging fits 18 times more requests.*
 
@@ -88,15 +90,17 @@ The KV cache holds the keys and values of every token, and every decode step rea
 
 ### Think it through
 
-Here is the question. The server does not know how long an answer will be. So how much memory should it reserve for one request? Let's think it through.
+The server does not know how long an answer will be. So how much memory should it reserve for one request?
 
-- **First thought.** A first thought is to reserve the longest sequence, so a request can never run out halfway.
-- **What it misses.** That is reasonable, but it misses that most of the reservation stays empty, and no other request can use it.
-- **The real question.** So the real question is what happens when memory is handed out one small block at a time.
+A first thought is to reserve the longest sequence, so a request can never run out halfway.
+
+That is reasonable, but it misses that most of the reservation stays empty, and no other request can use it.
+
+So the real question is what happens when memory is handed out one small block at a time.
 
 ### The mechanism, step by step
 
-![Why does paging fit 18 times more requests: the mechanism, as drawn in the video](/videos/inference-internals-phase-2/c2-mechanism.webp)
+<img src="/videos/inference-internals-phase-2/c2-mechanism.webp" alt="Why does paging fit 18 times more requests: the mechanism, as drawn in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 1. One token of llama-3-8b costs 128 KB of keys and values across its 32 layers.
 2. A reservation of 32,768 tokens costs 4 GB, so the 56 GB pool holds 14 requests.
@@ -107,13 +111,13 @@ Here is the question. The server does not know how long an answer will be. So ho
 
 The course lab measures 18.1 times more requests with paging, on the same GPU and the same model. The contiguous allocator leaves 52.9 GB reserved and unused, and paging leaves 0.2 GB. The PagedAttention paper saw the same waste in real systems, where only 20 to 38% of KV memory held real tokens.
 
-![Why does paging fit 18 times more requests: the number and its source, as shown in the video](/videos/inference-internals-phase-2/c2-number.webp)
+<img src="/videos/inference-internals-phase-2/c2-number.webp" alt="Why does paging fit 18 times more requests: the number and its source, as shown in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 ### Key points
 
-- **Remember.** paging reserves what a request needs now, not the most it could ever need.
-- **The trap.** a worst-case reservation looks safe, but it leaves 52.9 of 56 GB idle.
-- **Try this.** run paging_lab.py and find the line that reports 18.1 times more requests.
+- **Remember.** Paging reserves what a request needs now, not the most it could ever need.
+- **The trap.** A worst-case reservation looks safe, but it leaves 52.9 of 56 GB idle.
+- **Try this.** Run paging_lab.py and find the line that reports 18.1 times more requests.
 
 *A fuller pool admits more requests, but it can also run out of free blocks. Concept 3 asks what the server does when the blocks run out.*
 
@@ -131,15 +135,17 @@ Preemption means the scheduler takes the blocks of a running request and gives t
 
 ### Think it through
 
-Here is the question. The pool has no free block, and a running request needs one more. What should the server do? Let's think it through.
+The pool has no free block, and a running request needs one more. What should the server do?
 
-- **First thought.** A first thought is an out-of-memory error, because that is what a normal memory allocator returns.
-- **What it misses.** That is reasonable, but it misses that the server can take blocks from a running request, so it chooses a pause.
-- **The real question.** So the real question is how long that pause lasts, and who can see it.
+A first thought is an out-of-memory error, because that is what a normal memory allocator returns.
+
+That is reasonable, but it misses that the server can take blocks from a running request, so it chooses a pause.
+
+So the real question is how long that pause lasts, and who can see it.
 
 ### The mechanism, step by step
 
-![What happens when the blocks run out: the mechanism, as drawn in the video](/videos/inference-internals-phase-2/c3-mechanism.webp)
+<img src="/videos/inference-internals-phase-2/c3-mechanism.webp" alt="What happens when the blocks run out: the mechanism, as drawn in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 1. At 1.2 seconds a burst arrives, and the pool runs out while request R holds 40 blocks.
 2. The scheduler preempts R and frees all 40 blocks, so R goes back to the queue.
@@ -150,13 +156,13 @@ Here is the question. The pool has no free block, and a running request needs on
 
 It becomes a failure when max_num_seqs admits more sequences than the KV pool can hold, so preemption repeats. Each preempted request prefills again and recreates the pressure, so throughput collapses while GPU utilisation stays high. No error is raised, and the documented fix is to lower max_num_seqs, not to add memory.
 
-![What happens when the blocks run out: the number and its source, as shown in the video](/videos/inference-internals-phase-2/c3-number.webp)
+<img src="/videos/inference-internals-phase-2/c3-number.webp" alt="What happens when the blocks run out: the number and its source, as shown in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 ### Key points
 
-- **Remember.** running out of blocks causes preemption, not an error, and the prefill is redone later.
-- **The trap.** raising gpu_memory_utilization only moves the threshold, and it can turn preemption into an out-of-memory error.
-- **Try this.** record the longest gap between two tokens of each answer, because only that metric shows the pause.
+- **Remember.** Running out of blocks causes preemption, not an error, and the prefill is redone later.
+- **The trap.** Raising gpu_memory_utilization only moves the threshold, and it can turn preemption into an out-of-memory error.
+- **Try this.** Record the longest gap between two tokens of each answer, because only that metric shows the pause.
 
 *Two requests that start with the same tokens can share their first blocks. Concept 4 asks why one changed character at the start ends that sharing.*
 
@@ -174,15 +180,17 @@ The server keeps the KV blocks of prompts it has already computed, in a tree key
 
 ### Think it through
 
-Here is the question. Only the first line of your 1,200-token prompt changes. So how much of the prompt still hits the cache? Let's think it through.
+Only the first line of your 1,200-token prompt changes. So how much of the prompt still hits the cache?
 
-- **First thought.** A first thought is that everything after that line still hits, because those blocks are identical.
-- **What it misses.** That is reasonable, but it misses that each block's key includes the hashes of every block before it.
-- **The real question.** So the real question is where the match stops, and whether it can start again.
+A first thought is that everything after that line still hits, because those blocks are identical.
+
+That is reasonable, but it misses that each block's key includes the hashes of every block before it.
+
+So the real question is where the match stops, and whether it can start again.
 
 ### The mechanism, step by step
 
-![Why does one changed character end the cache hit: the mechanism, as drawn in the video](/videos/inference-internals-phase-2/c4-mechanism.webp)
+<img src="/videos/inference-internals-phase-2/c4-mechanism.webp" alt="Why does one changed character end the cache hit: the mechanism, as drawn in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 1. Each block's key hashes the previous key and the block's own 16 tokens, so the keys form a chain.
 2. Matching starts at block 0 and stops at the first miss, so a change at the top gives every later block a new key.
@@ -193,13 +201,13 @@ Here is the question. Only the first line of your 1,200-token prompt changes. So
 
 The course simulator sent the same tokens in two orders, and the time-first layout hit 0.0% of them. The time-last layout hit 92.0% and cost 3.22 times less on input, from the order alone. Eviction still applies, so with a cache of 500 blocks, the good layout fell from 93.5% to 68.8%.
 
-![Why does one changed character end the cache hit: the number and its source, as shown in the video](/videos/inference-internals-phase-2/c4-number.webp)
+<img src="/videos/inference-internals-phase-2/c4-number.webp" alt="Why does one changed character end the cache hit: the number and its source, as shown in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 ### Key points
 
-- **Remember.** stable content goes first and changing content goes last, because the match runs forward from token 0.
-- **The trap.** a cache hit is never guaranteed, so model both prices and alert on the hit rate.
-- **Try this.** run prefix_cache_sim.py and compare the two layouts.
+- **Remember.** Stable content goes first and changing content goes last, because the match runs forward from token 0.
+- **The trap.** A cache hit is never guaranteed, so model both prices and alert on the hit rate.
+- **Try this.** Run prefix_cache_sim.py and compare the two layouts.
 
 *You now know how requests take blocks and share them, so capacity becomes arithmetic. Concept 5 asks how many requests one GPU can hold.*
 
@@ -217,15 +225,17 @@ The setting is the share of GPU memory the server may use, and the model weights
 
 ### Think it through
 
-Here is the question. The setting falls from vLLM's default of 0.92 to 0.70. How much of your capacity does that cost? Let's think it through.
+The setting falls from vLLM's default of 0.92 to 0.70. How much of your capacity does that cost?
 
-- **First thought.** A first thought is about a quarter, because 0.70 is 76% of 0.92.
-- **What it misses.** That is reasonable, but it misses that the weights stay at 16 GB, so the whole cut comes out of the pool.
-- **The real question.** So the real question is how big the pool is after the weights.
+A first thought is about a quarter, because 0.70 is 76% of 0.92.
+
+That is reasonable, but it misses that the weights stay at 16 GB, so the whole cut comes out of the pool.
+
+So the real question is how big the pool is after the weights.
 
 ### The mechanism, step by step
 
-![How many requests can one GPU hold: the mechanism, as drawn in the video](/videos/inference-internals-phase-2/c5-mechanism.webp)
+<img src="/videos/inference-internals-phase-2/c5-mechanism.webp" alt="How many requests can one GPU hold: the mechanism, as drawn in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 1. At the lab's 0.90, the server may use 72 GB, and the weights take 16, so the pool is 56 GB.
 2. One block of 16 tokens at 128 KB each is 2 MB, so the pool holds 28,672 blocks.
@@ -236,13 +246,13 @@ Here is the question. The setting falls from vLLM's default of 0.92 to 0.70. How
 
 Now the setting. At 0.92 the pool holds 260 requests, and at 0.70 it holds 181. The lower setting removes 17.6 GB from the pool, which is 30% of your capacity, not a quarter. The default of 0.92 was read in vLLM 0.29.0, so a tutorial that says 0.90 is out of date.
 
-![How many requests can one GPU hold: the number and its source, as shown in the video](/videos/inference-internals-phase-2/c5-number.webp)
+<img src="/videos/inference-internals-phase-2/c5-number.webp" alt="How many requests can one GPU hold: the number and its source, as shown in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 ### Key points
 
-- **Remember.** the pool is memory times the setting minus the weights, divided into blocks that requests hold.
-- **The trap.** gpu_memory_utilization looks like a safety setting, but it sets capacity, and 0.70 costs 30%.
-- **Try this.** run paging_lab.py with gpu-util 0.70, and check that 181 requests fit.
+- **Remember.** The pool is memory times the setting minus the weights, divided into blocks that requests hold.
+- **The trap.** Gpu_memory_utilization looks like a safety setting, but it sets capacity, and 0.70 costs 30%.
+- **Try this.** Run paging_lab.py with gpu-util 0.70, and check that 181 requests fit.
 
 *Part A explained whose token runs next and how many requests fit, but not the 764 ms gap. Concept 6 asks why one long prompt freezes every stream.*
 
@@ -264,15 +274,17 @@ Each iteration runs one forward pass, and that pass can hold prefill work, decod
 
 ### Think it through
 
-Here is the question. A 24,000-token prompt arrives while three streams are mid-answer. Where should the server run its prefill? Let's think it through.
+A 24,000-token prompt arrives while three streams are mid-answer. Where should the server run its prefill?
 
-- **First thought.** A first thought is to run it whole in the next pass, because the new user waits for a first token.
-- **What it misses.** That is reasonable, but it misses that the pass then has no room for decodes, so three streams get zero tokens.
-- **The real question.** Waiting instead stretches the new TTFT to seconds, so the real question is how one pass can hold both.
+A first thought is to run it whole in the next pass, because the new user waits for a first token.
+
+That is reasonable, but it misses that the pass then has no room for decodes, so three streams get zero tokens.
+
+Waiting instead stretches the new TTFT to seconds, so the real question is how one pass can hold both.
 
 ### The mechanism, step by step
 
-![Why does one long prompt freeze every stream: the mechanism, as drawn in the video](/videos/inference-internals-phase-2/c6-mechanism.webp)
+<img src="/videos/inference-internals-phase-2/c6-mechanism.webp" alt="Why does one long prompt freeze every stream: the mechanism, as drawn in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 1. A prefill token costs 0.03 ms, so the whole prompt in one pass takes 720 ms.
 2. With chunking, each decoding stream reserves one token of a 2,048-token budget first.
@@ -284,13 +296,13 @@ Here is the question. A 24,000-token prompt arrives while three streams are mid-
 
 With a 48,000-token prompt, the course run's worst gap fell from 1,460 ms to 81 ms. The price was 112 ms more mean TTFT, and throughput stayed at 3.8 requests per second. On real GPUs, Sarathi-Serve measured the time between tokens rising up to 28.3 times without chunking.
 
-![Why does one long prompt freeze every stream: the number and its source, as shown in the video](/videos/inference-internals-phase-2/c6-number.webp)
+<img src="/videos/inference-internals-phase-2/c6-number.webp" alt="Why does one long prompt freeze every stream: the number and its source, as shown in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 ### Key points
 
-- **Remember.** reserve the decodes first, then fill the pass with prefill slices.
-- **The trap.** median TTFT and total latency cannot show a 720 ms pause inside one stream.
-- **Try this.** record the longest gap between two tokens in your streaming client, and alert above 500 ms.
+- **Remember.** Reserve the decodes first, then fill the pass with prefill slices.
+- **The trap.** Median TTFT and total latency cannot show a 720 ms pause inside one stream.
+- **Try this.** Record the longest gap between two tokens in your streaming client, and alert above 500 ms.
 
 *The stream is smooth again, so the lesson moves to your support agent's strict-mode classifier. Concept 7 asks who says that a strict answer is complete.*
 
@@ -308,15 +320,17 @@ Before each token, the model gives every token in its vocabulary a score, called
 
 ### Think it through
 
-Here is the question. Every answer follows the schema, yet some crash your parser on long-prompt days. Where do you look first? Let's think it through.
+Every answer follows the schema, yet some crash your parser on long-prompt days. Where do you look first?
 
-- **First thought.** A first thought is a bug in the schema or the mask, because strict mode promised valid JSON.
-- **What it misses.** That is reasonable, but it misses that the mask has no input for how many output tokens are left.
-- **The real question.** So the real question is what happens when the output budget ends before the closing brace.
+A first thought is a bug in the schema or the mask, because strict mode promised valid JSON.
+
+That is reasonable, but it misses that the mask has no input for how many output tokens are left.
+
+So the real question is what happens when the output budget ends before the closing brace.
 
 ### The mechanism, step by step
 
-![Who says a strict answer is complete: the mechanism, as drawn in the video](/videos/inference-internals-phase-2/c7-mechanism.webp)
+<img src="/videos/inference-internals-phase-2/c7-mechanism.webp" alt="Who says a strict answer is complete: the mechanism, as drawn in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 1. At each step the mask checks one thing per token, whether it is valid under the grammar now.
 2. An open string is a legal state, so every token inside a long value passes the mask.
@@ -327,13 +341,13 @@ Here is the question. Every answer follows the schema, yet some crash your parse
 
 This holds at all three levels: a prompt only, JSON mode, and a strict JSON schema. Strict mode adds correct keys and legal values, but an answer can still be cut at every level. The Format Tax paper writes the mask as a product of the model's probability and a validity check, with no term for completeness.
 
-![Who says a strict answer is complete: the number and its source, as shown in the video](/videos/inference-internals-phase-2/c7-number.webp)
+<img src="/videos/inference-internals-phase-2/c7-number.webp" alt="Who says a strict answer is complete: the number and its source, as shown in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 ### Key points
 
-- **Remember.** the mask guarantees legal tokens, and only finish_reason says the answer reached its end.
-- **The trap.** teams delete the finish_reason check when they turn on strict mode, so truncation becomes invisible.
-- **Try this.** log finish_reason next to every parse failure for a week.
+- **Remember.** The mask guarantees legal tokens, and only finish_reason says the answer reached its end.
+- **The trap.** Teams delete the finish_reason check when they turn on strict mode, so truncation becomes invisible.
+- **Try this.** Log finish_reason next to every parse failure for a week.
 
 *Legal and complete are now two separate checks, but the classifier also lost 9 accuracy points. Concept 8 asks who took those points.*
 
@@ -351,15 +365,17 @@ There are two suspects, because strict mode changes both the prompt and the deco
 
 ### Think it through
 
-Here is the question. Accuracy fell 9 points the day strict mode went on. Which suspect took the points? Let's think it through.
+Accuracy fell 9 points the day strict mode went on. Which suspect took the points?
 
-- **First thought.** A first thought is the mask, because the drop started the day the constraint was switched on.
-- **What it misses.** That is reasonable, but it misses that the same switch changed the prompt, and the two costs can be measured apart.
-- **The real question.** So the real question is how much of the drop appears before any constraint runs.
+A first thought is the mask, because the drop started the day the constraint was switched on.
+
+That is reasonable, but it misses that the same switch changed the prompt, and the two costs can be measured apart.
+
+So the real question is how much of the drop appears before any constraint runs.
 
 ### The mechanism, step by step
 
-![Accuracy fell 9 points. Who took them: the mechanism, as drawn in the video](/videos/inference-internals-phase-2/c8-mechanism.webp)
+<img src="/videos/inference-internals-phase-2/c8-mechanism.webp" alt="Accuracy fell 9 points. Who took them: the mechanism, as drawn in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 1. Run the tickets as free-form answers, so you have a baseline.
 2. Ask for the format in the prompt with constraints off, so the gap is the prompt's cost.
@@ -370,13 +386,13 @@ Here is the question. Accuracy fell 9 points the day strict mode went on. Which 
 
 The Format Tax paper ran this split on 6 open-weight models, 3 tasks and 4 formats. Asking for the format cost 3.9 points on average, and the mask on top cost 1.6 more. Of 39 cells with a significant effect, 36 already showed the drop with the prompt alone. Two calls, one to answer and one to reformat, gained 6.8 points on average.
 
-![Accuracy fell 9 points. Who took them: the number and its source, as shown in the video](/videos/inference-internals-phase-2/c8-number.webp)
+<img src="/videos/inference-internals-phase-2/c8-number.webp" alt="Accuracy fell 9 points. Who took them: the number and its source, as shown in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 ### Key points
 
-- **Remember.** most of the cost is paid at the prompt, so the reasoning field goes before the labels.
-- **The trap.** turning constraints off buys back only the decoder's share, 1.6 of the paper's average points.
-- **Try this.** rerun one failed ticket as free text, then with the format requested and constraints off.
+- **Remember.** Most of the cost is paid at the prompt, so the reasoning field goes before the labels.
+- **The trap.** Turning constraints off buys back only the decoder's share, 1.6 of the paper's average points.
+- **Try this.** Rerun one failed ticket as free text, then with the format requested and constraints off.
 
 *One failure is left, a six-hour agent run that ended on a 400 error. Concept 9 asks what must cross a compaction word for word.*
 
@@ -394,15 +410,17 @@ Compaction replaces old turns with a shorter summary, so the prompt fits in the 
 
 ### Think it through
 
-Here is the question. The refund rule sits in an early message, and the trigger fires twice. Where must the rule live to survive until hour five? Let's think it through.
+The refund rule sits in an early message, and the trigger fires twice. Where must the rule live to survive until hour five?
 
-- **First thought.** A first thought is that the summary keeps it, because a rule about money is clearly important.
-- **What it misses.** That is reasonable, but it misses that summarisers keep the active task, and an old rule makes no new events.
-- **The real question.** So the real question is which text must cross without a model deciding to keep it.
+A first thought is that the summary keeps it, because a rule about money is clearly important.
+
+That is reasonable, but it misses that summarisers keep the active task, and an old rule makes no new events.
+
+So the real question is which text must cross without a model deciding to keep it.
 
 ### The mechanism, step by step
 
-![What must cross a compaction word for word: the mechanism, as drawn in the video](/videos/inference-internals-phase-2/c9-mechanism.webp)
+<img src="/videos/inference-internals-phase-2/c9-mechanism.webp" alt="What must cross a compaction word for word: the mechanism, as drawn in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 1. The course's compactor fires at 60% of a 32,000-token window, which is 19,200 tokens.
 2. At turn 25, 45 old messages become a summary, and the 4 newest are kept word for word.
@@ -413,13 +431,13 @@ Here is the question. The refund rule sits in an early message, and the trigger 
 
 The ConstraintRot benchmark ran 1,323 episodes in 7 model families, and a program graded each tool call. When the summary dropped the constraint, 38% of episodes broke the policy. When the constraint survived, violations stayed at 0%, so the cause is deletion, not a long context. Pinning about 47 tokens restored 0% in every model family tested.
 
-![What must cross a compaction word for word: the number and its source, as shown in the video](/videos/inference-internals-phase-2/c9-number.webp)
+<img src="/videos/inference-internals-phase-2/c9-number.webp" alt="What must cross a compaction word for word: the number and its source, as shown in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 ### Key points
 
-- **Remember.** copy standing rules across every compaction as literal text, never through the summary.
-- **The trap.** trusting the summariser with a rule, because violations went from 0 to 38% when it dropped one.
-- **Try this.** check whether your compactor puts a dropped rule back before the next call.
+- **Remember.** Copy standing rules across every compaction as literal text, never through the summary.
+- **The trap.** Trusting the summariser with a rule, because violations went from 0 to 38% when it dropped one.
+- **Try this.** Check whether your compactor puts a dropped rule back before the next call.
 
 *One huge tool result can still jump past the trigger and the window in one step. Concept 10 asks what to do when that 400 arrives.*
 
@@ -437,15 +455,17 @@ A context budget splits the window into zones, one per source of text, and each 
 
 ### Think it through
 
-Here is the question. The prompt is over the window, and the loop sends it three times. How many attempts succeed? Let's think it through.
+The prompt is over the window, and the loop sends it three times. How many attempts succeed?
 
-- **First thought.** A first thought is that a later attempt succeeds, because backoff fixes rate limits and busy servers.
-- **What it misses.** That is reasonable, but it misses that the provider checks the input against a fixed window, and waiting does not change the input.
-- **The real question.** So all three attempts fail, and the real question is what must change before a retry can work.
+A first thought is that a later attempt succeeds, because backoff fixes rate limits and busy servers.
+
+That is reasonable, but it misses that the provider checks the input against a fixed window, and waiting does not change the input.
+
+So all three attempts fail, and the real question is what must change before a retry can work.
 
 ### The mechanism, step by step
 
-![The cap missed and the 400 arrived. What now: the mechanism, as drawn in the video](/videos/inference-internals-phase-2/c10-mechanism.webp)
+<img src="/videos/inference-internals-phase-2/c10-mechanism.webp" alt="The cap missed and the 400 arrived. What now: the mechanism, as drawn in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 1. Check status 400, then code context_length_exceeded, then the type, and the message text last.
 2. Log the overflow loudly, because a backstop that fires shows the trigger or the caps are wrong.
@@ -456,13 +476,13 @@ Here is the question. The prompt is over the window, and the loop sends it three
 
 In the course's compactor, a forced overflow at call 5 compacts from 3,849 to 2,270 tokens, and one retry succeeds. A bigger window is not the fix, because a 400,000-token prompt on 50 steps costs $40 at $2 per million tokens. And a context-rot study saw scores fall as input grew, in every model family it tested.
 
-![The cap missed and the 400 arrived. What now: the number and its source, as shown in the video](/videos/inference-internals-phase-2/c10-number.webp)
+<img src="/videos/inference-internals-phase-2/c10-number.webp" alt="The cap missed and the 400 arrived. What now: the number and its source, as shown in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 ### Key points
 
-- **Remember.** an overflow 400 is deterministic, so compact the input and retry once.
-- **The trap.** backoff on any exception resends the same prompt, so it fails three times and bills three calls.
-- **Try this.** run compactor.py with inject-overflow 5, and read the backstop lines.
+- **Remember.** An overflow 400 is deterministic, so compact the input and retry once.
+- **The trap.** Backoff on any exception resends the same prompt, so it fails three times and bills three calls.
+- **Try this.** Run compactor.py with inject-overflow 5, and read the backstop lines.
 
 *Each of your support agent's three failures now has a mechanism and a fix. The recap collects the ten claims, and the next phase prices the cache.*
 

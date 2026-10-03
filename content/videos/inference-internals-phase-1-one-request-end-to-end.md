@@ -40,15 +40,17 @@ A tokenizer cuts your text into tokens, the pieces the model reads and the provi
 
 ### Think it through
 
-Here is the question. Your cost model counts tokens as characters divided by 4. How far off is it when half of the traffic is Hindi? Let's think it through.
+Your cost model counts tokens as characters divided by 4. How far off is it when half of the traffic is Hindi?
 
-- **First thought.** A first thought is that characters divided by 4 works for any text, because it fits English prose well.
-- **What it misses.** That thought is reasonable, but it misses one thing. The vocabulary is mostly English, so Hindi splits into far more pieces.
-- **The real question.** So the real question is how many characters one token holds for each shape of text you send.
+A first thought is that characters divided by 4 works for any text, because it fits English prose well.
+
+That thought is reasonable, but it misses one thing. The vocabulary is mostly English, so Hindi splits into far more pieces.
+
+So the real question is how many characters one token holds for each shape of text you send.
 
 ### The mechanism, step by step
 
-![Why does the same text cost different amounts of tokens: the mechanism, as drawn in the video](/videos/inference-internals-phase-1/c1-mechanism.webp)
+<img src="/videos/inference-internals-phase-1/c1-mechanism.webp" alt="Why does the same text cost different amounts of tokens: the mechanism, as drawn in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 1. English prose holds about 4 to 4.5 characters per token, because the vocabulary was built for it.
 2. Code and JSON drop to about 2 to 3.5, because quotes, braces and indents are tokens too.
@@ -59,13 +61,13 @@ Here is the question. Your cost model counts tokens as characters divided by 4. 
 
 Now the bill. A tool returns 1,000 tokens of pretty-printed JSON on step 1 of a 10-step agent loop. Because the history is sent again, that result is billed ten times by step 10, which is 10,000 tokens. As compact JSON the same result is 600 tokens, so it costs 6,000, and the 4,000 difference is only formatting. Tokenizers also differ between providers. For the same text, Llama 2's tokenizer gives about 19 to 20% more tokens than ChatGPT's and GPT-4's.
 
-![Why does the same text cost different amounts of tokens: the number and its source, as shown in the video](/videos/inference-internals-phase-1/c1-number.webp)
+<img src="/videos/inference-internals-phase-1/c1-number.webp" alt="Why does the same text cost different amounts of tokens: the number and its source, as shown in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 ### Key points
 
-- **Remember.** you are billed for tokens, and the exchange rate depends on what the text looks like.
-- **The trap.** a tiktoken count is only an estimate, because the provider's tokenizer differs. The server's usage object is the invoice.
-- **Try this.** search your agent for json.dumps with indent=2 where the output goes into a prompt.
+- **Remember.** You are billed for tokens, and the exchange rate depends on what the text looks like.
+- **The trap.** A tiktoken count is only an estimate, because the provider's tokenizer differs. The server's usage object is the invoice.
+- **Try this.** Search your agent for json.dumps with indent=2 where the output goes into a prompt.
 
 *This concept explained the dollars in your log, but not the 2.1 seconds. Concept 2 asks where TTFT comes from.*
 
@@ -83,15 +85,17 @@ TTFT, the time to first token, runs from sending the request until the first tok
 
 ### Think it through
 
-Here is the question. Your TTFT grows step after step, and the provider says everything is fine. Is that slow start your number or the provider's number? Let's think it through.
+Your TTFT grows step after step, and the provider says everything is fine. Is that slow start your number or the provider's number?
 
-- **First thought.** A first thought is that the provider is slow today, because the wait happens on their servers and their load changes.
-- **What it misses.** That thought is reasonable, but it misses one thing. Your framework appends history every step, so each prompt is longer than the last.
-- **The real question.** So the real question is whether your input tokens grew together with your TTFT.
+A first thought is that the provider is slow today, because the wait happens on their servers and their load changes.
+
+That thought is reasonable, but it misses one thing. Your framework appends history every step, so each prompt is longer than the last.
+
+So the real question is whether your input tokens grew together with your TTFT.
 
 ### The mechanism, step by step
 
-![Where does TTFT come from: the mechanism, as drawn in the video](/videos/inference-internals-phase-1/c2-mechanism.webp)
+<img src="/videos/inference-internals-phase-1/c2-mechanism.webp" alt="Where does TTFT come from: the mechanism, as drawn in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 1. Receiving, routing and tokenizing take a few milliseconds, so they are never the cause.
 2. The queue length changes with the provider's load, not with your prompt.
@@ -102,13 +106,13 @@ Here is the question. Your TTFT grows step after step, and the provider says eve
 
 Now the failure. Over 25 steps, the step latency creeps from 3 seconds to 11, while the time per output token stays flat. Plot TTFT per step next to input tokens per step. When they grow together, the cause is your growing history. When TTFT jumps while your input length stays flat, the cause is the provider's queue. The fix on your side is to compact or prune the history before each step.
 
-![Where does TTFT come from: the number and its source, as shown in the video](/videos/inference-internals-phase-1/c2-number.webp)
+<img src="/videos/inference-internals-phase-1/c2-number.webp" alt="Where does TTFT come from: the number and its source, as shown in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 ### Key points
 
 - **Remember.** TTFT is queue plus prefill, and you pay prefill on the whole prompt, on every request.
-- **The trap.** saying the model is slow today, when the real change was your own prompt growing.
-- **Try this.** compare the input tokens of the first step and the last step of one long agent session.
+- **The trap.** Saying the model is slow today, when the real change was your own prompt growing.
+- **Try this.** Compare the input tokens of the first step and the last step of one long agent session.
 
 *Prefill also writes two vectors per token into GPU memory, and this concept did not say why. Concept 3 asks what the KV cache is.*
 
@@ -126,15 +130,17 @@ During prefill, every layer computes two vectors per token, called K, the key, a
 
 ### Think it through
 
-Here is the question. One 80 GB H100 serves Llama-3-8B, and the model weights take 16 GB. How many requests with an 8k-token context fit on it at once? Let's think it through.
+One 80 GB H100 serves Llama-3-8B, and the model weights take 16 GB. How many requests with an 8k-token context fit on it at once?
 
-- **First thought.** A first thought is that hundreds fit, because the weights are shared and one more request adds little math.
-- **What it misses.** That thought is reasonable, but it misses one thing. Each request keeps its own KV cache, and at 8k tokens it is large.
-- **The real question.** So the real question is how many bytes one token of KV cache takes.
+A first thought is that hundreds fit, because the weights are shared and one more request adds little math.
+
+That thought is reasonable, but it misses one thing. Each request keeps its own KV cache, and at 8k tokens it is large.
+
+So the real question is how many bytes one token of KV cache takes.
 
 ### The mechanism, step by step
 
-![What is the KV cache, and what does it limit: the mechanism, as drawn in the video](/videos/inference-internals-phase-1/c3-mechanism.webp)
+<img src="/videos/inference-internals-phase-1/c3-mechanism.webp" alt="What is the KV cache, and what does it limit: the mechanism, as drawn in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 1. Bytes per token is 2, for K and V, times layers, times KV heads, times head size, times bytes per value.
 2. Llama-3-8B has 32 layers, 8 KV heads and a head size of 128, at 2 bytes per value in bf16.
@@ -151,13 +157,13 @@ Here is the question. One 80 GB H100 serves Llama-3-8B, and the model weights ta
 
 So one H100 serving this model holds about 57 requests at 8k context, and that is the provider's capacity. It is why the provider queues you at peak time, and batch APIs sell its spare slots at quiet times for about 50% off. Model designers changed attention to shrink this cache. Llama-3-8B shares each KV head among 4 query heads, so its cache is 4 times smaller.
 
-![What is the KV cache, and what does it limit: the number and its source, as shown in the video](/videos/inference-internals-phase-1/c3-number.webp)
+<img src="/videos/inference-internals-phase-1/c3-number.webp" alt="What is the KV cache, and what does it limit: the number and its source, as shown in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 ### Key points
 
-- **Remember.** the KV cache is where your prompt lives on the GPU, and its memory sets how many requests fit.
-- **The trap.** sending the same system prompt does not guarantee cache hits, because one early changing byte breaks the prefix.
-- **Try this.** open your prompt template and check that timestamps, user text and other changing parts come last.
+- **Remember.** The KV cache is where your prompt lives on the GPU, and its memory sets how many requests fit.
+- **The trap.** Sending the same system prompt does not guarantee cache hits, because one early changing byte breaks the prefix.
+- **Try this.** Open your prompt template and check that timestamps, user text and other changing parts come last.
 
 *Every decode step reads this cache, and this concept did not say what that costs. Concept 4 asks why output tokens cost more.*
 
@@ -175,15 +181,17 @@ After prefill, a stage called decode writes the answer one token per step. Each 
 
 ### Think it through
 
-Here is the question. Prefill processes thousands of input tokens per second on this same GPU. So why does decode write only tens of tokens per second? Let's think it through.
+Prefill processes thousands of input tokens per second on this same GPU. So why does decode write only tens of tokens per second?
 
-- **First thought.** A first thought is that writing a token is harder math than reading one, because choosing a word sounds hard.
-- **What it misses.** That thought is reasonable, but it misses one thing. The math per step is small, but each step reads the weights and the KV cache from memory.
-- **The real question.** So the real question is what each decode step waits for.
+A first thought is that writing a token is harder math than reading one, because choosing a word sounds hard.
+
+That thought is reasonable, but it misses one thing. The math per step is small, but each step reads the weights and the KV cache from memory.
+
+So the real question is what each decode step waits for.
 
 ### The mechanism, step by step
 
-![Why do output tokens cost more and run slower: the mechanism, as drawn in the video](/videos/inference-internals-phase-1/c4-mechanism.webp)
+<img src="/videos/inference-internals-phase-1/c4-mechanism.webp" alt="Why do output tokens cost more and run slower: the mechanism, as drawn in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 1. Prefill sends 10,000 tokens through the GPU in one parallel pass, so the math units set the limit.
 2. Decode reads 16 GB of weights plus the KV cache for each token, so the math units wait for memory.
@@ -196,13 +204,13 @@ Here is the question. Prefill processes thousands of input tokens per second on 
 
 The price sheet shows the same physics. gpt-4.1 lists $2.00 per million input tokens and $8.00 per million output tokens. That is 4 times, and across providers the output price runs about 3 to 8 times the input price. Reasoning models add hidden output. A model that thinks for 900 tokens to write a 300-token answer bills you for 1,200. So each visible token costs 4 times the sheet price, and max_tokens caps the thinking and the answer together. A small cap can spend everything on thinking, so you get an empty answer and still pay for it.
 
-![Why do output tokens cost more and run slower: the number and its source, as shown in the video](/videos/inference-internals-phase-1/c4-number.webp)
+<img src="/videos/inference-internals-phase-1/c4-number.webp" alt="Why do output tokens cost more and run slower: the number and its source, as shown in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 ### Key points
 
-- **Remember.** input tokens are processed in parallel, but output tokens are made one by one, so they cost more in dollars and seconds.
-- **The trap.** comparing two models by total latency on one prompt, because their answers have different lengths.
-- **Try this.** run one prompt with max_tokens 40 and then 400, and check that TTFT stays while the total time grows.
+- **Remember.** Input tokens are processed in parallel, but output tokens are made one by one, so they cost more in dollars and seconds.
+- **The trap.** Comparing two models by total latency on one prompt, because their answers have different lengths.
+- **Try this.** Run one prompt with max_tokens 40 and then 400, and check that TTFT stays while the total time grows.
 
 *This concept explained how fast each token comes, but not how it is chosen. Concept 5 asks why temperature 0 does not reproduce.*
 
@@ -220,15 +228,17 @@ Each decode step ends with a score for every token in the vocabulary, called the
 
 ### Think it through
 
-Here is the question. At temperature 0 the sampler has no random step at all. So why can two identical requests return different text? Let's think it through.
+At temperature 0 the sampler has no random step at all. So why can two identical requests return different text?
 
-- **First thought.** A first thought is that the same input must give the same output, because greedy sampling always picks the same way.
-- **What it misses.** That thought is reasonable, but it misses one thing. Greedy sampling is exact, but the logits it reads are not.
-- **The real question.** So the real question is what changes the logits between two identical requests.
+A first thought is that the same input must give the same output, because greedy sampling always picks the same way.
+
+That thought is reasonable, but it misses one thing. Greedy sampling is exact, but the logits it reads are not.
+
+So the real question is what changes the logits between two identical requests.
 
 ### The mechanism, step by step
 
-![Why does temperature 0 not reproduce: the mechanism, as drawn in the video](/videos/inference-internals-phase-1/c5-mechanism.webp)
+<img src="/videos/inference-internals-phase-1/c5-mechanism.webp" alt="Why does temperature 0 not reproduce: the mechanism, as drawn in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 1. Your request runs in a batch with other people's requests, and server load changes the batch size.
 2. GPU kernels add numbers in an order that depends on the batch size, in RMSNorm, matrix multiply and attention.
@@ -240,13 +250,13 @@ Here is the question. At temperature 0 the sampler has no random step at all. So
 
 Now the measurement. 1,000 completions at temperature 0 from a self-hosted Qwen3-235B gave 80 different outputs. The first difference appeared at token 103, so the answers matched for a while and then split. With batch-invariant kernels, which add in the same order at any batch size, all 1,000 outputs were identical. That costs speed. 1,000 Qwen3-8B sequences took 26 seconds by default, and 42 to 55 seconds with batch-invariant kernels.
 
-![Why does temperature 0 not reproduce: the number and its source, as shown in the video](/videos/inference-internals-phase-1/c5-number.webp)
+<img src="/videos/inference-internals-phase-1/c5-number.webp" alt="Why does temperature 0 not reproduce: the number and its source, as shown in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 ### Key points
 
-- **Remember.** temperature 0 removes the randomness you added, not the randomness of the machine.
-- **The trap.** ten identical runs do not make a test stable. Check structure and meaning, never exact bytes.
-- **Try this.** check whether your agent sets one temperature for every call, because extraction wants 0 to 0.2 and drafting 0.7 to 1.
+- **Remember.** Temperature 0 removes the randomness you added, not the randomness of the machine.
+- **The trap.** Ten identical runs do not make a test stable. Check structure and meaning, never exact bytes.
+- **Try this.** Check whether your agent sets one temperature for every call, because extraction wants 0 to 0.2 and drafting 0.7 to 1.
 
 *This concept explained how each token is picked, but not how you see it from outside. Concept 6 asks how to measure TTFT, TPOT and cost.*
 
@@ -264,15 +274,17 @@ Streaming sends tokens as decode makes them, over SSE, a long HTTP response that
 
 ### Think it through
 
-Here is the question. Your code times the whole call and counts tokens with tiktoken. What can they tell you when a call is slow or the bill looks wrong? Let's think it through.
+Your code times the whole call and counts tokens with tiktoken. What can they tell you when a call is slow or the bill looks wrong?
 
-- **First thought.** A first thought is that total time and a token count are enough, because the user waits for one and the price sheet multiplies the other.
-- **What it misses.** That thought is reasonable, but it misses one thing. Total time adds your prefill to the provider's queue and decode, and tiktoken only estimates the bill.
-- **The real question.** So the real question is which timestamps and which counts split one call into its parts.
+A first thought is that total time and a token count are enough, because the user waits for one and the price sheet multiplies the other.
+
+That thought is reasonable, but it misses one thing. Total time adds your prefill to the provider's queue and decode, and tiktoken only estimates the bill.
+
+So the real question is which timestamps and which counts split one call into its parts.
 
 ### The mechanism, step by step
 
-![How do you measure TTFT, TPOT and cost: the mechanism, as drawn in the video](/videos/inference-internals-phase-1/c6-mechanism.webp)
+<img src="/videos/inference-internals-phase-1/c6-mechanism.webp" alt="How do you measure TTFT, TPOT and cost: the mechanism, as drawn in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 1. Send the request with stream set to true, and take a timestamp.
 2. Take a second timestamp at the first content chunk, and the difference is TTFT.
@@ -284,13 +296,13 @@ Here is the question. Your code times the whole call and counts tokens with tikt
 
 Now the failure. A structured-output call hits max_tokens, so finish_reason is length and the JSON is cut off. The parse fails, and a naive retry pays for the whole prompt again, to fail the same way. So size max_tokens for each call from the schema's worst case, plus the thinking budget on reasoning models. Claude reports this stop as max_tokens, in a field called stop_reason, so a logger that checks only for length misses every Claude truncation.
 
-![How do you measure TTFT, TPOT and cost: the number and its source, as shown in the video](/videos/inference-internals-phase-1/c6-number.webp)
+<img src="/videos/inference-internals-phase-1/c6-number.webp" alt="How do you measure TTFT, TPOT and cost: the number and its source, as shown in the video" width="1280" height="616" loading="lazy" decoding="async" />
 
 ### Key points
 
-- **Remember.** stream to measure time, and let the server's usage object write the invoice, not your tokenizer.
-- **The trap.** some gateways drop the usage chunk, and code that treats missing usage as zero books every call as free.
-- **Try this.** find where your stack reads usage after a call, and check whether it also stores TTFT and finish_reason.
+- **Remember.** Stream to measure time, and let the server's usage object write the invoice, not your tokenizer.
+- **The trap.** Some gateways drop the usage chunk, and code that treats missing usage as zero books every call as free.
+- **Try this.** Find where your stack reads usage after a call, and check whether it also stores TTFT and finish_reason.
 
 *You can now split your run log into its causes, and the recap puts the six concepts side by side.*
 
