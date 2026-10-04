@@ -54,7 +54,7 @@ export function VideoPlayer({ title, youtube, thumbnail, chapters }: VideoPlayer
                 </span>
               </button>
             ) : (
-              <div className="absolute inset-x-0 bottom-0 flex justify-center p-4">
+              <div className="absolute right-0 top-0 p-3">
                 <span className="rounded-full bg-fg px-3 py-1 font-mono text-[12px] text-bg">Coming soon on YouTube</span>
               </div>
             )}

@@ -26,7 +26,7 @@ export const playlists: Playlist[] = [
     slug: "inference-internals",
     title: "Inference Internals",
     blurb:
-      "What happens to an LLM request on the server, taught one concept at a time: tokens, the KV cache, batching, decoding, routing and cost.",
+      "Short videos on how LLMs behave in production. Each one answers one question, such as why the bill grew or why a stream froze, and every video has a written version.",
   },
 ];
 
@@ -47,7 +47,7 @@ export type Video = {
   playlist: string;
   /** Position inside the playlist; lower comes first. */
   order: number;
-  /** Short label inside the playlist, for example "Phase 1". */
+  /** Short label inside the playlist, for example "#3". */
   part?: string;
   /** YouTube video id. Empty until the video is uploaded. */
   youtube?: string;
