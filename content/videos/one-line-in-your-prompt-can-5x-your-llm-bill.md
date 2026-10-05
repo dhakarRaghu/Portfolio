@@ -7,7 +7,7 @@ playlist: inference-internals
 order: 1
 part: "#1"
 youtube: ""
-duration: "7:36"
+duration: "7:35"
 thumbnail: "/videos/inference-internals-01.webp"
 chapters:
   - "0:00 One line, five times the bill"

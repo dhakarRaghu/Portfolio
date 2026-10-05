@@ -7,7 +7,7 @@ playlist: inference-internals
 order: 7
 part: "#7"
 youtube: ""
-duration: "7:11"
+duration: "7:10"
 thumbnail: "/videos/inference-internals-07.webp"
 chapters:
   - "0:00 Six hours, then a 400"

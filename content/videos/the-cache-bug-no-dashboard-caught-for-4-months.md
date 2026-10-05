@@ -7,7 +7,7 @@ playlist: inference-internals
 order: 10
 part: "#10"
 youtube: ""
-duration: "9:17"
+duration: "9:16"
 thumbnail: "/videos/inference-internals-10.webp"
 chapters:
   - "0:00 Four months behind green dashboards"

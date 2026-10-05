@@ -7,7 +7,7 @@ playlist: inference-internals
 order: 6
 part: "#6"
 youtube: ""
-duration: "7:17"
+duration: "7:16"
 thumbnail: "/videos/inference-internals-06.webp"
 chapters:
   - "0:00 Strict mode on, 9 points gone"

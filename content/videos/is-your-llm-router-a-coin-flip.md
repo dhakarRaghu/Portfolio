@@ -7,7 +7,7 @@ playlist: inference-internals
 order: 9
 part: "#9"
 youtube: ""
-duration: "11:57"
+duration: "11:56"
 thumbnail: "/videos/inference-internals-09.webp"
 chapters:
   - "0:00 Two dashboards, one coin flip"

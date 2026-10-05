@@ -7,7 +7,7 @@ playlist: inference-internals
 order: 8
 part: "#8"
 youtube: ""
-duration: "10:34"
+duration: "10:33"
 thumbnail: "/videos/inference-internals-08.webp"
 chapters:
   - "0:00 The bill that went up"

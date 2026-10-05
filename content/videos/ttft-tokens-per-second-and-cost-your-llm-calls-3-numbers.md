@@ -7,7 +7,7 @@ playlist: inference-internals
 order: 2
 part: "#2"
 youtube: ""
-duration: "12:05"
+duration: "12:04"
 thumbnail: "/videos/inference-internals-02.webp"
 chapters:
   - "0:00 Your run log's three numbers"
